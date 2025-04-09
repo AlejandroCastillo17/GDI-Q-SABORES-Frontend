@@ -1,0 +1,96 @@
+.login {
+    display: flex;                
+    width: 100vw;                 
+    height: 100vh;                
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(255, 251, 4, 0.4);
+}
+
+.cont-img {
+    width: 50%;
+    height: 100%;
+}
+
+.cont-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;           
+}
+
+.cont-rest {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    padding: 2rem;
+    background-color: white;
+}
+
+.cont-rest img {
+    width: 500px;
+    padding-top: 1rem;
+}
+
+.cont-rest h1 {
+    font-family: monospace;
+    font-size: 45px;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+.cont-rest p {
+    font-family: monospace;
+    margin-bottom: 3px;
+    margin-top: 8px;
+    font-size: 25px;
+    color: black;
+    transform: translateX(-75%)
+}
+
+.contraseña-vision {
+    position: relative;
+    width: 300px;
+    transform: translateX(-10%)
+}
+  
+.contraseña-vision input {
+    width: 100%;
+    padding: 0.5rem;
+    padding-right: 2.5rem; 
+    border: 2px solid black;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background-color: white;
+    height: 20px;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+  
+.icono {
+    position: absolute;
+    right: -35px;
+    top: 50%;
+    transform: translateY(-80%);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: rgb(0, 0, 0);
+}
+  
+.cont-rest button {
+    padding: 0.5rem 1rem;
+    background-color: #4cd137;
+    width: 200px;   
+    height: 50px;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+  
+.cont-rest button:hover {
+    transform: scale(1.05);
+    color: white;
+}
