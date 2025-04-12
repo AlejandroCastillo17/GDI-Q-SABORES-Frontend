@@ -2,7 +2,6 @@ import { useState } from "react";
 import React from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import logo from "../assets/qsaboreslogo.png"
-import bosque from "../assets/bosque.png"
 import '../styles/Login.css'
 
 const Login = ({setAutenticacion}) => {
@@ -28,7 +27,7 @@ const Login = ({setAutenticacion}) => {
                 <div className="contraseña-vision">
                     <input
                         type={verContraseña ? "text" : "password"}
-                        placeholder="Contraseña"
+                        placeholder="Ingrese su contraseña"
                     />
                     <span
                         className="icono"

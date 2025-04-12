@@ -4,7 +4,7 @@
     left: 0;
     width: 100vw;                 
     height: 100vh;
-    background-image: url("../assets/bosque.png");
+    background-image: url("../assets/bosque.jpg");
     background-size: cover;     
     background-repeat: no-repeat;   
     background-position: center;
@@ -88,6 +88,7 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    outline: none;
 }
   
 .cont-rest button:hover {
