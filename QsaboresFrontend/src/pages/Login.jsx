@@ -2,6 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import logo from "../assets/qsaboreslogo.png"
+import bosque from "../assets/bosque.jpg"
 import '../styles/Login.css'
 
 const Login = ({setAutenticacion}) => {
@@ -18,8 +19,13 @@ const Login = ({setAutenticacion}) => {
 
     return (
         <section className="login">
+            <div className="cont-img">
+                <img src={bosque} alt="" />
+            </div>
             <div className="cont-rest">
+                <br />
                 <img src={logo} alt="Logo de Q'SaboresS" />
+                <br />
                 <br />
                 <h1>Bienvenido de nuevo!</h1>
                 <br />
