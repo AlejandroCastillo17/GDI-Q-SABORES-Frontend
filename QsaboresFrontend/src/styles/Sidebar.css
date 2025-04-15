@@ -1,24 +1,27 @@
 .sidebar {
-    width: 300px;
-    height: 94vh;
+    width: 320px;
+    height: 100%;
     background: #C7DB9C;
     position: fixed;
     left: 0;
     top: 0;
-    padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 10;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
 }
 
 .sidebar img {
-    width: 270px;
+    width: 290px;
     height: 110px;
     box-shadow: 0 0 10px #4e4e4e;
+    margin-bottom: 20px;
+}
+
+.sidebar nav {
+    text-align: center;
+    width: 100%;
 }
 
 .sidebar ul {
@@ -29,11 +32,11 @@
 }
 
 .sidebar li {
-    margin: 25px 20px;
-    width: 220px;
-    text-align: center;
+    margin: 14px 8px;
+    width: 94%;
+    text-align: left;
     display: flex;
-    border-radius: 10px;
+    border: 1px solid #827B7B;
 }
 
 .sidebar svg {
@@ -43,7 +46,8 @@
 }
 
 .sidebar a {
-    font-family: monospace;
+    width: 80%;
+    font-family: "Nova Square", sans-serif;
     color: rgb(0, 0, 0);
     font-size: 25px;
 }
@@ -70,3 +74,8 @@
     background-color: #338936;
     color: white;
 }
+
+.logout:hover svg {
+    stroke: white;
+}
+
