@@ -2,7 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import logo from "../assets/qsaboreslogo.png"
-import bosque from "../assets/bosque.jpg"
+import bosque from "../assets/bosque.jpeg"
 import '../styles/Login.css'
 
 const Login = ({setAutenticacion}) => {
