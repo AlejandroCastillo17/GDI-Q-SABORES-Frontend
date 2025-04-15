@@ -5,7 +5,9 @@ import logo from "../assets/qsaboreslogo.png"
 import bosque from "../assets/bosque.jpeg"
 import '../styles/Login.css'
 
+
 const Login = ({setAutenticacion}) => {
+     
 
     const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ const Login = ({setAutenticacion}) => {
                 <img src={logo} alt="Logo de Q'SaboresS" />
                 <br />
                 <br />
-                <h1>Bienvenido de nuevo!</h1>
+                <h1 >Bienvenido de nuevo!</h1>
                 <br />
                 <p>Contraseña</p>
                 <div className="contraseña-vision">

@@ -6,7 +6,7 @@
 }
   
 .cont-img {
-    width: 60%;
+    width: 50%;
     height: 100%;
 }
   
@@ -17,11 +17,12 @@
 }
 
 .cont-rest {
-    width: 40%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem;
+    padding: 2rem ; 
+    padding-top: 0rem;
     background-color: #ffffff;
     /*border-radius: 25px;
     box-shadow: inset 0px 8px 8px #4e4e4e;*/
@@ -29,12 +30,10 @@
 
 .cont-rest img {
     width: 400px;
-    padding-top: 1rem;
-    box-shadow: 0 0 10px #4e4e4e;
 }
 
 .cont-rest h1 {
-    font-family: monospace;
+    font-family:"Inria Serif", serif;
     font-size: 45px;
     color: black;
     margin-bottom: 10px;
