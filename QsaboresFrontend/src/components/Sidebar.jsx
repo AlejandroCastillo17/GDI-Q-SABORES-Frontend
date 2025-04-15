@@ -1,6 +1,6 @@
 import "../styles/Sidebar.css"
 import { Navigate, useNavigate } from 'react-router-dom';
-import logo from "../assets/qsaboreslogo.png"
+import logo from "../assets/images/qsaboreslogo.png"
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {

@@ -1,0 +1,32 @@
+.buscador-container {
+    background-color: white;
+    padding: 5px;
+    border: 1px solid black;
+    height: 50px;
+    
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.buscador-container> * {
+    margin: 0 25px;
+}
+
+.buscador {
+    height: 40px;
+    border-radius: 20px;
+    width: 500px;
+    background-color: white;
+    color: black;
+    display: flex;
+    text-align: center;
+   
+}
+
+.lupa {
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}

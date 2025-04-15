@@ -1,7 +1,15 @@
 .home{
- background-color: white;
+ background-color: #FFF0BD
 }
 
 .home div h1 {
     color: rgb(0, 102, 190);
 }
+
+
+.home>h1 {
+    color: black;
+    display: flex;
+    justify-content: center; 
+}
+

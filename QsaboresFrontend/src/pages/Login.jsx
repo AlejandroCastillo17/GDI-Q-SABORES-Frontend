@@ -1,8 +1,8 @@
 import { useState } from "react";
 import React from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
-import logo from "../assets/qsaboreslogo.png"
-import bosque from "../assets/bosque.jpeg"
+import logo from "../assets/images/qsaboreslogo.png"
+import bosque from "../assets/images/bosque.jpeg"
 import '../styles/Login.css'
 
 
