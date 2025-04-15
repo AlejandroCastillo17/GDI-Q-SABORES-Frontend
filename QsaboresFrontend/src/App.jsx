@@ -13,18 +13,20 @@ function App() {
 
   return (
     <>
-      <Router>
-        <Routes>
-          {/* Ruta de login */}
-          <Route path="/login" element={<Login setAutenticacion={setAutenticacion} />} />
+      <div id='app'>
+        <Router>
+            <Routes>
+              {/* Ruta de login */}
+              <Route path="/login" element={<Login setAutenticacion={setAutenticacion} />} />
 
-          {/* Rutas protegidas */}
-          <Route path='/' element={Autenticacion ? <Layout /> : <Navigate to="/login" />}>
-            <Route path="/" element={<Home/>} />
-            <Route path="/inventario" element={<Inventario/>} />
-          </Route>
-        </Routes>
-      </Router>
+              {/* Rutas protegidas */}
+              <Route path='/' element={Autenticacion ? <Layout /> : <Navigate to="/login" />}>
+                <Route path="/" element={<Home/>} />
+                <Route path="/inventario" element={<Inventario/>} />
+              </Route>
+            </Routes>
+          </Router>
+      </div>
     </>
   )
 }
