@@ -1,32 +1,21 @@
+
 .buscador-container {
-    background-color: white;
-    padding: 5px;
-    border: 1px solid black;
-    height: 50px;
-    
-
+    padding: 7px;
+    width: 500px;
     display: flex;
+    align-items: center;
     flex-direction: row;
-    align-items: flex-start;
-}
-
-.buscador-container> * {
-    margin: 0 25px;
+    background-color: white;
+    gap: 10px;
+    border-radius: 10px;
 }
 
 .buscador {
     height: 40px;
-    border-radius: 20px;
     width: 500px;
     background-color: white;
     color: black;
-    display: flex;
-    text-align: center;
-   
+    padding-left: 10px;
+    border: none
 }
 
-.lupa {
-  height: 40px;
-  justify-content: center;
-  align-items: center;
-}
