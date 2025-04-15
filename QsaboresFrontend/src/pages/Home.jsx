@@ -4,9 +4,7 @@ const Home = () => {
     return (
         <>
             <section className="home">
-                <div>
-                    <h1>hijueputa</h1>
-                </div>
+              <h1>prueba </h1>
             </section>
         </>
     )
