@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-do
 import Login from './pages/Login'
 import Home from './pages/Home';
 import Inventario from './pages/Inventario';
+import Informes from './pages/Informes';
 import Layout from './Layouts/Layout';
 import './App.css'
 
@@ -23,6 +24,7 @@ function App() {
               <Route path='/' element={Autenticacion ? <Layout /> : <Navigate to="/login" />}>
                 <Route path="/" element={<Home/>} />
                 <Route path="/inventario" element={<Inventario/>} />
+                <Route path="/informes" element={<Informes/>} />
               </Route>
             </Routes>
           </Router>

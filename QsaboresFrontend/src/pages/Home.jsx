@@ -1,5 +1,5 @@
 import "../styles/Home.css"
-import Buscador from "../components/buscador";
+import Buscador from "../components/Buscador";
 const Home = () => {
     return (
         <>
