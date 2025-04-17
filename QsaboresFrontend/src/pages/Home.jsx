@@ -4,9 +4,12 @@ const Home = () => {
     return (
         <>
             <section className="home">
-              <h1>prueba</h1>
+              <h1>Venta</h1>
               <section className="contener-principal">
                 <Buscador/>
+                <section className="principal_Contenido">
+                  
+                </section>
               </section>
             </section>
         </>

@@ -1,15 +1,33 @@
 .home{
- background-color: #FFF0BD
+ background-color: #FFF0BD;
+ display: flex;
+ flex-direction: column ;
+ align-items: center;
+ color: black;
 }
 
-.home div h1 {
-    color: rgb(0, 102, 190);
-}
-
-
-.home>h1 {
-    color: black;
+.contener-principal{
     display: flex;
-    justify-content: center; 
+    flex-direction: column;
+    padding: 10px 10px 0px 10px;
+    height: 420px;
+    background-color: #C7DB9C;
+    border-radius: 10px;
+    gap:2rem;
 }
 
+.principal_Contenido{
+    display: flex;
+    font-size: 0.5rem;
+    align-items: center;
+    text-align: center;
+    width: 500px;
+    height: 18rem ;
+    background-color: white;
+}
+
+h1{
+    margin: 2rem;
+    font-family: "Nova Square", sans-serif;
+    font-weight: bold;
+}
