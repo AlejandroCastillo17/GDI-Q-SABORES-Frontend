@@ -8,7 +8,7 @@ const Home = () => {
               <section className="contener-principal">
                 <Buscador/>
                 <section className="principal_Contenido">
-                  <h1>aca van los productos</h1>
+                  
                 </section>
               </section>
             </section>
