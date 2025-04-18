@@ -1,6 +1,6 @@
 import "../styles/Inventario.css"
 import Button from "../components/Button";
-import Buscador from "../components/Buscador";
+import Buscador from "../components/buscador";
 
 const Inventario = () => {
     return (

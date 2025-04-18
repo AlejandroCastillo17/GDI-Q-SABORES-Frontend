@@ -1,5 +1,5 @@
 import "../styles/Home.css"
-import Buscador from "../components/Buscador";
+import Buscador from "../components/buscador";
 import Button from "../components/Button";
 
 
