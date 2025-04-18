@@ -24,7 +24,7 @@
 }
 
 .boton.neutro:hover .icono-boton svg {
-    stroke: #f0f0f0;
+    stroke: #FFF0BD;
 }
 
 
@@ -41,6 +41,22 @@
 }
 
 .boton.verde:hover .icono-boton svg {
+    stroke: white;
+}
+
+/* Variante azul*/
+
+.boton.azul {
+    background-color: white;
+    color: #334789;
+    border-color: #334789;
+}
+.boton.azul:hover {
+    background-color: #334789;
+    color: white;
+}
+
+.boton.azul:hover .icono-boton svg {
     stroke: white;
 }
 

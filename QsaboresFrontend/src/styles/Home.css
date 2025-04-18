@@ -67,4 +67,7 @@ h1{
     flex-direction: row;
     justify-content: center;
     gap: 12rem;
+
+    font-family: "Nova Square", sans-serif;
+    font-weight: bold;
 }

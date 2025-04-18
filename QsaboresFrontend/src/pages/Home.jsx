@@ -1,6 +1,8 @@
 import "../styles/Home.css"
-import Buscador from "../components/buscador";
+import Buscador from "../components/Buscador";
 import Button from "../components/Button";
+
+
 const Home = () => {
     return (
         <>
@@ -10,7 +12,7 @@ const Home = () => {
                 <Buscador/>
                 
                 <section className="principal_Contenido">
-                  <h1>aca van los productos</h1>
+                  
                 </section>
 
                 <section className="principal_valores">
