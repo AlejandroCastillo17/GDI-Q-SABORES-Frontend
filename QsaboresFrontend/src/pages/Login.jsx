@@ -12,16 +12,13 @@ const Login = ({setAutenticacion}) => {
     const navigate = useNavigate();
 
     const ValidacionLogin = async () => {
-        //setAutenticacion(true);
+        
+        setAutenticacion(false);
         const response = await authentication({contrasena: document.getElementById("contrasena").value})
 
-        if(response.value) {
+        if(response.status == 200) {
             navigate('/');
             setAutenticacion(true);
-        }
-        else {
-            navigate('/login')
-            setAutenticacion(false)
         }
     };
 
