@@ -1,6 +1,8 @@
 import "../styles/Home.css"
 import Buscador from "../components/buscador";
 import Button from "../components/Button";
+
+
 const Home = () => {
     return (
         <>

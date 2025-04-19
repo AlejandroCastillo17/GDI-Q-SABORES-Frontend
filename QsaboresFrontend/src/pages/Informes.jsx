@@ -1,4 +1,4 @@
-import Buscador from "../components/Buscador";
+import Buscador from "../components/buscador";
 import "../styles/Informes.css"
 
 const Informes = () => {

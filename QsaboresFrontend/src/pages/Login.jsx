@@ -4,17 +4,22 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import logo from "../assets/images/qsaboreslogo.png"
 import bosque from "../assets/images/bosque.jpeg"
 import '../styles/Login.css'
+import { authentication } from "../js/login";
 
 
 const Login = ({setAutenticacion}) => {
      
-
     const navigate = useNavigate();
 
-    const ValidacionLogin = () => {
+    const ValidacionLogin = async () => {
         
-        setAutenticacion(true);
-        navigate('/');
+        setAutenticacion(false);
+        const response = await authentication({contrasena: document.getElementById("contrasena").value})
+
+        if(response.status == 200) {
+            navigate('/');
+            setAutenticacion(true);
+        }
     };
 
     const [verContraseña, setverContraseña] = useState(false);
@@ -36,6 +41,7 @@ const Login = ({setAutenticacion}) => {
                     <input
                         type={verContraseña ? "text" : "password"}
                         placeholder="Ingrese su contraseña"
+                        id="contrasena"
                     />
                     <span
                         className="icono"
