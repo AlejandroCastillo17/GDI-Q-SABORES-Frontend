@@ -106,7 +106,7 @@
 
 .inventario-tabla {
   width: 90%;
-  background-color: #333;
+  background-color: #C7DB9C;
   padding: 15px;
   border-radius: 15px;
   overflow-x: auto;
@@ -119,8 +119,8 @@
 }
   
 .tabla thead {
-  background-color:#333;
-  color: #fff0BD;
+  background-color:#C7DB9C;
+  color: black;
 }
   
 .tabla th, .tabla td {
@@ -129,7 +129,7 @@
 }
 
 .tabla td {
-  color:#333;
+  color:black;
   font-weight: 500;
 }
   
@@ -139,11 +139,11 @@
 }
   
 .tabla tbody tr:hover {
-  background-color: #333;
+  background-color: gray;
 }
 
 .tabla tbody tr:hover td { 
-  color: #FFF0BD;
+  color: white;
 }
   
 .tabla input[type="checkbox"] {
