@@ -1,12 +1,12 @@
-import "../styles/Inventario.css"
-import Button from "../components/Button";
-import Buscador from "../components/buscador";
+import React from 'react';
+import Button from '../components/button';
+import '../styles/proveedores.css';
 
-const Inventario = () => {
-    return (
-        <>
-            <section className="inventario">
-                <h1>INVENTARIO</h1>
+const Proveedores = () => {
+  return (
+    <>
+         <section className="proveedores">
+                <h1>PROVEEDORES</h1>
                 <div id="cont">
                     <div className="buscador">
                         <svg xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
@@ -15,13 +15,6 @@ const Inventario = () => {
                             fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" />
                         </svg>
                         <input type="text" />
-                    </div>
-                    <div id="cont-select">
-                        <select id="select">
-                            <option value="value1">Value 1</option>
-                            <option value="value2">Value 2</option>
-                            <option value="value3">Value 3</option>
-                        </select>
                     </div>
                     <Button variant="rojo">
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  
@@ -53,59 +46,56 @@ const Inventario = () => {
                     </Button>
                 </div>
                 <br />
-                <div className="inventario-tabla">
+                <div className="proveedores-tabla">
                     <table class="tabla">
                         <thead>
                             <tr>
                                 <th></th>
                                 <th>Nombre</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Proveedor</th>
+                                <th>Telefono</th>
+                                <th>Email</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><input type="checkbox" /></td>
-                                <td>BonBon Bun</td>
-                                <td>x3</td>
-                                <td>300$</td>
                                 <td>Colombina</td>
+                                <td>23456789</td>
+                                <td>colombina@gmial.com$</td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" /></td>
-                                <td>Chocorramo</td>
-                                <td>x12</td>
-                                <td>3500$</td>
-                                <td>Ramo</td>
+                                <td>Colombina</td>
+                                <td>23456789</td>
+                                <td>colombina@gmial.com$</td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" /></td>
-                                <td>Pilsen</td>
-                                <td>x30</td>
-                                <td>4000$</td>
-                                <td>Bavaria</td>
+                                <td>Colombina</td>
+                                <td>23456789</td>
+                                <td>colombina@gmial.com$</td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" /></td>
-                                <td>Arepas</td>
-                                <td>x23</td>
-                                <td>2000$</td>
-                                <td>Sonsonéa</td>
+                                <td>Colombina</td>
+                                <td>23456789</td>
+                                <td>colombina@gmial.com$</td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" /></td>
-                                <td>DeTodito</td>
-                                <td>x25</td>
-                                <td>3000$</td>
-                                <td>FritoLay</td>
+                                <td>Colombina</td>
+                                <td>23456789</td>
+                                <td>colombina@gmial.com$</td>
                             </tr>
+                            
+                            
                         </tbody>
                     </table>
                 </div>
             </section>
         </>
-    )
-};
+  );
+}
 
-export default Inventario;
+export default Proveedores;
