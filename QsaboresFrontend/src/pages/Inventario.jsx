@@ -1,8 +1,92 @@
 import "../styles/Inventario.css"
+import React, { useRef, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Button from "../components/Button";
 import Buscador from "../components/buscador";
 
+
 const Inventario = () => {
+
+    {/* Logica para verificar los cambios del formulario */}
+
+    const [datosForm, setdatosForm] = useState({
+        nombre: '',
+        cantidad: '',
+        precio: '',
+        proveedor: '',
+        categoria: ''
+    });
+
+    const [error, setError] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setdatosForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    
+        // Validación de campos
+        const { nombre, cantidad, precio, proveedor, categoria } = datosForm;
+    
+        if (!imagen) {
+            setError("Debe agregar una imagen del producto.");
+            return;
+        }
+    
+        if (!nombre || !cantidad || !precio || !proveedor || !categoria) {
+            setError("Por favor complete todos los campos.");
+            return;
+        }
+
+        
+
+        toast.success("¡Producto guardado exitosamente!");
+    
+        console.log("Formulario válido, se puede enviar:", datosForm);
+    
+        // Reset
+        setdatosForm({ nombre: '', cantidad: '', precio: '', proveedor: '', categoria: '' });
+        setError('');
+        cerrarModalAgregar();
+    };
+
+    {/* Logica para el cambio de imagen */}
+
+    const inputRef = useRef(null);
+    const [imagen, setImagen] = useState(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagen(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    {/* Logica para el modal de agregar */}
+
+    const [showModalAgregar, setShowModalAgregar] = useState(false);
+  
+    const abrirModalAgregar = () => {
+        setShowModalAgregar(true);
+    };
+  
+    const cerrarModalAgregar = () => {
+        setShowModalAgregar(false);
+        setImagen(null);
+        inputRef.current.value = null;
+        setdatosForm({ nombre: '', cantidad: '', precio: '', proveedor: '', categoria: '' });
+        setError('');
+    };
+
+    {/* ///////////////////////////////////////////////////////////////////////////////////////////////////// */}
+
     return (
         <>
             <section className="inventario">
@@ -41,7 +125,7 @@ const Inventario = () => {
                         </svg>
                         Editar
                     </Button>
-                    <Button variant="verde">
+                    <Button variant="verde" onClick={abrirModalAgregar}>
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
                             fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
                             class="icon icon-tabler icons-tabler-outline icon-tabler-square-rounded-plus">
@@ -67,7 +151,7 @@ const Inventario = () => {
                         <tbody>
                             <tr>
                                 <td><input type="checkbox" /></td>
-                                <td>BonBon Bun</td>
+                                <td>BonBonBun</td>
                                 <td>x3</td>
                                 <td>300$</td>
                                 <td>Colombina</td>
@@ -103,7 +187,74 @@ const Inventario = () => {
                         </tbody>
                     </table>
                 </div>
+                
+                {/* Modal de agregar producto */}
+                {showModalAgregar && (
+                    <div className="modal" onClick={cerrarModalAgregar}>
+                        <div className="modal-contenedor" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-contenido">
+                            <div class="image-upload" id="previewContainer" style={{backgroundImage: imagen ? `url(${imagen})` : 'none', backgroundSize: imagen ? '100% 100%' : 'cover', }} >
+                                {!imagen && (
+                                    <label htmlFor="imagenProducto" id="labelTexto">
+                                        + Agregar imagen del producto.
+                                    </label>
+                                )}
+                                <input type="file" id="imagenProducto" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                            </div>
+                                <form class="formulario" onSubmit={handleSubmit}>
+
+                                    <div className="bloque">
+                                        <label>Nombre</label>
+                                        <input type="text" placeholder="Nombre del producto" name="nombre" value={datosForm.nombre} onChange={handleChange} />
+                                    </div>
+                                    
+                                    <div className="bloque">
+                                        <label>Cantidad</label>
+                                        <input type="number" placeholder="Cantidad" name="cantidad" value={datosForm.cantidad} onChange={handleChange}  />
+                                    </div>
+
+                                    <div className="bloque">
+                                        <label>Precio Unitario</label>
+                                        <input type="number" step="0.01" placeholder="Precio" name="precio" value={datosForm.precio} onChange={handleChange} />
+                                    </div>
+                                    
+                                    <div className="bloque">
+                                        <label>Proveedor</label>
+                                        <div id="cont-select-form">
+                                            <select id="select-form" name="proveedor" value={datosForm.proveedor} onChange={handleChange}>
+                                                <option value="value1">Value 1</option>
+                                                <option value="value2">Value 2</option>
+                                                <option value="value3">Value 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="bloque">
+                                        <label>Categoría</label>
+                                        <div id="cont-select-form2">
+                                            <select id="select-form" name="categoria" value={datosForm.categoria} onChange={handleChange}>
+                                                <option value="value1">Value 1</option>
+                                                <option value="value2">Value 2</option>
+                                                <option value="value3">Value 3</option>
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+
+                                    {error && <p className="error">{error}</p>}
+
+                                    <div class="botones">
+                                        <Button type="submit" variant="verde" class="btn">Guardar</Button>
+                                        <Button variant="rojo" onClick={cerrarModalAgregar} class="btn">Cancelar</Button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                )} 
+
             </section>
+            <ToastContainer position="top-center" autoClose={3000} />
         </>
     )
 };
