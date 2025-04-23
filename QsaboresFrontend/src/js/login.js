@@ -3,7 +3,7 @@ import axios from 'axios';
 export const authentication = async (datos) => {
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/sabores/api/v1/login', datos, {
+    const response = await axios.post('http://127.0.0.1:8000/sabores/api/v1/usuarios/login/', datos, {
       headers: {
         'Content-Type': 'application/json'
       }
