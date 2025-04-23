@@ -32,6 +32,7 @@
   gap: 5px;
   border: 2px solid #333;
   background-color: #FFF0BD;
+  border-radius: 10px;
 }
 
 .buscador input {
@@ -320,7 +321,38 @@
 .botones .boton.rojo, .botones .boton.verde {
   font-size: 20px;
   outline: none;
-} 
+}
+
+.modal-contenedor-eliminar {
+  width: 620px;
+  height: 240px;
+  background-color: #FFF0BD;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.modal-contenedor-eliminar h2 {
+  width: 500px;
+  height: 50%;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  text-align: center;
+  padding-left: 50px;
+  color: #333;
+}
+
+#botoness {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: center;
+  text-align: center;
+}
 
 /* Estilos de la tabla */
 

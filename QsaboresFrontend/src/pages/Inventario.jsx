@@ -41,11 +41,9 @@ const Inventario = () => {
             return;
         }
 
-        
+        {/* Logica para el back, esperar al negro */}
 
         toast.success("¡Producto guardado exitosamente!");
-    
-        console.log("Formulario válido, se puede enviar:", datosForm);
     
         // Reset
         setdatosForm({ nombre: '', cantidad: '', precio: '', proveedor: '', categoria: '' });
@@ -85,6 +83,18 @@ const Inventario = () => {
         setError('');
     };
 
+    {/* Logica para el modal de eliminar */}
+
+    const [showModalEliminar, setShowModalEliminar] = useState(false);
+
+    const abrirModalEliminar = () => {
+        setShowModalEliminar(true);
+    }
+
+    const cerrarModalEliminar = () => {
+        setShowModalEliminar(false);
+    }
+
     {/* ///////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
     return (
@@ -107,7 +117,7 @@ const Inventario = () => {
                             <option value="value3">Value 3</option>
                         </select>
                     </div>
-                    <Button variant="rojo">
+                    <Button variant="rojo" onClick={abrirModalEliminar}>
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  
                             fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
                             class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" 
@@ -248,6 +258,19 @@ const Inventario = () => {
                                         <Button variant="rojo" onClick={cerrarModalAgregar} class="btn">Cancelar</Button>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal de eliminar producto */}
+                {showModalEliminar && (
+                    <div className="modal" onClick={cerrarModalEliminar}>
+                        <div className="modal-contenedor-eliminar" onClick={(e) => e.stopPropagation()}>
+                            <h2>¿Esta completamente seguro que desea eliminar el producto?</h2>
+                            <div id="botoness">
+                                <Button variant="verde" onClick={cerrarModalEliminar}>Aceptar</Button>
+                                <Button variant="rojo" onClick={cerrarModalEliminar}>Cancelar</Button>
                             </div>
                         </div>
                     </div>
