@@ -16,7 +16,7 @@ const Login = ({setAutenticacion}) => {
         setAutenticacion(false);
         const response = await authentication({contrasena: document.getElementById("contrasena").value})
 
-        if(response.status == 200) {
+        if(response.status == 200 || true) {//quitar 'true' esto es para que no me esté pidiendo token de auth 
             navigate('/');
             setAutenticacion(true);
         }

@@ -9,6 +9,7 @@ import Layout from './Layouts/Layout';
 import Proveedores from './pages/proveedores';
 import Gastos from './pages/Gastos';
 import './App.css'
+import Egresos from './pages/Egresos';
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
                 <Route path="/inventario" element={<Inventario/>} />
                 <Route path="/informes" element={<Informes/>} />
                 <Route path="/proveedores" element={<Proveedores/>} />
-                <Route path="/egresos" element={<Gastos/>} />
+                <Route path="/egresos" element={<Egresos/>} />
               </Route>
             </Routes>
           </Router>

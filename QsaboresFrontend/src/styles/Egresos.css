@@ -1,0 +1,119 @@
+.egresos {
+    flex-grow: 1;
+    height: 100vh;
+    padding: 20px; 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .egresos h1 {
+    font-family: monospace;
+    font-size: 80px;
+    color: black;
+    margin: 10px 0px;
+  }
+  
+  .egresos > #cont {
+    width: 95%;
+    padding: 0%;
+    gap: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #cont > .buscador {
+    width: 90%;
+    height: 100%;
+    gap: 1%;
+    border: 1px solid #333;
+    background-color: #ffffff;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+  }
+
+  #cont > .buscador > #buscador {
+    width: 95%;
+    height: 90%;
+    border: 0px solid #333;
+    background-color: #ffffff;
+    border-radius: 15px;
+    font-size: x-large;
+  }
+  
+  .buscador input {
+    width: 80%;
+    height: 60%;
+    outline: none;
+    background-color: #ffffff;
+    border: 1px solid #333;
+    color: #333;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+  
+  .buscador svg {
+    padding-left: 5px;
+  }
+  
+  #cont button{
+    font-size: 20px;
+  }
+  
+  #cont-select {
+    position: relative;
+    display: inline-block;
+    width: 130px;
+  }
+  
+  #cont-select select {
+    width: 100%;
+    font-size: 23px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    background-color: #fff0BD;
+    color: #333;
+    cursor: pointer;
+    padding: 8px 30px 8px 10px; 
+    transition: border-color 0.3s ease;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none; 
+  }
+  
+  #cont-select::after {
+    content: '▼';
+    font-size: 24px;
+    color: #333;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-53%);
+    pointer-events: none;
+  }
+  
+  #select option{
+    background-color: #333;
+    color: #fff0BD;
+  }
+  
+  #select:hover{
+    background-color: #333;
+    color: #FFF0BD;
+  }
+  
+  #cont-select:hover::after {
+    color:#FFF0BD; 
+  }
+  
+  
+  /* Estilos de la tabla */
