@@ -173,6 +173,66 @@ const Inventario = () => {
         setShowModalEliminar(false);
     }
 
+    // Logica para la edicion del producto
+
+    const [edicion, setEdicion] =useState(false);
+    const [productoEditando, setProductoEditando] = useState(null);
+    const [datosEditados, setDatosEditados] = useState({});
+
+    const verEdicion = () => {
+        const Seleccionados = productos.filter(p => p.seleccionado);
+
+        if (Seleccionados.length === 0) {
+            toast.warning("No hay ningun producto seleccionado");
+            return;
+        }
+        
+        if (Seleccionados.length > 1) {
+            toast.warning("Selecciona solo un producto para editar");
+            return;
+        }
+
+        const productoSeleccionado = Seleccionados[0];
+  
+        setEdicion(true);
+        Editar(productoSeleccionado);
+    }
+
+    const ocultarEdicion = () => {
+        setEdicion(false)
+    }
+
+    const Editar = (producto) => {
+        setProductoEditando(producto.id); 
+        setDatosEditados({ ...producto }); 
+    };
+    
+    const CancelarEdicion = () => {
+        setProductoEditando(null);
+        setDatosEditados({});
+        ocultarEdicion();
+    };
+    
+    const GuardarEdicion = () => {
+        setProductos((productosActuales) =>
+            productosActuales.map(
+                (prod) =>
+                prod.id === productoEditando ? datosEditados : prod
+            )
+        );
+        setProductoEditando(null);
+        setDatosEditados({});
+        ocultarEdicion();
+    };
+    
+    const handleChangeEdicion = (e) => {
+        const { name, value } = e.target;
+        setDatosEditados((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+    };
+
     // ///////////////////////////////////////////////////////////////////////////////////////////////////// 
 
     return (
@@ -204,7 +264,7 @@ const Inventario = () => {
                         </svg>
                         Eliminar
                     </Button>
-                    <Button variant="azul">
+                    <Button variant="azul" onClick={verEdicion}>
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
                             fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
                             class="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" 
@@ -246,15 +306,77 @@ const Inventario = () => {
                                             onChange={(e) => Seleccion(producto.id, e.target.checked)}
                                         />
                                     </td>
-                                    <td>{producto.nombre}</td>
-                                    <td>{producto.cantidad}</td>
-                                    <td>{producto.precio}</td>
-                                    <td>{producto.proveedor}</td>
+                                    <td>
+                                        {productoEditando === producto.id ? 
+                                            (
+                                                <input
+                                                    className="inputs"
+                                                    type="text"
+                                                    name="nombre"
+                                                    value={datosEditados.nombre}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (producto.nombre)
+                                        }
+                                    </td>
+                                    <td>
+                                        {productoEditando === producto.id ? 
+                                            (
+                                                <input
+                                                    className="inputs"
+                                                    type="number"
+                                                    name="cantidad"
+                                                    value={datosEditados.cantidad}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (producto.cantidad)
+                                        }
+                                    </td>
+                                    <td>
+                                        {productoEditando === producto.id ? 
+                                            (
+                                                <input
+                                                    className="inputs"
+                                                    type="number"
+                                                    name="precio"
+                                                    value={datosEditados.precio}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (producto.precio)
+                                        }
+                                    </td>
+                                    <td>
+                                        {productoEditando === producto.id ? 
+                                            (
+                                                <input
+                                                    className="inputs"
+                                                    type="text"
+                                                    name="proveedor"
+                                                    value={datosEditados.proveedor}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (producto.proveedor)
+                                        }
+                                    </td>
                                 </tr>
                             )}                           
                         </tbody>
                     </table>
                 </div>
+                {edicion && (
+                    <div id="botoness-edicion">
+                        <Button variant="verde"  onClick={GuardarEdicion}>Guardar</Button>
+                        <Button variant="rojo" onClick={CancelarEdicion} >Cancelar</Button>
+                    </div>
+                )}
                 
                 {/* Modal de agregar producto */}
                 {showModalAgregar && (

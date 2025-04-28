@@ -329,6 +329,10 @@
   outline: none;
 }
 
+.boton.rojo, .boton.verde, .boton.azul {
+  outline: none;
+}
+
 /* Modal Eliminar*/
 
 .modal-contenedor-eliminar {
@@ -340,6 +344,7 @@
   justify-content: center;
   border-radius: 20px;
 }
+
 
 .modal-contenedor-eliminar h2 {
   width: 500px;
@@ -360,6 +365,21 @@
   gap: 30px;
   justify-content: center;
   text-align: center;
+}
+
+#botoness-edicion {
+  width: 100%;
+  margin-right: 75px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: right;
+  text-align: center;
+}
+
+#botoness-edicion .boton.rojo, #botoness-edicion .boton.verde {
+  font-size: 15px;
 }
 
 /* Estilos de la tabla */
@@ -392,6 +412,21 @@
   color:black;
   font-weight: 500;
 }
+
+.inputs {
+  margin: 0;
+  padding: 0;
+  width: 180px;
+  height: 30px;
+  font-size: 1rem;
+  background-color: #FFF0BD;
+  color: #333;
+  font-weight: 600;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 5px;
+  border: 2px solid #333;
+}
   
 .tabla tbody tr {
   background-color: #ffffff;
@@ -412,7 +447,7 @@
   cursor: pointer;
 }
   
-  /* Opcional: bordes suaves entre celdas */
+/* Opcional: bordes suaves entre celdas */
 .tabla td, .tabla th {
   border-bottom: 2px solid #333;
 }

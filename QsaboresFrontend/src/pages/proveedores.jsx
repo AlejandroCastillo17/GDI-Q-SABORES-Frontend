@@ -143,6 +143,68 @@ const Proveedores = () => {
         setShowModalEliminar(false);
     }
 
+    // Logica para la edicion de los proveedores
+
+    const [edicion, setEdicion] =useState(false);
+    const [proveedorEditando, setProveedorEditando] = useState(null);
+    const [datosEditados, setDatosEditados] = useState({});
+
+    const verEdicion = () => {
+        const Seleccionados = proveedores.filter(p => p.seleccionado);
+
+        if (Seleccionados.length === 0) {
+            toast.warning("No hay ningun proveedor seleccionado");
+            return;
+        }
+        
+        if (Seleccionados.length > 1) {
+            toast.warning("Selecciona solo un proveedor para editar");
+            return;
+        }
+
+        const proveedorSeleccionado = Seleccionados[0];
+  
+        setEdicion(true);
+        Editar(proveedorSeleccionado);
+    }
+
+    const ocultarEdicion = () => {
+        setEdicion(false)
+    }
+
+    const Editar = (proveedor) => {
+        setProveedorEditando(proveedor.id); 
+        setDatosEditados({ ...proveedor }); 
+    };
+    
+    const CancelarEdicion = () => {
+        setProveedorEditando(null);
+        setDatosEditados({});
+        ocultarEdicion();
+    };
+    
+    const GuardarEdicion = () => {
+        setProveedores((proveedores) =>
+            proveedores.map(
+                (provee) =>
+                provee.id === proveedorEditando ? datosEditados : provee
+            )
+        );
+        setProveedorEditando(null);
+        setDatosEditados({});
+        ocultarEdicion();
+    };
+    
+    const handleChangeEdicion = (e) => {
+        const { name, value } = e.target;
+        setDatosEditados((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+    };
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     return (
         <>
             <section className="proveedores">
@@ -165,14 +227,14 @@ const Proveedores = () => {
                         </svg>
                         Eliminar
                     </Button>
-                        <Button variant="azul">
-                            <svg  xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
-                                fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" 
-                                fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" />
-                            </svg>
-                            Editar
+                    <Button variant="azul" onClick={verEdicion}>
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
+                            fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" 
+                            fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" />
+                        </svg>
+                        Editar
                     </Button>
                     <Button variant="verde" onClick={abrirModalAgregar}>
                         <svg  xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
@@ -207,14 +269,62 @@ const Proveedores = () => {
                                             onChange={(e) => Seleccion(proveedor.id, e.target.checked)} 
                                         />
                                     </td>
-                                    <td>{proveedor.nombre}</td>
-                                    <td>{proveedor.telefono}</td>
-                                    <td>{proveedor.email}</td>
+                                    <td>
+                                        {proveedorEditando === proveedor.id ? 
+                                            (
+                                                <input
+                                                    className="inputss"
+                                                    type="text"
+                                                    name="nombre"
+                                                    value={datosEditados.nombre}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (proveedor.nombre)
+                                        }
+                                    </td>
+                                    <td>
+                                        {proveedorEditando === proveedor.id ? 
+                                            (
+                                                <input
+                                                    className="inputss"
+                                                    type="tel"
+                                                    name="telefono"
+                                                    value={datosEditados.telefono}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (proveedor.telefono)
+                                        }
+                                    </td>
+                                    <td>
+                                        {proveedorEditando === proveedor.id ? 
+                                            (
+                                                <input
+                                                    className="inputss"
+                                                    type="email"
+                                                    name="email"
+                                                    value={datosEditados.email}
+                                                    onChange={handleChangeEdicion}
+                                                />
+                                            ) 
+                                            : 
+                                            (proveedor.email)
+                                        }
+                                    </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
+                {edicion && (
+                    <div id="botoness-edicion">
+                        <Button variant="verde"  onClick={GuardarEdicion}>Guardar</Button>
+                        <Button variant="rojo" onClick={CancelarEdicion} >Cancelar</Button>
+                    </div>
+                )}
 
                 {/* Modal de agregar producto */}
                 {showModalAgregar && (
