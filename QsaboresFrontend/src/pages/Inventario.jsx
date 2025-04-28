@@ -8,9 +8,45 @@ import Buscador from "../components/buscador";
 
 const Inventario = () => {
 
+    {/* logica para eliminar los porductos que se seleccionen */}
+
+    const Seleccion = (id) => {
+        setProductos(prev =>
+            prev.map(producto =>
+              producto.id === id ? { ...producto, seleccionado: !producto.seleccionado } : producto
+            )
+        );
+    };
+
+    const eliminarProdSelec = () => {
+        const haySeleccionados = productos.some(p => p.seleccionado);
+        if (!haySeleccionados) {
+          toast.warning("No hay ningun producto seleccionado");
+          cerrarModalEliminar();
+          return;
+        }
+      
+        const nuevosProductos = productos.filter(p => !p.seleccionado);
+        setProductos(nuevosProductos);
+        cerrarModalEliminar();
+    };
+      
+      
+
+    {/* Lista de productos para dinamicar la tabla */}
+
+    const [productos, setProductos] = useState([
+        { id: 1, nombre: 'Papas', cantidad: 10, precio: 1000, proveedor: 'Proveedor X', seleccionado: false },
+        { id: 2, nombre: 'Refresco', cantidad: 5, precio: 2000, proveedor: 'Proveedor Y', seleccionado: false }
+    ]);
+
+    const k = 0;
+
+
     {/* Logica para verificar los cambios del formulario */}
 
     const [datosForm, setdatosForm] = useState({
+        id: '',
         nombre: '',
         cantidad: '',
         precio: '',
@@ -40,6 +76,21 @@ const Inventario = () => {
             setError("Por favor complete todos los campos.");
             return;
         }
+
+        {/* Agregar el producto a la tabla */}
+
+        const nuevoProducto = {
+            id: k + 1, 
+            nombre,
+            cantidad,
+            precio,
+            proveedor,
+            categoria,
+            imagen,
+            seleccionado: false
+        };
+
+        setProductos(prev => [...prev, nuevoProducto]);
 
         {/* Logica para el back, esperar al negro */}
 
@@ -88,7 +139,14 @@ const Inventario = () => {
     const [showModalEliminar, setShowModalEliminar] = useState(false);
 
     const abrirModalEliminar = () => {
-        setShowModalEliminar(true);
+        const haySeleccionados = productos.some(p => p.seleccionado);
+        if (!haySeleccionados) {
+          toast.warning("No hay ningun producto seleccionado");
+          return;
+        }else {
+            setShowModalEliminar(true);
+        }
+        
     }
 
     const cerrarModalEliminar = () => {
@@ -159,41 +217,21 @@ const Inventario = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>BonBonBun</td>
-                                <td>x3</td>
-                                <td>300$</td>
-                                <td>Colombina</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>Chocorramo</td>
-                                <td>x12</td>
-                                <td>3500$</td>
-                                <td>Ramo</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>Pilsen</td>
-                                <td>x30</td>
-                                <td>4000$</td>
-                                <td>Bavaria</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>Arepas</td>
-                                <td>x23</td>
-                                <td>2000$</td>
-                                <td>Sonsonéa</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>DeTodito</td>
-                                <td>x25</td>
-                                <td>3000$</td>
-                                <td>FritoLay</td>
-                            </tr>
+                            {productos.map((producto, index) => 
+                                <tr key={producto.id}>
+                                    <td>
+                                        <input 
+                                            type="checkbox" 
+                                            checked={producto.seleccionado || false} 
+                                            onChange={() => Seleccion(producto.id)} 
+                                        />
+                                    </td>
+                                    <td>{producto.nombre}</td>
+                                    <td>{producto.cantidad}</td>
+                                    <td>{producto.precio}</td>
+                                    <td>{producto.proveedor}</td>
+                                </tr>
+                            )}                           
                         </tbody>
                     </table>
                 </div>
@@ -203,14 +241,14 @@ const Inventario = () => {
                     <div className="modal" onClick={cerrarModalAgregar}>
                         <div className="modal-contenedor" onClick={(e) => e.stopPropagation()}>
                             <div className="modal-contenido">
-                            <div class="image-upload" id="previewContainer" style={{backgroundImage: imagen ? `url(${imagen})` : 'none', backgroundSize: imagen ? '100% 100%' : 'cover', }} >
-                                {!imagen && (
-                                    <label htmlFor="imagenProducto" id="labelTexto">
-                                        + Agregar imagen del producto.
-                                    </label>
-                                )}
-                                <input type="file" id="imagenProducto" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
-                            </div>
+                                <div class="image-upload" id="previewContainer" style={{backgroundImage: imagen ? `url(${imagen})` : 'none', backgroundSize: imagen ? '100% 100%' : 'cover', }} >
+                                    {!imagen && (
+                                        <label htmlFor="imagenProducto" id="labelTexto">
+                                            + Agregar imagen del producto.
+                                        </label>
+                                    )}
+                                    <input type="file" id="imagenProducto" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                                </div>
                                 <form class="formulario" onSubmit={handleSubmit}>
 
                                     <div className="bloque">
@@ -267,9 +305,9 @@ const Inventario = () => {
                 {showModalEliminar && (
                     <div className="modal" onClick={cerrarModalEliminar}>
                         <div className="modal-contenedor-eliminar" onClick={(e) => e.stopPropagation()}>
-                            <h2>¿Esta completamente seguro que desea eliminar el producto?</h2>
+                            <h2>¿Esta completamente seguro que desea eliminar el/los producto?</h2>
                             <div id="botoness">
-                                <Button variant="verde" onClick={cerrarModalEliminar}>Aceptar</Button>
+                                <Button variant="verde" onClick={eliminarProdSelec}>Aceptar</Button>
                                 <Button variant="rojo" onClick={cerrarModalEliminar}>Cancelar</Button>
                             </div>
                         </div>
