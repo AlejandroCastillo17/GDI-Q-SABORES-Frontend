@@ -1,5 +1,6 @@
 import "../styles/Inventario.css"
 import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Button from "../components/Button";
@@ -8,15 +9,45 @@ import Buscador from "../components/buscador";
 
 const Inventario = () => {
 
-    {/* logica para eliminar los porductos que se seleccionen */}
+    // Lista de productos para dinamizar la tabla 
 
-    const Seleccion = (id) => {
+    const [productos, setProductos] = useState([]);
+
+    useEffect(() => {
+        try {
+          const productosGuardados = localStorage.getItem('productos');
+          if (productosGuardados) {
+            const productosParseados = JSON.parse(productosGuardados);
+            if (Array.isArray(productosParseados)) {
+              setProductos(productosParseados);
+            } else {
+              console.error('Productos guardados no son un array');
+              setProductos([]); 
+            }
+          }
+        } catch (error) {
+          console.error('Error leyendo productos del localStorage:', error);
+          setProductos([]);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (productos.length > 0) { 
+          localStorage.setItem('productos', JSON.stringify(productos));
+        } else {
+          localStorage.removeItem('productos'); 
+        }
+    }, [productos]);
+
+    // logica para eliminar los porductos que se seleccionen 
+
+    const Seleccion = (id, isChecked) => {
         setProductos(prev =>
             prev.map(producto =>
-              producto.id === id ? { ...producto, seleccionado: !producto.seleccionado } : producto
+                producto.id === id ? { ...producto, seleccionado: isChecked } : producto
             )
         );
-    };
+    };    
 
     const eliminarProdSelec = () => {
         const haySeleccionados = productos.some(p => p.seleccionado);
@@ -30,20 +61,8 @@ const Inventario = () => {
         setProductos(nuevosProductos);
         cerrarModalEliminar();
     };
-      
-      
 
-    {/* Lista de productos para dinamicar la tabla */}
-
-    const [productos, setProductos] = useState([
-        { id: 1, nombre: 'Papas', cantidad: 10, precio: 1000, proveedor: 'Proveedor X', seleccionado: false },
-        { id: 2, nombre: 'Refresco', cantidad: 5, precio: 2000, proveedor: 'Proveedor Y', seleccionado: false }
-    ]);
-
-    const k = 0;
-
-
-    {/* Logica para verificar los cambios del formulario */}
+    // Logica para verificar los cambios del formulario 
 
     const [datosForm, setdatosForm] = useState({
         id: '',
@@ -77,10 +96,10 @@ const Inventario = () => {
             return;
         }
 
-        {/* Agregar el producto a la tabla */}
+        // Agregar el producto a la tabla 
 
         const nuevoProducto = {
-            id: k + 1, 
+            id: productos.length + 1, 
             nombre,
             cantidad,
             precio,
@@ -92,7 +111,7 @@ const Inventario = () => {
 
         setProductos(prev => [...prev, nuevoProducto]);
 
-        {/* Logica para el back, esperar al negro */}
+        //Logica para el back, esperar al negro 
 
         toast.success("¡Producto guardado exitosamente!");
     
@@ -102,7 +121,8 @@ const Inventario = () => {
         cerrarModalAgregar();
     };
 
-    {/* Logica para el cambio de imagen */}
+    // Logica para el cambio de imagen 
+    
 
     const inputRef = useRef(null);
     const [imagen, setImagen] = useState(null);
@@ -118,7 +138,7 @@ const Inventario = () => {
         }
     };
 
-    {/* Logica para el modal de agregar */}
+    // Logica para el modal de agregar 
 
     const [showModalAgregar, setShowModalAgregar] = useState(false);
   
@@ -134,7 +154,7 @@ const Inventario = () => {
         setError('');
     };
 
-    {/* Logica para el modal de eliminar */}
+    // Logica para el modal de eliminar 
 
     const [showModalEliminar, setShowModalEliminar] = useState(false);
 
@@ -153,7 +173,7 @@ const Inventario = () => {
         setShowModalEliminar(false);
     }
 
-    {/* ///////////////////////////////////////////////////////////////////////////////////////////////////// */}
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////// 
 
     return (
         <>
@@ -206,7 +226,7 @@ const Inventario = () => {
                 </div>
                 <br />
                 <div className="inventario-tabla">
-                    <table class="tabla">
+                    <table className="tabla">
                         <thead>
                             <tr>
                                 <th></th>
@@ -223,7 +243,7 @@ const Inventario = () => {
                                         <input 
                                             type="checkbox" 
                                             checked={producto.seleccionado || false} 
-                                            onChange={() => Seleccion(producto.id)} 
+                                            onChange={(e) => Seleccion(producto.id, e.target.checked)}
                                         />
                                     </td>
                                     <td>{producto.nombre}</td>
@@ -241,7 +261,7 @@ const Inventario = () => {
                     <div className="modal" onClick={cerrarModalAgregar}>
                         <div className="modal-contenedor" onClick={(e) => e.stopPropagation()}>
                             <div className="modal-contenido">
-                                <div class="image-upload" id="previewContainer" style={{backgroundImage: imagen ? `url(${imagen})` : 'none', backgroundSize: imagen ? '100% 100%' : 'cover', }} >
+                                <div className="image-upload" id="previewContainer" style={{backgroundImage: imagen ? `url(${imagen})` : 'none', backgroundSize: imagen ? '100% 100%' : 'cover', }} >
                                     {!imagen && (
                                         <label htmlFor="imagenProducto" id="labelTexto">
                                             + Agregar imagen del producto.
@@ -249,7 +269,7 @@ const Inventario = () => {
                                     )}
                                     <input type="file" id="imagenProducto" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
                                 </div>
-                                <form class="formulario" onSubmit={handleSubmit}>
+                                <form className="formulario" onSubmit={handleSubmit}>
 
                                     <div className="bloque">
                                         <label>Nombre</label>
@@ -291,7 +311,7 @@ const Inventario = () => {
 
                                     {error && <p className="error">{error}</p>}
 
-                                    <div class="botones">
+                                    <div className="botones">
                                         <Button type="submit" variant="verde" class="btn">Guardar</Button>
                                         <Button variant="rojo" onClick={cerrarModalAgregar} class="btn">Cancelar</Button>
                                     </div>
@@ -305,7 +325,7 @@ const Inventario = () => {
                 {showModalEliminar && (
                     <div className="modal" onClick={cerrarModalEliminar}>
                         <div className="modal-contenedor-eliminar" onClick={(e) => e.stopPropagation()}>
-                            <h2>¿Esta completamente seguro que desea eliminar el/los producto?</h2>
+                            <h2>¿Esta completamente seguro que desea eliminar el/los productos?</h2>
                             <div id="botoness">
                                 <Button variant="verde" onClick={eliminarProdSelec}>Aceptar</Button>
                                 <Button variant="rojo" onClick={cerrarModalEliminar}>Cancelar</Button>
