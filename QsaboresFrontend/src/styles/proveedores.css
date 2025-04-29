@@ -107,10 +107,19 @@
 
 .proveedores-tabla {
   width: 90%;
+  height: 50%;
   background-color: #C7DB9C;
-  padding: 15px;
+  padding: 0;
+  border: 15px solid #C7DB9C;
   border-radius: 15px;
   overflow-x: auto;
+
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.proveedpres-tabla::-webkit-scrollbar {
+  display: none; 
 }
   
 .tabla {
@@ -122,6 +131,12 @@
 .tabla thead {
   background-color:#C7DB9C;
   color: black;
+}
+
+.t  {
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
   
 .tabla th, .tabla td {
@@ -217,19 +232,19 @@
   justify-self: center;
 }
 
-.bloque {
+.bloque-p {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
 
-.bloque label {
+.bloque-p label {
   width: 30%;
   text-align: start;
 }
 
-.bloque input {
+.bloque-p input {
   width: 65%;
 }
 

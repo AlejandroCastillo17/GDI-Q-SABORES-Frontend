@@ -250,7 +250,7 @@ const Proveedores = () => {
                 <br />
                 <div className="proveedores-tabla">
                     <table class="tabla">
-                        <thead>
+                        <thead className='t'>
                             <tr>
                                 <th></th>
                                 <th>Nombre</th>
@@ -333,17 +333,17 @@ const Proveedores = () => {
                             <div className="modal-contenido-p">
                                 <form className="formulario-p" onSubmit={handleSubmit}>
 
-                                    <div className="bloque">
+                                    <div className="bloque-p">
                                         <label>Nombre</label>
                                         <input type="text" placeholder="Nombre del proovedor" name="nombre" value={datosForm.nombre} onChange={handleChange} />
                                     </div>
                                     
-                                    <div className="bloque">
+                                    <div className="bloque-p">
                                         <label>Telefono</label>
                                         <input type="tel" placeholder="Numero de contacto" name="telefono" value={datosForm.telefono} onChange={handleChange}  />
                                     </div>
 
-                                    <div className="bloque">
+                                    <div className="bloque-p">
                                         <label>Email</label>
                                         <input type="email" step="0.01" placeholder="Email del proveedor" name="email" value={datosForm.email} onChange={handleChange} />
                                     </div>

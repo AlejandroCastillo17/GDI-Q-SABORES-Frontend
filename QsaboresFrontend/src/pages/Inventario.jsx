@@ -233,6 +233,8 @@ const Inventario = () => {
         }));
     };
 
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
+
     // ///////////////////////////////////////////////////////////////////////////////////////////////////// 
 
     return (
@@ -249,10 +251,11 @@ const Inventario = () => {
                         <input type="text" />
                     </div>
                     <div id="cont-select">
-                        <select id="select">
-                            <option value="value1">Value 1</option>
-                            <option value="value2">Value 2</option>
-                            <option value="value3">Value 3</option>
+                        <select id="select" value={categoriaSeleccionada} onChange={(e) => setCategoriaSeleccionada(e.target.value)}>
+                            <option value="">Todas</option>
+                            <option value="Licores">Licores</option>
+                            <option value="Tabaco">Tabaco</option>
+                            <option value="Gaseosas">Gaseosas</option>
                         </select>
                     </div>
                     <Button variant="rojo" onClick={abrirModalEliminar}>
@@ -287,7 +290,7 @@ const Inventario = () => {
                 <br />
                 <div className="inventario-tabla">
                     <table className="tabla">
-                        <thead>
+                        <thead className="t">
                             <tr>
                                 <th></th>
                                 <th>Nombre</th>
@@ -297,76 +300,79 @@ const Inventario = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {productos.map((producto, index) => 
-                                <tr key={producto.id}>
-                                    <td>
-                                        <input 
-                                            type="checkbox" 
-                                            checked={producto.seleccionado || false} 
-                                            onChange={(e) => Seleccion(producto.id, e.target.checked)}
-                                        />
-                                    </td>
-                                    <td>
-                                        {productoEditando === producto.id ? 
-                                            (
-                                                <input
-                                                    className="inputs"
-                                                    type="text"
-                                                    name="nombre"
-                                                    value={datosEditados.nombre}
-                                                    onChange={handleChangeEdicion}
-                                                />
-                                            ) 
-                                            : 
-                                            (producto.nombre)
-                                        }
-                                    </td>
-                                    <td>
-                                        {productoEditando === producto.id ? 
-                                            (
-                                                <input
-                                                    className="inputs"
-                                                    type="number"
-                                                    name="cantidad"
-                                                    value={datosEditados.cantidad}
-                                                    onChange={handleChangeEdicion}
-                                                />
-                                            ) 
-                                            : 
-                                            (producto.cantidad)
-                                        }
-                                    </td>
-                                    <td>
-                                        {productoEditando === producto.id ? 
-                                            (
-                                                <input
-                                                    className="inputs"
-                                                    type="number"
-                                                    name="precio"
-                                                    value={datosEditados.precio}
-                                                    onChange={handleChangeEdicion}
-                                                />
-                                            ) 
-                                            : 
-                                            (producto.precio)
-                                        }
-                                    </td>
-                                    <td>
-                                        {productoEditando === producto.id ? 
-                                            (
-                                                <input
-                                                    className="inputs"
-                                                    type="text"
-                                                    name="proveedor"
-                                                    value={datosEditados.proveedor}
-                                                    onChange={handleChangeEdicion}
-                                                />
-                                            ) 
-                                            : 
-                                            (producto.proveedor)
-                                        }
-                                    </td>
-                                </tr>
+                            {(categoriaSeleccionada
+                                    ? productos.filter((p) => p.categoria === categoriaSeleccionada)
+                                    : productos
+                                ).map((producto, index) => 
+                                    <tr key={producto.id}>
+                                        <td>
+                                            <input 
+                                                type="checkbox" 
+                                                checked={producto.seleccionado || false} 
+                                                onChange={(e) => Seleccion(producto.id, e.target.checked)}
+                                            />
+                                        </td>
+                                        <td>
+                                            {productoEditando === producto.id ? 
+                                                (
+                                                    <input
+                                                        className="inputs"
+                                                        type="text"
+                                                        name="nombre"
+                                                        value={datosEditados.nombre}
+                                                        onChange={handleChangeEdicion}
+                                                    />
+                                                ) 
+                                                : 
+                                                (producto.nombre)
+                                            }
+                                        </td>
+                                        <td>
+                                            {productoEditando === producto.id ? 
+                                                (
+                                                    <input
+                                                        className="inputs"
+                                                        type="number"
+                                                        name="cantidad"
+                                                        value={datosEditados.cantidad}
+                                                        onChange={handleChangeEdicion}
+                                                    />
+                                                ) 
+                                                : 
+                                                (producto.cantidad)
+                                            }
+                                        </td>
+                                        <td>
+                                            {productoEditando === producto.id ? 
+                                                (
+                                                    <input
+                                                        className="inputs"
+                                                        type="number"
+                                                        name="precio"
+                                                        value={datosEditados.precio}
+                                                        onChange={handleChangeEdicion}
+                                                    />
+                                                ) 
+                                                : 
+                                                (producto.precio)
+                                            }
+                                        </td>
+                                        <td>
+                                            {productoEditando === producto.id ? 
+                                                (
+                                                    <input
+                                                        className="inputs"
+                                                        type="text"
+                                                        name="proveedor"
+                                                        value={datosEditados.proveedor}
+                                                        onChange={handleChangeEdicion}
+                                                    />
+                                                ) 
+                                                : 
+                                                (producto.proveedor)
+                                            }
+                                        </td>
+                                    </tr>
                             )}                           
                         </tbody>
                     </table>
@@ -423,9 +429,9 @@ const Inventario = () => {
                                         <label>Categoría</label>
                                         <div id="cont-select-form2">
                                             <select id="select-form" name="categoria" value={datosForm.categoria} onChange={handleChange}>
-                                                <option value="value1">Value 1</option>
-                                                <option value="value2">Value 2</option>
-                                                <option value="value3">Value 3</option>
+                                                <option value="Licores">Licores</option>
+                                                <option value="Tabaco">Tabaco</option>
+                                                <option value="Gaseosas">Gaseosas</option>
                                             </select>
                                         </div>
                                         
