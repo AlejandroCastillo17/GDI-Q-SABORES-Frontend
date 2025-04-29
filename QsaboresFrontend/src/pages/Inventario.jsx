@@ -1,13 +1,35 @@
 import "../styles/Inventario.css"
-import React, { useRef, useState } from 'react';
-import { useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Button from "../components/Button";
 import Buscador from "../components/buscador";
-
+import { consultaInventario } from "../js/inventario";
 
 const Inventario = () => {
+    const [productosData, setProductosData] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const obtenerInventario = async () => {
+          try {
+            const data = await consultaInventario();
+            if (Array.isArray(data)) {
+              setProductosData(data);
+            } else {
+              setError("Error al acceder al inventario");
+              console.error("Respuesta inesperada:", data);
+            }
+          } catch (err) {
+            setError("Error al consultar el inventario");
+            console.error("Error en la consulta:", err);
+          }
+        };
+      
+        obtenerInventario();
+    }, []);
+      
+    console.log(productosData)
 
     // Lista de productos para dinamizar la tabla 
 
@@ -72,8 +94,6 @@ const Inventario = () => {
         proveedor: '',
         categoria: ''
     });
-
-    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -288,7 +308,11 @@ const Inventario = () => {
                     </Button>
                 </div>
                 <br />
-                <div className="inventario-tabla">
+                <div className="scrollable-table">
+                  <div className="inventario-tabla">
+                    <table class="tabla">
+                        <thead>
+                  <div className="inventario-tabla">
                     <table className="tabla">
                         <thead className="t">
                             <tr>
@@ -300,82 +324,19 @@ const Inventario = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {(categoriaSeleccionada
-                                    ? productos.filter((p) => p.categoria === categoriaSeleccionada)
-                                    : productos
-                                ).map((producto, index) => 
-                                    <tr key={producto.id}>
-                                        <td>
-                                            <input 
-                                                type="checkbox" 
-                                                checked={producto.seleccionado || false} 
-                                                onChange={(e) => Seleccion(producto.id, e.target.checked)}
-                                            />
-                                        </td>
-                                        <td>
-                                            {productoEditando === producto.id ? 
-                                                (
-                                                    <input
-                                                        className="inputs"
-                                                        type="text"
-                                                        name="nombre"
-                                                        value={datosEditados.nombre}
-                                                        onChange={handleChangeEdicion}
-                                                    />
-                                                ) 
-                                                : 
-                                                (producto.nombre)
-                                            }
-                                        </td>
-                                        <td>
-                                            {productoEditando === producto.id ? 
-                                                (
-                                                    <input
-                                                        className="inputs"
-                                                        type="number"
-                                                        name="cantidad"
-                                                        value={datosEditados.cantidad}
-                                                        onChange={handleChangeEdicion}
-                                                    />
-                                                ) 
-                                                : 
-                                                (producto.cantidad)
-                                            }
-                                        </td>
-                                        <td>
-                                            {productoEditando === producto.id ? 
-                                                (
-                                                    <input
-                                                        className="inputs"
-                                                        type="number"
-                                                        name="precio"
-                                                        value={datosEditados.precio}
-                                                        onChange={handleChangeEdicion}
-                                                    />
-                                                ) 
-                                                : 
-                                                (producto.precio)
-                                            }
-                                        </td>
-                                        <td>
-                                            {productoEditando === producto.id ? 
-                                                (
-                                                    <input
-                                                        className="inputs"
-                                                        type="text"
-                                                        name="proveedor"
-                                                        value={datosEditados.proveedor}
-                                                        onChange={handleChangeEdicion}
-                                                    />
-                                                ) 
-                                                : 
-                                                (producto.proveedor)
-                                            }
-                                        </td>
-                                    </tr>
-                            )}                           
+                            {productosData.map((producto) => (
+                                <tr>
+                                    <td><input type="checkbox" value={producto.id}/></td>
+                                    <td><input type="text" className="table-items" value={producto.nombre} disabled /></td>
+                                    <td><input type="text" className="table-items" value={producto.categoria} disabled/></td>
+                                    <td><input type="text" className="table-items" value={producto.precio} disabled/></td>
+                                    <td><input type="text" className="table-items" value={producto.proveedor.nombre} disabled/></td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+                  </div>
+
                 </div>
                 {edicion && (
                     <div id="botoness-edicion">
