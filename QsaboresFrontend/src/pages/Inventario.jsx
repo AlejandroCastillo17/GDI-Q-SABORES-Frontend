@@ -1,15 +1,35 @@
 import "../styles/Inventario.css"
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Button from "../components/Button";
 import Buscador from "../components/buscador";
-
+import { consultaInventario } from "../js/inventario";
 
 const Inventario = () => {
+    const [productosData, setProductosData] = useState([]);
+    const [error, setError] = useState(null);
 
-    {/* Logica para verificar los cambios del formulario */}
-
+    useEffect(() => {
+        const obtenerInventario = async () => {
+          try {
+            const data = await consultaInventario();
+            if (Array.isArray(data)) {
+              setProductosData(data);
+            } else {
+              setError("Error al acceder al inventario");
+              console.error("Respuesta inesperada:", data);
+            }
+          } catch (err) {
+            setError("Error al consultar el inventario");
+            console.error("Error en la consulta:", err);
+          }
+        };
+      
+        obtenerInventario();
+    }, []);
+      
+    console.log(productosData)
     const [datosForm, setdatosForm] = useState({
         nombre: '',
         cantidad: '',
@@ -17,8 +37,6 @@ const Inventario = () => {
         proveedor: '',
         categoria: ''
     });
-
-    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -147,7 +165,8 @@ const Inventario = () => {
                     </Button>
                 </div>
                 <br />
-                <div className="inventario-tabla">
+                <div className="scrollable-table">
+                  <div className="inventario-tabla">
                     <table class="tabla">
                         <thead>
                             <tr>
@@ -159,50 +178,26 @@ const Inventario = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>BonBonBun</td>
-                                <td>x3</td>
-                                <td>300$</td>
-                                <td>Colombina</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>Chocorramo</td>
-                                <td>x12</td>
-                                <td>3500$</td>
-                                <td>Ramo</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>Pilsen</td>
-                                <td>x30</td>
-                                <td>4000$</td>
-                                <td>Bavaria</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>Arepas</td>
-                                <td>x23</td>
-                                <td>2000$</td>
-                                <td>Sonsonéa</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>DeTodito</td>
-                                <td>x25</td>
-                                <td>3000$</td>
-                                <td>FritoLay</td>
-                            </tr>
+                            {productosData.map((producto) => (
+                                <tr>
+                                    <td><input type="checkbox" value={producto.id}/></td>
+                                    <td><input type="text" className="table-items" value={producto.nombre} disabled /></td>
+                                    <td><input type="text" className="table-items" value={producto.categoria} disabled/></td>
+                                    <td><input type="text" className="table-items" value={producto.precio} disabled/></td>
+                                    <td><input type="text" className="table-items" value={producto.proveedor.nombre} disabled/></td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+                  </div>
+
                 </div>
                 
                 {/* Modal de agregar producto */}
                 {showModalAgregar && (
                     <div className="modal" onClick={cerrarModalAgregar}>
                         <div className="modal-contenedor" onClick={(e) => e.stopPropagation()}>
-                            <div className="modal-contenido">
+                            <div className="modal-contenidFo">
                             <div class="image-upload" id="previewContainer" style={{backgroundImage: imagen ? `url(${imagen})` : 'none', backgroundSize: imagen ? '100% 100%' : 'cover', }} >
                                 {!imagen && (
                                     <label htmlFor="imagenProducto" id="labelTexto">

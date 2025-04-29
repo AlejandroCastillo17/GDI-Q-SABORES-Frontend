@@ -9,6 +9,7 @@ const Sidebar = () => {
 
     const CerrarSesion = () => {
         navigate('/Login');
+        sessionStorage.removeItem("token");
     };
 
     return (

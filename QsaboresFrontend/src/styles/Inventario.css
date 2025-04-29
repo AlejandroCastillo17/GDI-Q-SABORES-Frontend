@@ -12,14 +12,13 @@
   font-family: monospace;
   font-size: 80px;
   color: black;
-  margin: 25px 0px;
+  margin:0;
 }
 
 #cont {
   width: 97%;
   display: flex;
   flex-direction: row;
-  gap: 15px;
   align-items: center;
   justify-content: center;
 }
@@ -194,7 +193,7 @@
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0px;
 }
 
 .error {
@@ -360,11 +359,14 @@
   width: 90%;
   background-color: #C7DB9C;
   padding: 15px;
+  padding-top: 0px;
   border-radius: 15px;
+
 }
   
 .tabla {
-  width: 100%;
+  min-width:40rem;
+  margin-top: 3rem;
   border-collapse: collapse;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: auto;
@@ -373,6 +375,9 @@
 .tabla thead {
   background-color:#C7DB9C;
   color: black;
+  position: sticky;
+  top: 0; 
+  z-index: 10;
 }
   
 .tabla th, .tabla td {
@@ -397,16 +402,38 @@
 .tabla tbody tr:hover td { 
   color: white;
 }
-  
-.tabla input[type="checkbox"] {
-  transform: scale(1.3);
-  accent-color: #FFF0BD; /* morado elegante */
-  cursor: pointer;
+
+/* Contenedor scrollable de la tabla */
+.scrollable-table {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 400px; /* Ajusta este valor según tu diseño */
+  overflow-y: auto;
+  overflow-x: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 0px;
+  margin:0   ;
 }
-  
-  /* Opcional: bordes suaves entre celdas */
-.tabla td, .tabla th {
-  border-bottom: 2px solid #333;
+
+.table-items{
+  all: unset; /* Quita todo el estilo heredado o predeterminado */
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
+  font: inherit;
+  box-sizing: border-box;
+  width: 9rem;
+  border: none;
 }
+
+  
+
+
   
 
