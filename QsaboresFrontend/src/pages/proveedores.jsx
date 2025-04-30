@@ -249,8 +249,8 @@ const Proveedores = () => {
                 </div>
                 <br />
                 <div className="proveedores-tabla">
-                    <table class="tabla">
-                        <thead className='t'>
+                    <table class="tabla-P">
+                        <thead className='t-P'>
                             <tr>
                                 <th></th>
                                 <th>Nombre</th>
