@@ -12,7 +12,7 @@
   font-family: monospace;
   font-size: 80px;
   color: black;
-  margin:0;
+  margin: 0;
 }
 
 #cont {
@@ -30,7 +30,7 @@
   align-items: center;
   gap: 5px;
   border: 2px solid #333;
-  background-color: #FFF0BD;
+  background-color: #fff0bd;
   border-radius: 10px;
 }
 
@@ -49,7 +49,7 @@
   padding-left: 5px;
 }
 
-#cont button{
+#cont button {
   font-size: 20px;
 }
 
@@ -61,22 +61,23 @@
 
 #cont-select select {
   width: 100%;
+  font-size: 23px;
   border: 2px solid #333;
   border-radius: 8px;
-  background-color: #fff0BD;
-  padding: 8px 30px 8px 10px;
+  background-color: #fff0bd;
   color: #333;
-  cursor: pointer; 
+  cursor: pointer;
+  padding: 8px 30px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: none; 
+  background-image: none;
 }
 
 #cont-select::after {
-  content: '▼';
+  content: "▼";
   font-size: 24px;
   color: #333;
   position: absolute;
@@ -86,18 +87,18 @@
   pointer-events: none;
 }
 
-#select option{
+#select option {
   background-color: #333;
-  color: #fff0BD;
+  color: #fff0bd;
 }
 
-#select:hover{
+#select:hover {
   background-color: #333;
-  color: #FFF0BD;
+  color: #fff0bd;
 }
 
 #cont-select:hover::after {
-  color:#FFF0BD; 
+  color: #fff0bd;
 }
 
 /* Estilos del modal */
@@ -116,7 +117,7 @@
 }
 
 .modal-contenedor {
-  background-color: #FFF0BD;
+  background-color: #fff0bd;
   width: 50%;
   height: 85%;
   max-width: 90%;
@@ -129,17 +130,14 @@
 }
 
 .modal-contenido {
-  background: #C7DB9C;
+  background: #c7db9c;
   padding: 20px;
   border-radius: 12px;
   width: 90%;
-  height: 92%;
+  height: 90%;
   overflow: none;
   position: relative;
-}
-
-.modal-contenido div {
-  justify-self: center;
+  text-align: center;
 }
 
 .bloque {
@@ -151,17 +149,16 @@
 
 .bloque label {
   width: 30%;
-  text-align: start;
+  text-align: center;
 }
 
 .bloque input {
   width: 65%;
 }
 
-
 .image-upload {
   background: #d9d9d9;
-  height: 150px;
+  height: 130px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,7 +166,7 @@
   border-radius: 5px;
   cursor: pointer;
   position: relative;
-  width: 60%;
+  width: 100%;
   cursor: pointer;
   position: relative;
   background-size: cover;
@@ -183,14 +180,13 @@
 }
 
 .image-upload label {
-  font-size: 25px;
+  font-size: 30px;
   color: #777;
   cursor: pointer;
   z-index: 2;
   background-color: rgba(255, 255, 255, 0.6);
-  padding: 5px 5px;
+  padding: 5px 15px;
   border-radius: 10px;
-  margin: 0 30px;
 }
 
 .formulario {
@@ -209,52 +205,51 @@
 
 .formulario label {
   font-weight: bold;
-  color:#333;
+  color: #333;
   font-family: sans-serif;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .formulario input {
   padding: 10px 5px;
   border-radius: 5px;
   border: none;
-  background-color: #FFF0BD;
+  background-color: #fff0bd;
   color: #333;
   width: 50%;
-  font-size: 18px;
+  font-size: 20px;
   outline: none;
 }
 
 .formulario input:hover {
-  background-color: gray;
-  color: #ffffff;
+  background-color: #333;
+  color: #fff0bd;
 }
 
 #cont-select-form select {
   width: 100%;
-  font-size: 18px;
+  font-size: 23px;
   border-radius: 8px;
-  background-color: #fff0BD;
+  background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 246px 10px 10px; 
-  margin-top: 1px;
+  padding: 8px 220px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: none; 
+  background-image: none;
 }
 
 #cont-select-form::after {
-  content: '▼';
+  content: "▼";
   font-size: 24px;
   color: #333;
   position: absolute;
   right: 90px;
   top: 68%;
-  transform: translateY(-80%);
+  transform: translateY(-99%);
   pointer-events: none;
 }
 
@@ -264,85 +259,78 @@
   border: none;
   outline: none;
   color: #333;
-  background-color: #FFF0BD;
-  width: 60%;
+  background-color: #fff0bd;
+  width: 50%;
   font-size: 20px;
 }
 
-#select-form option{
+#select-form option {
   background-color: #333;
-  color: #fff0BD;
+  color: #fff0bd;
 }
 
-#select-form:hover{
-  background-color: gray;
-  color: #ffffff;
+#select-form:hover {
+  background-color: #333;
+  color: #fff0bd;
 }
 
 #cont-select-form:hover::after {
-  color:#ffffff; 
+  color: #fff0bd;
 }
 
 #cont-select-form2 select {
   width: 100%;
-  font-size: 18px;
+  font-size: 23px;
   border-radius: 8px;
-  background-color: #fff0BD;
+  background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 226px 10px 10px; 
-  margin-top: 1px;
+  padding: 8px 220px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: none; 
+  background-image: none;
 }
 
 #cont-select-form2::after {
-  content: '▼';
+  content: "▼";
   font-size: 24px;
   color: #333;
   position: absolute;
   right: 90px;
   top: 78%;
-  transform: translateY(-99%);
+  transform: translateY(-98%);
   pointer-events: none;
 }
 
 #cont-select-form2:hover::after {
-  color:#ffffff; 
+  color: #fff0bd;
 }
 
 .botones {
   display: flex;
   justify-content: center;
   gap: 50px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
-.botones .boton.rojo, .botones .boton.verde {
-  font-size: 19px;
+.botones .boton.rojo,
+.botones .boton.verde {
+  font-size: 20px;
   outline: none;
 }
-
-.boton.rojo, .boton.verde, .boton.azul {
-  outline: none;
-}
-
-/* Modal Eliminar*/
 
 .modal-contenedor-eliminar {
   width: 620px;
   height: 240px;
-  background-color: #FFF0BD;
+  background-color: #fff0bd;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border-radius: 20px;
 }
-
 
 .modal-contenedor-eliminar h2 {
   width: 500px;
@@ -357,7 +345,7 @@
 }
 
 #botoness {
-  margin-top: 10px;
+  margin-top: 25px;
   display: flex;
   flex-direction: row;
   gap: 30px;
@@ -365,83 +353,53 @@
   text-align: center;
 }
 
-#botoness-edicion {
-  width: 100%;
-  margin-right: 75px;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  justify-content: right;
-  text-align: center;
-}
-
-#botoness-edicion .boton.rojo, #botoness-edicion .boton.verde {
-  font-size: 15px;
-}
-
 /* Estilos de la tabla */
 
 .inventario-tabla {
   width: 90%;
-  height: 50%;
-  background-color: #C7DB9C;
+  background-color: #c7db9c;
   padding: 15px;
   padding-top: 0px;
   border-radius: 15px;
-
 }
-  
+
 .tabla {
-  min-width:40rem;
+  min-width: 40rem;
   margin-top: 3rem;
   border-collapse: collapse;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow: auto;
 }
-  
+
 .tabla thead {
-  background-color:#C7DB9C;
+  background-color: #c7db9c;
   color: black;
   position: sticky;
-  top: 0; 
+  top: 0;
   z-index: 10;
 }
-  
-.tabla th, .tabla td {
+
+.tabla th,
+.tabla td {
   padding: 12px 14px;
   text-align: left;
 }
 
 .tabla td {
-  color:black;
+  color: black;
   font-weight: 500;
 }
 
-.inputs {
-  margin: 0;
-  padding: 0;
-  width: 180px;
-  height: 30px;
-  font-size: 1rem;
-  background-color: #FFF0BD;
-  color: #333;
-  font-weight: 600;
-  outline: none;
-  font-family: Arial, Helvetica, sans-serif;
-  border-radius: 5px;
-  border: 2px solid #333;
-}
-  
 .tabla tbody tr {
   background-color: #ffffff;
   transition: background-color 0.3s ease;
 }
-  
+
 .tabla tbody tr:hover {
   background-color: gray;
 }
 
-.tabla tbody tr:hover td { 
+.tabla tbody tr:hover td {
   color: white;
 }
 
@@ -458,10 +416,10 @@
   border-radius: 10px;
   margin-top: 20px;
   padding: 0px;
-  margin:0   ;
+  margin: 0;
 }
 
-.table-items{
+.table-items {
   all: unset; /* Quita todo el estilo heredado o predeterminado */
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -473,9 +431,3 @@
   width: 9rem;
   border: none;
 }
-
-  
-
-
-  
-
