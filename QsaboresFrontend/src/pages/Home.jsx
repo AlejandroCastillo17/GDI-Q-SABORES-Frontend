@@ -2,6 +2,7 @@ import "../styles/Home.css";
 import Buscador from "../components/buscador";
 import Button from "../components/Button";
 import CardP from "../components/cardP";
+import Alerta from "../components/AlertaCantidades";
 
 const Home = () => {
   const productos = [
@@ -18,6 +19,7 @@ const Home = () => {
   ];
   return (
     <section className="home">
+      <Alerta />
       <section className="contener-principal">
         <Buscador />
 

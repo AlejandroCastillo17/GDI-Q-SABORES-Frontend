@@ -1,4 +1,6 @@
 import React from 'react';
+import  "../styles/Gastos.css";
+import Alerta from '../components/AlertaCantidades';
 
 const Gastos = () => {
    return (

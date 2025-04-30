@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-
 import Login from './pages/Login'
 import Home from './pages/Home';
 import Inventario from './pages/Inventario';
@@ -13,8 +12,8 @@ import Gastos from './pages/Gastos';
 import Compras from './pages/Compras';
 
 function App() {
-
   const [Autenticacion, setAutenticacion] = useState(true);//Cambiar, estaba en false el useState
+
 
   return (
     <>
