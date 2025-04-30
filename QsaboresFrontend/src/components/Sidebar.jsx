@@ -12,6 +12,7 @@ const Sidebar = () => {
 
     const CerrarSesion = () => {
         navigate('/Login');
+        sessionStorage.removeItem("token");
     };
 
     const abrirmodal = () => {

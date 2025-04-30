@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-
 import Login from './pages/Login'
 import Home from './pages/Home';
 import Inventario from './pages/Inventario';
@@ -13,7 +12,7 @@ import './App.css'
 function App() {
 
   const [Autenticacion, setAutenticacion] = useState(false);  
-
+  
   return (
     <>
       <div id='app'>
