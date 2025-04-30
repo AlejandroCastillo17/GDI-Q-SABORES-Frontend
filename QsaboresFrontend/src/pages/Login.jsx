@@ -19,10 +19,7 @@ const Login = ({setAutenticacion}) => {
         if(response.status == 200) {
             navigate('/');
             setAutenticacion(true);
-        }  
-        navigate('/');
-        setAutenticacion(true);
-        
+        }
     };
 
     const [verContraseña, setverContraseña] = useState(false);
