@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '../components/Button';
 import '../styles/Egresos.css';
-import  "../styles/Gastos.css";
 import { useState } from 'react';
 
 const Egresos = () => {
@@ -50,11 +49,11 @@ const Egresos = () => {
                     </div>
                     <br />                
 
-                    <section id='botones-cambiar-tabla'>
-                        <button variant="verde" onClick={() => setSrcIframe('/gastos')}>
+                    <section id='botones-tablas-egresos'>
+                        <button className="button-cambiar-tablas-egresos" onClick={() => setSrcIframe('/gastos')}>
                         Ver Gastos
                         </button>
-                        <button variant="verde" onClick={() => setSrcIframe('/compras')}>
+                        <button className="button-cambiar-tablas-egresos" onClick={() => setSrcIframe('/compras')}>
                             Ver Compras
                         </button>
                     </section>
@@ -63,7 +62,7 @@ const Egresos = () => {
                             title="contenido-egresos"
                             src={srcIframe}
                             frameborder="0"
-                            width="100%"
+                            width="98%"
                             height="100%"
                         >
                             Tu navegador no soporta iframes

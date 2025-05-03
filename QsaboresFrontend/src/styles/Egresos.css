@@ -116,9 +116,99 @@
   }
   
   
-  /* Estilos de la tabla */
+  
+  #botones-tablas-egresos {
+  margin-top: 0%;
+  width: 50%;
+  gap: 10%;
+  display: flex ;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#botones-tablas-egresos > .button-cambiar-tablas-egresos:active {
+  background-color: yellowgreen;
+}
+
+
 
 #tablas-egresos {
+  margin-top: 0.5%;
   width: 100%;
-  height: 100%;
+  height: 90%;
+}
+
+/* Estilos de la tabla */
+
+.egresos-tabla-section {
+  width: 95%;
+  background-color: #C7DB9C;
+  padding: 1.5%;
+  border-radius: 15px;
+  margin-right: 3%;
+  overflow-x: auto;
+}
+  
+.egresos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+  
+.egresos-tabla thead {
+  background-color:#C7DB9C;
+  color: black;
+}
+  
+.egresos-tabla td {
+  padding: 12px 10px;
+  text-align: center;
+
+}
+
+.egresos-tabla > th {
+  padding: 0%;
+  text-align: center;
+}
+
+.egresos-tabla td {
+  color:black;
+  font-weight: 500;
+}
+  
+.egresos-tabla tbody tr {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+  
+.egresos-tabla tbody tr:hover {
+  background-color: gray;
+}
+
+.egresos-tabla tbody tr:hover td { 
+  color: white;
+}
+  
+.egresos-tabla input[type="checkbox"] {
+  transform: scale(1.3);
+  accent-color: #FFF0BD; /* morado elegante */
+  cursor: pointer;
+}
+  
+  /* Opcional: bordes suaves entre celdas */
+.egresos-tabla td, .egresos-tabla th {
+  border-bottom: 2px solid #333;
+}
+  
+.egresos-tabla-section > h2 {
+  margin: 0%;
+  font-family: monospace;
+  font-size: 300%;
+  color: black;
+  padding: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 }

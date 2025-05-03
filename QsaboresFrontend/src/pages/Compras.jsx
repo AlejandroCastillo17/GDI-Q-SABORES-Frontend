@@ -3,74 +3,83 @@ import React from 'react';
 const Compras = () => {
    return (
      <>
-         <div className="compras-tabla-section">
-                  <h2>Compras</h2>
-                  <table class="compras-tabla">
+         <div className="egresos-tabla-section">
+                  <h2>COMPRAS</h2>
+                  <table class="egresos-tabla">
                         <thead>
                            <tr>
                               <th></th>
                               <th>Nombre</th>
                               <th>Precio</th>
-                              <th>Estado</th>
-                              <th>Fecha de pago</th>
+                              <th>Cantidad</th>
+                              <th>Proveedor</th>
+                              <th>Fecha de pedido</th>
                               
                            </tr>
                         </thead>
                         <tbody>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Arriendo</td>
+                              <td>Bon bon bum</td>
                               <td>500.000</td>
-                              <td>Fijo</td>
+                              <td>500</td>
+                              <td>Colombina</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Arriendo</td>
+                              <td>Bon bon bum</td>
                               <td>500.000</td>
-                              <td>Fijo</td>
+                              <td>500</td>
+                              <td>Colombina</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Servicios</td>
-                              <td>80.000</td>
-                              <td>Fijo</td>
+                              <td>Yupi</td>
+                              <td>100.000</td>
+                              <td>300</td>
+                              <td>Yupi</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Arreglo PC</td>
-                              <td>500.000</td>
-                              <td>Variable</td>
+                              <td>Yupi</td>
+                              <td>100.000</td>
+                              <td>300</td>
+                              <td>Yupi</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Arriendo</td>
-                              <td>500.000</td>
-                              <td>Fijo</td>
+                              <td>Chocoramo</td>
+                              <td>600.000</td>
+                              <td>300</td>
+                              <td>Yupi</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Arriendo</td>
-                              <td>500.000</td>
-                              <td>Fijo</td>
+                              <td>Chocoramo</td>
+                              <td>600.000</td>
+                              <td>300</td>
+                              <td>Yupi</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Servicios</td>
-                              <td>80.000</td>
-                              <td>Fijo</td>
+                              <td>Gel Bachué</td>
+                              <td>1.000.000</td>
+                              <td>500</td>
+                              <td>Bachué</td>
                               <td>01/05/2025</td>
                            </tr>
                            <tr>
                               <td><input type="checkbox" /></td>
-                              <td>Arreglo PC</td>
-                              <td>500.000</td>
-                              <td>Variable</td>
+                              <td>Gel Bachué</td>
+                              <td>1.000.000</td>
+                              <td>500</td>
+                              <td>Bachué</td>
                               <td>01/05/2025</td>
                            </tr>
                         </tbody>

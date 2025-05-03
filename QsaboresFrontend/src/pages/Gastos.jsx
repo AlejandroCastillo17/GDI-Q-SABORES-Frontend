@@ -1,13 +1,13 @@
 import React from 'react';
-import  "../styles/Gastos.css";
 import Alerta from '../components/AlertaCantidades';
+//import  "../styles/Gastos.css";
 
 const Gastos = () => {
    return (
      <>
-         <div className="gastos-tabla-section">
+         <div className="egresos-tabla-section">
                   <h2>GASTOS</h2>
-                  <table class="gastos-tabla">
+                  <table class="egresos-tabla">
                         <thead>
                            <tr>
                               <th></th>
