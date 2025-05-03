@@ -181,6 +181,7 @@ const Proveedores = () => {
         setProveedorEditando(null);
         setDatosEditados({});
         ocultarEdicion();
+        toast.info("Cancelado con exito!");
     };
     
     const GuardarEdicion = () => {
@@ -193,6 +194,7 @@ const Proveedores = () => {
         setProveedorEditando(null);
         setDatosEditados({});
         ocultarEdicion();
+        toast.success("Guardado con exito!");
     };
     
     const handleChangeEdicion = (e) => {

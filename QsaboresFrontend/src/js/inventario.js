@@ -16,3 +16,6 @@ export const consultaInventario = async () => {
     return error.response || error.message;
   }
 };
+
+
+

@@ -118,7 +118,7 @@
   -ms-overflow-style: none; 
 }
 
-.proveedpres-tabla::-webkit-scrollbar {
+.proveedores-tabla::-webkit-scrollbar {
   display: none; 
 }
   
