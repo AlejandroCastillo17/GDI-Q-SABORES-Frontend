@@ -12,13 +12,14 @@
   font-family: monospace;
   font-size: 80px;
   color: black;
-  margin: 0;
+  margin: 25px 0px;
 }
 
 #cont {
   width: 97%;
   display: flex;
   flex-direction: row;
+  gap: 15px;
   align-items: center;
   justify-content: center;
 }
@@ -149,7 +150,7 @@
 
 .bloque label {
   width: 30%;
-  text-align: center;
+  text-align: start;
 }
 
 .bloque input {
@@ -158,7 +159,7 @@
 
 .image-upload {
   background: #d9d9d9;
-  height: 130px;
+  height: 170px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -166,7 +167,7 @@
   border-radius: 5px;
   cursor: pointer;
   position: relative;
-  width: 100%;
+  width: 50%;
   cursor: pointer;
   position: relative;
   background-size: cover;
@@ -180,19 +181,19 @@
 }
 
 .image-upload label {
-  font-size: 30px;
+  font-size: 20px;
   color: #777;
   cursor: pointer;
   z-index: 2;
   background-color: rgba(255, 255, 255, 0.6);
-  padding: 5px 15px;
+  padding: 5px 0px;
   border-radius: 10px;
 }
 
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 0px;
+  gap: 10px;
 }
 
 .error {
@@ -233,7 +234,7 @@
   background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 220px 8px 10px;
+  padding: 8px 200px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
@@ -249,7 +250,7 @@
   position: absolute;
   right: 90px;
   top: 68%;
-  transform: translateY(-99%);
+  transform: translateY(-120%);
   pointer-events: none;
 }
 
@@ -285,7 +286,7 @@
   background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 220px 8px 10px;
+  padding: 8px 235px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
@@ -301,7 +302,7 @@
   position: absolute;
   right: 90px;
   top: 78%;
-  transform: translateY(-98%);
+  transform: translateY(-120%);
   pointer-events: none;
 }
 
@@ -319,6 +320,14 @@
 .botones .boton.rojo,
 .botones .boton.verde {
   font-size: 20px;
+  outline: none;
+}
+
+#cont .boton.rojo, #cont .boton.verde, #cont .boton.azul {
+  outline: none;
+}
+
+#botoness-edicion .boton.rojo, #botoness-edicion .boton.verde {
   outline: none;
 }
 
@@ -357,36 +366,46 @@
 
 .inventario-tabla {
   width: 90%;
-  background-color: #c7db9c;
-  padding: 15px;
-  padding-top: 0px;
+  height: 47%;
+  background-color: #C7DB9C;
+  padding: 0;
+  border: 15px solid #C7DB9C;
   border-radius: 15px;
+  overflow-x: auto;
+
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.inventario-tabla::-webkit-scrollbar {
+  display: none; 
 }
 
 .tabla {
-  min-width: 40rem;
-  margin-top: 3rem;
+  width: 100%;
   border-collapse: collapse;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  overflow: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .tabla thead {
-  background-color: #c7db9c;
+  background-color:#C7DB9C;
   color: black;
+}
+
+.t  {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 9;
 }
 
 .tabla th,
 .tabla td {
-  padding: 12px 14px;
-  text-align: left;
+  padding: 12px 10px;
+  text-align: center;
 }
 
 .tabla td {
-  color: black;
+  color:black;
   font-weight: 500;
 }
 
@@ -403,31 +422,42 @@
   color: white;
 }
 
-/* Contenedor scrollable de la tabla */
-.scrollable-table {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-height: 400px; /* Ajusta este valor según tu diseño */
-  overflow-y: auto;
-  overflow-x: auto;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  margin-top: 20px;
-  padding: 0px;
-  margin: 0;
+.tabla input[type="checkbox"] {
+  transform: scale(1.3);
+  accent-color: #FFF0BD; 
+  cursor: pointer;
+}
+  
+.tabla td, .tabla-P th {
+  border-bottom: 2px solid #333;
 }
 
-.table-items {
-  all: unset; /* Quita todo el estilo heredado o predeterminado */
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-  color: black;
-  font: inherit;
-  box-sizing: border-box;
-  width: 9rem;
-  border: none;
+.inputs {
+  margin: 0;
+  padding: 0;
+  width: 180px;
+  height: 30px;
+  font-size: 1rem;
+  background-color: #FFF0BD;
+  color: #333;
+  font-weight: 600;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 5px;
+  border: 2px solid #333;
+}
+
+#botoness-edicion {
+  width: 100%;
+  margin-right: 75px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: right;
+  text-align: center;
+}
+
+#botoness-edicion .boton.verde, #botoness-edicion .boton.rojo{
+  font-size: 15px;
 }

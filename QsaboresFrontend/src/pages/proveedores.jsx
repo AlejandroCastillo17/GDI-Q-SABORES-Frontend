@@ -181,6 +181,7 @@ const Proveedores = () => {
         setProveedorEditando(null);
         setDatosEditados({});
         ocultarEdicion();
+        toast.info("Cancelado con exito!");
     };
     
     const GuardarEdicion = () => {
@@ -193,6 +194,7 @@ const Proveedores = () => {
         setProveedorEditando(null);
         setDatosEditados({});
         ocultarEdicion();
+        toast.success("Guardado con exito!");
     };
     
     const handleChangeEdicion = (e) => {
@@ -249,8 +251,8 @@ const Proveedores = () => {
                 </div>
                 <br />
                 <div className="proveedores-tabla">
-                    <table class="tabla">
-                        <thead className='t'>
+                    <table class="tabla-P">
+                        <thead className='t-P'>
                             <tr>
                                 <th></th>
                                 <th>Nombre</th>
