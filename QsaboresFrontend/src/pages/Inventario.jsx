@@ -337,7 +337,7 @@ const Inventario = () => {
                             {(categoriaSeleccionada
                                 ? productosData.filter((p) => p.categoria === categoriaSeleccionada)
                                 : productosData
-                                ).map((producto, index) => 
+                                ).map((producto) => 
                                     <tr key={producto.id}>
                                         <td>
                                             <input 
@@ -499,7 +499,7 @@ const Inventario = () => {
                                             <select
                                                 id="select-form"
                                                 name="categoria"
-                                                value={datosForm.categoria}
+                                               
                                                 onChange={handleChange}
                                             >
                                                 <option value="ropa">Ropa</option>
