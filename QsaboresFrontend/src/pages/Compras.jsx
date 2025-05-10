@@ -1,12 +1,12 @@
 import React from 'react';
+import "../styles/Compras.css"
 
 const Compras = () => {
    return (
      <>
-         <div className="egresos-tabla-section">
-                  <h2>COMPRAS</h2>
-                  <table class="egresos-tabla">
-                        <thead>
+         <div className="compras-tabla">
+                  <table class="tabla">
+                        <thead className='t'>
                            <tr>
                               <th></th>
                               <th>Nombre</th>
