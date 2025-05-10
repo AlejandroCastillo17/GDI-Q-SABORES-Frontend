@@ -374,12 +374,12 @@ const Inventario = () => {
                                                         className="inputs"
                                                         type="text"
                                                         name="categoria"
-                                                        value={datosEditados.categoria}
+                                                        value={datosEditados.categoria.nombre}
                                                         onChange={handleChangeEdicion}
                                                     />
                                                 ) 
                                                 : 
-                                                (producto.categoria)
+                                                (producto.categoria.nombre)
                                             }
                                         </td>
                                         <td>
