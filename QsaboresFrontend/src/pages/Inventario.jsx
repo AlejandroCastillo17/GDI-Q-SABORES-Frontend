@@ -5,12 +5,16 @@ import "react-toastify/dist/ReactToastify.css";
 import Button from "../components/Button";
 import Buscador from "../components/buscador";
 import { consultaInventario } from "../js/inventario";
+import { consultaProveedores } from "../js/proveedores";
+
 
 const Inventario = () => {
 
-    const [productosData, setProductosData] = useState([]);
-    const [error, setError] = useState(null);
+    const [cargando, setCargando] = useState(true);
 
+    const [productosData, setProductosData] = useState([]);
+    const [proveedoresData, setProveedoresData] = useState([])
+    const [error, setError] = useState(null);
     useEffect(() => {
         const obtenerInventario = async () => {
         try {
@@ -24,13 +28,34 @@ const Inventario = () => {
         } catch (err) {
             setError("Error al consultar el inventario");
             console.error("Error en la consulta:", err);
+        } finally {
+            setCargando(false);
         }
         };
 
+        const obtenerProveedores =  async () => {
+            try{
+                const provedoresD = await consultaProveedores();
+                if (Array.isArray(provedoresD)){
+                    setProveedoresData(provedoresD)
+                }
+                else{
+                    setError("Error al acceder al inventario");
+                    console.error("Respuesta inesperada:", provedoresD);
+                }
+            }
+            catch (error){
+                setError("Error al consultar el inventario");
+                console.error("Error en la consulta:", error);
+            }
+        };
         obtenerInventario();
+        obtenerProveedores();
+
     }, []);
 
     console.log(productosData);
+    console.log("esto: ",proveedoresData);
     
     // logica para eliminar los porductos que se seleccionen
 
@@ -199,7 +224,7 @@ const Inventario = () => {
 
     const GuardarEdicion = () => {
         setProductosData((productosActuales) =>
-        productosActuales.map((prod) =>
+            productosActuales.map((prod) =>
             prod.id === productoEditando ? datosEditados : prod
         )
         );
@@ -218,6 +243,18 @@ const Inventario = () => {
     };
 
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+
+  // /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if (cargando) {
+        return (
+            <div className="modal-cargando">
+                <div className="modal-contenido-c">
+                    <div class='loader'></div>
+                </div>
+            </div>
+        );
+    }
 
   // /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -344,11 +381,11 @@ const Inventario = () => {
                                                 type="checkbox" 
                                                 checked={seleccionados.includes(producto.id)}
                                                 onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    setSeleccionados([...seleccionados, producto.id]);
-                                                } else {
-                                                    setSeleccionados(seleccionados.filter(id => id !== producto.id));
-                                                }
+                                                    if (e.target.checked) {
+                                                        setSeleccionados([...seleccionados, producto.id]);
+                                                    } else {
+                                                        setSeleccionados(seleccionados.filter(id => id !== producto.id));
+                                                    }
                                                 }}
                                             />
                                         </td>
@@ -486,9 +523,11 @@ const Inventario = () => {
                                                 value={datosForm.proveedor.nom}
                                                 onChange={handleChange}
                                             >
-                                                <option value="Colombina">Colombina</option>
-                                                <option value="Bavaria">Bavaria</option>
-                                                <option value="FritoLay">FritoLay</option>
+                                                { proveedoresData.map ((provedor) => (
+                                                    <option key={provedor.id} value={provedor.id}>
+                                                        {provedor.nombre}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
