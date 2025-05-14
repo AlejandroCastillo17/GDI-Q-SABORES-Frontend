@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import Buscador from "../components/buscador";
 import { consultaInventario } from "../js/inventario";
 import { consultaProveedores } from "../js/proveedores";
+import { consultaCategoria } from "../js/categoria";
 
 
 const Inventario = () => {
@@ -14,8 +15,12 @@ const Inventario = () => {
 
     const [productosData, setProductosData] = useState([]);
     const [proveedoresData, setProveedoresData] = useState([])
+    const [categoriaData, setCategoriaData] = useState([])
+
     const [error, setError] = useState(null);
+
     useEffect(() => {
+
         const obtenerInventario = async () => {
         try {
             const data = await consultaInventario();
@@ -40,22 +45,43 @@ const Inventario = () => {
                     setProveedoresData(provedoresD)
                 }
                 else{
-                    setError("Error al acceder al inventario");
+                    setError("Error al acceder a los proveedores");
                     console.error("Respuesta inesperada:", provedoresD);
                 }
             }
             catch (error){
-                setError("Error al consultar el inventario");
+                setError("Error al consultar los proveedores");
                 console.error("Error en la consulta:", error);
             }
         };
+
+        const obtenerCategoria =  async () => {
+            try{
+                const categorias = await consultaCategoria();
+                if (Array.isArray(categorias)){
+                    setCategoriaData(categorias)
+                }
+                else{
+                    setError("Error al acceder a la categoria");
+                    console.error("Respuesta inesperada:", categorias);
+                }
+            }
+            catch (error){
+                setError("Error al consultar las categorias");
+                console.error("Error en la consulta:", error);
+            }
+        };
+
         obtenerInventario();
         obtenerProveedores();
+        obtenerCategoria();
+        
 
     }, []);
 
     console.log(productosData);
     console.log("esto: ",proveedoresData);
+    console.log(categoriaData);
     
     // logica para eliminar los porductos que se seleccionen
 
@@ -71,6 +97,7 @@ const Inventario = () => {
         id: "",
         nombre: "",
         precio: "",
+        tope: "",
         proveedor: "",
         categoria: "",
     });
@@ -84,14 +111,14 @@ const Inventario = () => {
         e.preventDefault();
 
         // Validación de campos
-        const { nombre, precio, proveedor, categoria } = datosForm;
+        const { nombre, precio, tope, proveedor, categoria } = datosForm;
 
         if (!imagen) {
             setError("Debe agregar una imagen del producto.");
             return;
         }
 
-        if (!nombre ||  !precio || !proveedor || !categoria) {
+        if (!nombre ||  !precio || !tope || !proveedor || !categoria) {
             setError("Por favor complete todos los campos.");
             return;
         }
@@ -102,6 +129,7 @@ const Inventario = () => {
             id: productosData.length + 1,
             nombre,
             precio,
+            tope,
             proveedor,
             categoria,
             imagen
@@ -117,6 +145,7 @@ const Inventario = () => {
         setdatosForm({
             nombre: "",
             precio: "",
+            tope: "",
             proveedor: "",
             categoria: ""
         });
@@ -515,6 +544,17 @@ const Inventario = () => {
                                     </div>
 
                                     <div className="bloque">
+                                        <label>Tope minimo</label>
+                                        <input
+                                            type="number"
+                                            placeholder="Cantidad minima"
+                                            name="tope"
+                                            value={datosForm.tope}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="bloque">
                                         <label>Proveedor</label>
                                         <div id="cont-select-form">
                                             <select
@@ -541,10 +581,11 @@ const Inventario = () => {
                                                
                                                 onChange={handleChange}
                                             >
-                                                <option value="ropa">Ropa</option>
-                                                <option value="licor">Licor</option>
-                                                <option value="aseo">Aseo</option>
-                                                <option value="mekato">Mekato</option>
+                                                { categoriaData.map ((categoria) => (
+                                                    <option key={categoria.id} value={categoria.id}>
+                                                        {categoria.nombre}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
