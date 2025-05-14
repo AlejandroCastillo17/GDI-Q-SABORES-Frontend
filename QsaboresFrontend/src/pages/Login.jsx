@@ -11,18 +11,34 @@ const Login = ({setAutenticacion}) => {
      
     const navigate = useNavigate();
 
+    const [cargando, setCargando] = useState(false);
+
+    const [error, setError] = useState(null);
+
     const ValidacionLogin = async () => {
+
+        setCargando(true);
         
         setAutenticacion(false);
         const response = await authentication({contrasena: document.getElementById("contrasena").value})
 
-        if(response.status == 200 || true) {//quitar 'true' esto es para que no me esté pidiendo token de auth 
+        if(response.status == 200 ) {//quitar 'true' esto es para que no me esté pidiendo token de auth 
             navigate('/');
             setAutenticacion(true);
+            setCargando(false)
+        }else {
+            setError("Contraseña incorrecta, verifique por favor.");
+            setCargando(false)
         }
     };
 
     const [verContraseña, setverContraseña] = useState(false);
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     return (
         <section className="login">
@@ -63,11 +79,24 @@ const Login = ({setAutenticacion}) => {
                             <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                         </svg>}
                     </span>
+                    
                 </div>
+                {error && (<h3 className="error-login">{error}</h3>)}
                 <br />
                 <button onClick={ValidacionLogin}>Iniciar Sesion</button>
             </div>
+
+            {cargando && (
+                <div className="modal-cargando-l">
+                    <div className="modal-contenido-l">
+                        <div class='loader-l'></div>
+                    </div>
+                </div>
+            )};
+
         </section>
+
+        
     );
 };
 

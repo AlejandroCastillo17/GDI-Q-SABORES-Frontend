@@ -16,3 +16,4 @@ export const consultaProveedores = async () => {
     return error.response || error.message;
   }
 };
+
