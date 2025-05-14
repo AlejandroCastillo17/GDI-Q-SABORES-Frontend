@@ -365,6 +365,11 @@
   text-align: center;
 }
 
+#botoness .boton.rojo,
+#botoness .boton.verde {
+  outline: none;
+}
+
 /* Estilos de la tabla */
 
 .inventario-tabla {

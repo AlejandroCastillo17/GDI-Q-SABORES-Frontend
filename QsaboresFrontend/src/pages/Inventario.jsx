@@ -214,25 +214,23 @@ const Inventario = () => {
     };
 
     const eliminarProdSelec = async (e) => {
+
         try {
-            console.log("llego hasta el try")
-            const data= {
-                "ids":seleccionados
-            }
+            const data= {"ids":seleccionados}
             const response = await eliminarProductos(data);
             if (response.status === 204) {
                 toast.success("¡Productos eliminados exitosamente!");
                 obtenerInventario();
             }
-            console.log("este es el status", response.status)
         } catch (error) {
             console.error("Excepcion al eliminar el producto", error);
             toast.error("Error al eliminar el producto");
         }
+
         cerrarModalEliminar();
+
     };
 
-        console.log("estos son los seleccionados",seleccionados)
     const cerrarModalEliminar = () => {
         setShowModalEliminar(false);
     };
