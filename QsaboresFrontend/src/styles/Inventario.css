@@ -234,7 +234,7 @@
   background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 160px 8px 10px;
+  padding: 8px 65px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
@@ -250,7 +250,7 @@
   position: absolute;
   right: 90px;
   top: 68%;
-  transform: translateY(-70%);
+  transform: translateY(-80%);
   pointer-events: none;
 }
 
@@ -286,7 +286,7 @@
   background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 235px 8px 10px;
+  padding: 8px 65px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
@@ -302,7 +302,7 @@
   position: absolute;
   right: 90px;
   top: 78%;
-  transform: translateY(-70%);
+  transform: translateY(-80%);
   pointer-events: none;
 }
 

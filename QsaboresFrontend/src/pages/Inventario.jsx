@@ -4,24 +4,26 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "../components/Button";
 import Buscador from "../components/buscador";
+import { Navigate, useNavigate } from 'react-router-dom';
 import { consultaInventario } from "../js/inventario";
 import { consultaProveedores } from "../js/proveedores";
 import { consultaCategoria } from "../js/categoria";
+import { crearProductos } from "../js/inventario";
+import { eliminarProductos } from "../js/inventario";
 
 
 const Inventario = () => {
 
     const [cargando, setCargando] = useState(true);
 
+    // Logica para obtener productos, proveedores y categorias
+
     const [productosData, setProductosData] = useState([]);
     const [proveedoresData, setProveedoresData] = useState([])
     const [categoriaData, setCategoriaData] = useState([])
-
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-
-        const obtenerInventario = async () => {
+    const obtenerInventario = async () => {
         try {
             const data = await consultaInventario();
             if (Array.isArray(data)) {
@@ -36,65 +38,51 @@ const Inventario = () => {
         } finally {
             setCargando(false);
         }
-        };
+    };
 
-        const obtenerProveedores =  async () => {
-            try{
-                const provedoresD = await consultaProveedores();
-                if (Array.isArray(provedoresD)){
-                    setProveedoresData(provedoresD)
-                }
-                else{
-                    setError("Error al acceder a los proveedores");
-                    console.error("Respuesta inesperada:", provedoresD);
-                }
+    const obtenerProveedores =  async () => {
+        try{
+            const provedoresD = await consultaProveedores();
+            if (Array.isArray(provedoresD)){
+                setProveedoresData(provedoresD)
             }
-            catch (error){
-                setError("Error al consultar los proveedores");
-                console.error("Error en la consulta:", error);
+            else{
+                setError("Error al acceder a los proveedores");
+                console.error("Respuesta inesperada:", provedoresD);
             }
-        };
+        }
+        catch (error){
+            setError("Error al consultar los proveedores");
+            console.error("Error en la consulta:", error);
+        }
+    };
 
-        const obtenerCategoria =  async () => {
-            try{
-                const categorias = await consultaCategoria();
-                if (Array.isArray(categorias)){
-                    setCategoriaData(categorias)
-                }
-                else{
-                    setError("Error al acceder a la categoria");
-                    console.error("Respuesta inesperada:", categorias);
-                }
+    const obtenerCategoria =  async () => {
+        try{
+            const categorias = await consultaCategoria();
+            if (Array.isArray(categorias)){
+                setCategoriaData(categorias)
             }
-            catch (error){
-                setError("Error al consultar las categorias");
-                console.error("Error en la consulta:", error);
+            else{
+                setError("Error al acceder a la categoria");
+                console.error("Respuesta inesperada:", categorias);
             }
-        };
+        }
+        catch (error){
+            setError("Error al consultar las categorias");
+            console.error("Error en la consulta:", error);
+        }
+    };
 
+    useEffect(() => {
         obtenerInventario();
         obtenerProveedores();
         obtenerCategoria();
-        
-
     }, []);
 
-    console.log(productosData);
-    console.log("esto: ",proveedoresData);
-    console.log(categoriaData);
-    
-    // logica para eliminar los porductos que se seleccionen
-
-    const eliminarProdSelec = () => {
-        const Productos = productosData.filter(p => !seleccionados.includes(p.id));
-        setProductosData(Productos);
-        cerrarModalEliminar();
-    };
-
-    // Logica para verificar los cambios del formulario
+    // Logica para verificar los cambios del formulario y guardar el nuevo producto
 
     const [datosForm, setdatosForm] = useState({
-        id: "",
         nombre: "",
         precio: "",
         tope: "",
@@ -107,39 +95,56 @@ const Inventario = () => {
         setdatosForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Validación de campos
         const { nombre, precio, tope, proveedor, categoria } = datosForm;
+        console.log("estos son los datos: ",datosForm)
 
         if (!imagen) {
             setError("Debe agregar una imagen del producto.");
             return;
         }
 
-        if (!nombre ||  !precio || !tope || !proveedor || !categoria) {
+        if (!nombre ||  !precio || !tope) {
             setError("Por favor complete todos los campos.");
+            return;
+        }
+
+        if (!proveedor) {
+            setError("Debe seleccionar un proveedor del producto");
+            return;
+        }
+
+        if (!categoria) {
+            setError("Debe seleccionar una categoria del producto")
             return;
         }
 
         // Agregar el producto a la tabla
 
-        const nuevoProducto = {
-            id: productosData.length + 1,
-            nombre,
-            precio,
-            tope,
-            proveedor,
-            categoria,
-            imagen
+        const data = {
+            'nombre': nombre,
+            'precio':precio,
+            'cantidad_actual':0,
+            'cantidad_inicial':0,
+            'foto': null,
+            'topeMin':tope,
+            'categoriaid':categoria,
+            'proveedorid':proveedor
         };
 
-        setProductosData((prev) => [...prev, nuevoProducto]);
-
-        //Logica para el back, esperar al negro
-
-        toast.success("¡Producto guardado exitosamente!");
+        try {
+            const response = await crearProductos(data);
+            if (response.status === 201) {
+                toast.success("¡Producto guardado exitosamente!");
+                obtenerInventario();
+            }
+        } catch (error) {
+            console.error("Excepcion al crear el producto", error);
+            toast.error("Error al crear el producto");
+        }
 
         // Reset
         setdatosForm({
@@ -190,6 +195,10 @@ const Inventario = () => {
         setError("");
     };
 
+    // Filas de tabla seleccionadas 
+
+    const [seleccionados, setSeleccionados] = useState([]);
+
     // Logica para el modal de eliminar
 
     const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -204,13 +213,31 @@ const Inventario = () => {
         }
     };
 
+    const eliminarProdSelec = async (e) => {
+        try {
+            console.log("llego hasta el try")
+            const data= {
+                "ids":seleccionados
+            }
+            const response = await eliminarProductos(data);
+            if (response.status === 204) {
+                toast.success("¡Productos eliminados exitosamente!");
+                obtenerInventario();
+            }
+            console.log("este es el status", response.status)
+        } catch (error) {
+            console.error("Excepcion al eliminar el producto", error);
+            toast.error("Error al eliminar el producto");
+        }
+        cerrarModalEliminar();
+    };
+
+        console.log("estos son los seleccionados",seleccionados)
     const cerrarModalEliminar = () => {
         setShowModalEliminar(false);
     };
 
   // Logica para la edicion del producto
-
-    const [seleccionados, setSeleccionados] = useState([]);
 
     const [edicion, setEdicion] = useState(false);
     const [productoEditando, setProductoEditando] = useState(null);
@@ -560,9 +587,10 @@ const Inventario = () => {
                                             <select
                                                 id="select-form"
                                                 name="proveedor"
-                                                value={datosForm.proveedor.nom}
+                                                value={datosForm.proveedor}
                                                 onChange={handleChange}
                                             >
+                                                <option value="">Seleccione un proveedor</option>
                                                 { proveedoresData.map ((provedor) => (
                                                     <option key={provedor.id} value={provedor.id}>
                                                         {provedor.nombre}
@@ -574,15 +602,16 @@ const Inventario = () => {
 
                                     <div className="bloque">
                                         <label>Categoría</label>
-                                        <div id="cont-select-form2">
+                                        <div id="cont-select-form2">    
                                             <select
                                                 id="select-form"
                                                 name="categoria"
-                                               
+                                                value={datosForm.categoria}
                                                 onChange={handleChange}
                                             >
-                                                { categoriaData.map ((categoria) => (
-                                                    <option key={categoria.id} value={categoria.id}>
+                                                <option value="">Seleccione una categoria</option>
+                                               { categoriaData.map ((categoria) => (
+                                                    <option  selected key={categoria.id} value={categoria.id}>
                                                         {categoria.nombre}
                                                     </option>
                                                 ))}
