@@ -76,3 +76,17 @@
 .boton.rojo:hover .icono-boton svg {
     stroke: white;
 }
+
+/* Variante activa */
+
+.boton.activo {
+    background-color: #333;
+    color: #FFF0BD;
+    border-color: #FFF0BD;
+}
+
+.boton.activo:hover {
+    background-color: #FFF0BD;
+    color: #333;
+    border-color: #333;
+}

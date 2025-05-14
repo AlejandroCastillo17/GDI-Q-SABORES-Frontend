@@ -5,59 +5,42 @@ import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/proveedores.css';
+import { consultaProveedores } from "../js/proveedores";
 
 const Proveedores = () => {
 
-    // Lista de proveedores 
-    
-    const [proveedores, setProveedores] = useState([]);
+    // Lista de proveedores
 
+    const [cargando, setCargando] = useState(true);
+
+    const [proveedoresData, setProveedoresData] = useState([])
     useEffect(() => {
-        try {
-            const proveedoresGuardados = localStorage.getItem('proveedores');
-            if (proveedoresGuardados) {
-            const proveedoresParseados = JSON.parse(proveedoresGuardados);
-            if (Array.isArray(proveedoresParseados)) {
-                setProveedores(proveedoresParseados);
-            } else {
-                console.error('Proveedores guardados no son un array');
-                setProveedores([]); 
+
+        const obtenerProveedores =  async () => {
+            try{
+                const provedoresD = await consultaProveedores();
+                if (Array.isArray(provedoresD)){
+                    setProveedoresData(provedoresD)
+                }
+                else{
+                    console.error("Respuesta inesperada:", provedoresD);
+                }
             }
+            catch (error){
+                console.error("Error en la consulta:", error);
+            } finally {
+                setCargando(false);
             }
-        } catch (error) {
-            console.error('Error leyendo proveedores del localStorage:', error);
-            setProveedores([]);
-        }
+        };
+        obtenerProveedores();
+
     }, []);
 
-    useEffect(() => {
-        if (proveedores.length > 0) { 
-            localStorage.setItem('proveedores', JSON.stringify(proveedores));
-        } else {
-            localStorage.removeItem('proveedores'); 
-        }
-    }, [proveedores]);
-
-    // logica para eliminar los proveedores que se seleccionen 
-
-    const Seleccion = (id, isChecked) => {
-        setProveedores(prev =>
-            prev.map(proveedor =>
-                proveedor.id === id ? { ...proveedor, seleccionado: isChecked } : proveedor
-            )
-        );
-    };    
+    // logica para eliminar los proveedores que se seleccionen   
 
     const eliminarProveeSelec = () => {
-        const haySeleccionados = proveedores.some(p => p.seleccionado);
-        if (!haySeleccionados) {
-          toast.warning("No hay ningun proveedor seleccionado");
-          cerrarModalEliminar();
-          return;
-        }
-      
-        const nuevosProveedores = proveedores.filter(p => !p.seleccionado);
-        setProveedores(nuevosProveedores);
+        const Provedores = proveedoresData.filter(p => !seleccionados.includes(p.id));
+        setProveedoresData(Provedores);
         cerrarModalEliminar();
     };
 
@@ -91,14 +74,13 @@ const Proveedores = () => {
         // Agregar el proveedor a la tabla 
 
         const nuevoProveedor = {
-            id: proveedores.length + 1, 
+            id: proveedoresData.length + 1, 
             nombre,
             telefono,
-            email,
-            seleccionado: false
+            email
         };
 
-        setProveedores(prev => [...prev, nuevoProveedor]);
+        setProveedoresData(prev => [...prev, nuevoProveedor]);
 
         //Logica para el back, esperar al negro 
 
@@ -129,14 +111,13 @@ const Proveedores = () => {
     const [showModalEliminar, setShowModalEliminar] = useState(false);
 
     const abrirModalEliminar = () => {
-        const haySeleccionados = proveedores.some(p => p.seleccionado);
-        if (!haySeleccionados) {
-          toast.warning("No hay ningun proveedor seleccionado");
-          return;
-        }else {
+        const Seleccionados = proveedoresData.filter(p => seleccionados.includes(p.id));
+        if (Seleccionados.length === 0) {
+            toast.warning("No hay ningun producto seleccionado");
+        return;
+        } else {
             setShowModalEliminar(true);
         }
-        
     }
 
     const cerrarModalEliminar = () => {
@@ -145,12 +126,14 @@ const Proveedores = () => {
 
     // Logica para la edicion de los proveedores
 
+    const [seleccionados, setSeleccionados] = useState([]);
+
     const [edicion, setEdicion] =useState(false);
     const [proveedorEditando, setProveedorEditando] = useState(null);
     const [datosEditados, setDatosEditados] = useState({});
 
     const verEdicion = () => {
-        const Seleccionados = proveedores.filter(p => p.seleccionado);
+        const Seleccionados = proveedoresData.filter(p => seleccionados.includes(p.id));
 
         if (Seleccionados.length === 0) {
             toast.warning("No hay ningun proveedor seleccionado");
@@ -185,7 +168,7 @@ const Proveedores = () => {
     };
     
     const GuardarEdicion = () => {
-        setProveedores((proveedores) =>
+        setProveedoresData((proveedores) =>
             proveedores.map(
                 (provee) =>
                 provee.id === proveedorEditando ? datosEditados : provee
@@ -204,6 +187,18 @@ const Proveedores = () => {
           [name]: value,
         }));
     };
+
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    if (cargando) {
+        return (
+            <div className="modal-cargando">
+                <div className="modal-contenido-c">
+                    <div class='loader'></div>
+                </div>
+            </div>
+        );
+    }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -262,13 +257,19 @@ const Proveedores = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {proveedores.map((proveedor, index) => 
+                            {proveedoresData.map((proveedor) => 
                                 <tr key={proveedor.id}>
                                     <td>
                                         <input 
                                             type="checkbox" 
-                                            checked={proveedor.seleccionado || false}
-                                            onChange={(e) => Seleccion(proveedor.id, e.target.checked)} 
+                                            checked={seleccionados.includes(proveedor.id)}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                setSeleccionados([...seleccionados, proveedor.id]);
+                                                } else {
+                                                setSeleccionados(seleccionados.filter(id => id !== proveedor.id));
+                                                }
+                                            }}
                                         />
                                     </td>
                                     <td>
@@ -321,6 +322,7 @@ const Proveedores = () => {
                         </tbody>
                     </table>
                 </div>
+
                 {edicion && (
                     <div id="botoness-edicion">
                         <Button variant="verde"  onClick={GuardarEdicion}>Guardar</Button>

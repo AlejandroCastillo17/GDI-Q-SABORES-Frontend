@@ -8,12 +8,10 @@ import Layout from './Layouts/Layout';
 import Proveedores from './pages/proveedores';
 import './App.css'
 import Egresos from './pages/Egresos';
-import Gastos from './pages/Gastos';
-import Compras from './pages/Compras';
 
 function App() {
-  const [Autenticacion, setAutenticacion] = useState(true);//Cambiar, estaba en false el useState
 
+  const [Autenticacion, setAutenticacion] = useState(false);
 
   return (
     <>
@@ -24,8 +22,6 @@ function App() {
               <Route path="/login" element={<Login setAutenticacion={setAutenticacion} />} />
 
               {/* Rutas protegidas */}
-              <Route path="/gastos" element={Autenticacion ? <Gastos /> : <Navigate to="/login" />} />
-              <Route path="/compras" element={Autenticacion ? <Compras /> : <Navigate to="/login" />} />
               <Route path='/' element={Autenticacion ? <Layout /> : <Navigate to="/login" />}>
                 <Route path="/" element={<Home/>} />
                 <Route path="/inventario" element={<Inventario/>} />

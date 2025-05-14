@@ -1,4 +1,4 @@
-.gastos-tabla {
+.compras-tabla {
     width: 90%;
     height: 280px;
     background-color: #C7DB9C;
@@ -11,7 +11,7 @@
     -ms-overflow-style: none; 
 }
 
-.gastos-tabla::-webkit-scrollbar {
+.compras-tabla::-webkit-scrollbar {
     display: none; 
 }
 

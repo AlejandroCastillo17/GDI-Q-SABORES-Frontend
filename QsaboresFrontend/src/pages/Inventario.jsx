@@ -5,13 +5,22 @@ import "react-toastify/dist/ReactToastify.css";
 import Button from "../components/Button";
 import Buscador from "../components/buscador";
 import { consultaInventario } from "../js/inventario";
+import { consultaProveedores } from "../js/proveedores";
+import { consultaCategoria } from "../js/categoria";
+
 
 const Inventario = () => {
 
+    const [cargando, setCargando] = useState(true);
+
     const [productosData, setProductosData] = useState([]);
+    const [proveedoresData, setProveedoresData] = useState([])
+    const [categoriaData, setCategoriaData] = useState([])
+
     const [error, setError] = useState(null);
 
     useEffect(() => {
+
         const obtenerInventario = async () => {
         try {
             const data = await consultaInventario();
@@ -24,13 +33,55 @@ const Inventario = () => {
         } catch (err) {
             setError("Error al consultar el inventario");
             console.error("Error en la consulta:", err);
+        } finally {
+            setCargando(false);
         }
         };
 
+        const obtenerProveedores =  async () => {
+            try{
+                const provedoresD = await consultaProveedores();
+                if (Array.isArray(provedoresD)){
+                    setProveedoresData(provedoresD)
+                }
+                else{
+                    setError("Error al acceder a los proveedores");
+                    console.error("Respuesta inesperada:", provedoresD);
+                }
+            }
+            catch (error){
+                setError("Error al consultar los proveedores");
+                console.error("Error en la consulta:", error);
+            }
+        };
+
+        const obtenerCategoria =  async () => {
+            try{
+                const categorias = await consultaCategoria();
+                if (Array.isArray(categorias)){
+                    setCategoriaData(categorias)
+                }
+                else{
+                    setError("Error al acceder a la categoria");
+                    console.error("Respuesta inesperada:", categorias);
+                }
+            }
+            catch (error){
+                setError("Error al consultar las categorias");
+                console.error("Error en la consulta:", error);
+            }
+        };
+
         obtenerInventario();
+        obtenerProveedores();
+        obtenerCategoria();
+        
+
     }, []);
 
     console.log(productosData);
+    console.log("esto: ",proveedoresData);
+    console.log(categoriaData);
     
     // logica para eliminar los porductos que se seleccionen
 
@@ -46,6 +97,7 @@ const Inventario = () => {
         id: "",
         nombre: "",
         precio: "",
+        tope: "",
         proveedor: "",
         categoria: "",
     });
@@ -59,14 +111,14 @@ const Inventario = () => {
         e.preventDefault();
 
         // Validación de campos
-        const { nombre, precio, proveedor, categoria } = datosForm;
+        const { nombre, precio, tope, proveedor, categoria } = datosForm;
 
         if (!imagen) {
             setError("Debe agregar una imagen del producto.");
             return;
         }
 
-        if (!nombre ||  !precio || !proveedor || !categoria) {
+        if (!nombre ||  !precio || !tope || !proveedor || !categoria) {
             setError("Por favor complete todos los campos.");
             return;
         }
@@ -77,6 +129,7 @@ const Inventario = () => {
             id: productosData.length + 1,
             nombre,
             precio,
+            tope,
             proveedor,
             categoria,
             imagen
@@ -92,6 +145,7 @@ const Inventario = () => {
         setdatosForm({
             nombre: "",
             precio: "",
+            tope: "",
             proveedor: "",
             categoria: ""
         });
@@ -199,7 +253,7 @@ const Inventario = () => {
 
     const GuardarEdicion = () => {
         setProductosData((productosActuales) =>
-        productosActuales.map((prod) =>
+            productosActuales.map((prod) =>
             prod.id === productoEditando ? datosEditados : prod
         )
         );
@@ -218,6 +272,18 @@ const Inventario = () => {
     };
 
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+
+  // /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if (cargando) {
+        return (
+            <div className="modal-cargando">
+                <div className="modal-contenido-c">
+                    <div class='loader'></div>
+                </div>
+            </div>
+        );
+    }
 
   // /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -344,11 +410,11 @@ const Inventario = () => {
                                                 type="checkbox" 
                                                 checked={seleccionados.includes(producto.id)}
                                                 onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    setSeleccionados([...seleccionados, producto.id]);
-                                                } else {
-                                                    setSeleccionados(seleccionados.filter(id => id !== producto.id));
-                                                }
+                                                    if (e.target.checked) {
+                                                        setSeleccionados([...seleccionados, producto.id]);
+                                                    } else {
+                                                        setSeleccionados(seleccionados.filter(id => id !== producto.id));
+                                                    }
                                                 }}
                                             />
                                         </td>
@@ -478,6 +544,17 @@ const Inventario = () => {
                                     </div>
 
                                     <div className="bloque">
+                                        <label>Tope minimo</label>
+                                        <input
+                                            type="number"
+                                            placeholder="Cantidad minima"
+                                            name="tope"
+                                            value={datosForm.tope}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="bloque">
                                         <label>Proveedor</label>
                                         <div id="cont-select-form">
                                             <select
@@ -486,9 +563,11 @@ const Inventario = () => {
                                                 value={datosForm.proveedor.nom}
                                                 onChange={handleChange}
                                             >
-                                                <option value="Colombina">Colombina</option>
-                                                <option value="Bavaria">Bavaria</option>
-                                                <option value="FritoLay">FritoLay</option>
+                                                { proveedoresData.map ((provedor) => (
+                                                    <option key={provedor.id} value={provedor.id}>
+                                                        {provedor.nombre}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
@@ -502,10 +581,11 @@ const Inventario = () => {
                                                
                                                 onChange={handleChange}
                                             >
-                                                <option value="ropa">Ropa</option>
-                                                <option value="licor">Licor</option>
-                                                <option value="aseo">Aseo</option>
-                                                <option value="mekato">Mekato</option>
+                                                { categoriaData.map ((categoria) => (
+                                                    <option key={categoria.id} value={categoria.id}>
+                                                        {categoria.nombre}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                     </div>
