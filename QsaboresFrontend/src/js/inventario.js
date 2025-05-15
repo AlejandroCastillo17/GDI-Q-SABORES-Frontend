@@ -37,8 +37,8 @@ export const crearProductos = async (productoData) => {
 
 export const editarProductos = async (producto, id) => {
   try {
-    const response = await axios.put('http://127.0.0.1:8000/sabores/api/v1/productos/${id}/', producto, id,// Aquí van los datos que envías
-      {
+    const response = await axios.put(`http://127.0.0.1:8000/sabores/api/v1/productos/${id}/`, producto,
+       {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${sessionStorage.getItem('token')}`,
