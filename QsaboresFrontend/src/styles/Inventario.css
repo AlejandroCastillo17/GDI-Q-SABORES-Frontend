@@ -370,6 +370,22 @@
   outline: none;
 }
 
+#select-form-e {
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 2px solid #333;
+  outline: none;
+  color: #333;
+  background-color: #fff0bd;
+  width: 80%;
+  font-size: 20px;
+}
+
+#select-form-e option {
+  background-color: #333;
+  color: #FFF0BD;
+}
+
 /* Estilos de la tabla */
 
 .inventario-tabla {

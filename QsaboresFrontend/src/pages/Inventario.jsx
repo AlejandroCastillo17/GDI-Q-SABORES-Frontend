@@ -10,6 +10,7 @@ import { consultaProveedores } from "../js/proveedores";
 import { consultaCategoria } from "../js/categoria";
 import { crearProductos } from "../js/inventario";
 import { eliminarProductos } from "../js/inventario";
+import { editarProductos } from "../js/inventario";
 
 
 const Inventario = () => {
@@ -213,7 +214,7 @@ const Inventario = () => {
         }
     };
 
-    const eliminarProdSelec = async (e) => {
+    const eliminarProdSelec = async () => {
 
         try {
             const data= {"ids":seleccionados}
@@ -238,23 +239,25 @@ const Inventario = () => {
   // Logica para la edicion del producto
 
     const [edicion, setEdicion] = useState(false);
-    const [productoEditando, setProductoEditando] = useState(null);
-    const [datosEditados, setDatosEditados] = useState({});
+    const [ProdEditadoID, setProdEditadoID] = useState(null);
+    const [ProdEditado, setProdEditado] = useState({
+    });
 
     const verEdicion = () => {
-        const Seleccionados = productosData.filter(p => seleccionados.includes(p.id));
 
-        if (Seleccionados.length === 0) {
+        const ProdSeleccionado = productosData.filter(p => seleccionados.includes(p.id));
+
+        if (ProdSeleccionado.length === 0) {
             toast.warning("No hay ningun producto seleccionado");
             return;
         }
 
-        if (Seleccionados.length > 1) {
+        if (ProdSeleccionado.length > 1) {
             toast.warning("Selecciona solo un producto para editar");
             return;
         }
 
-        const productoSeleccionado = Seleccionados[0];
+        const productoSeleccionado = ProdSeleccionado[0];
 
         setEdicion(true);
         Editar(productoSeleccionado);
@@ -265,35 +268,70 @@ const Inventario = () => {
     };
 
     const Editar = (producto) => {
-        setProductoEditando(producto.id);
-        setDatosEditados({ ...producto });
+        setProdEditadoID(producto.id);
+        setProdEditado({ ...producto });
     };
 
     const CancelarEdicion = () => {
-        setProductoEditando(null);
-        setDatosEditados({});
+        setProdEditadoID(null);
+        setProdEditado({});
         ocultarEdicion();
         toast.info("Cancelado con exito!");
     };
 
-    const GuardarEdicion = () => {
-        setProductosData((productosActuales) =>
-            productosActuales.map((prod) =>
-            prod.id === productoEditando ? datosEditados : prod
-        )
-        );
-        setProductoEditando(null);
-        setDatosEditados({});
+    const GuardarEdicion = async () => {
+
+        const productoFormateado = {
+            "nombre": ProdEditado.nombre,
+            "precio": ProdEditado.precio,
+            "cantidad_actual": 0,
+            "cantidad_inicial": 0,
+            "foto": null,
+            "topeMin": 10,
+            "categoriaid": ProdEditado.categoria.id, 
+            "proveedorid": ProdEditado.proveedor.id 
+        };
+
+        console.log(productoFormateado);
+
+        try {
+            const response = await editarProductos(productoFormateado, ProdEditadoID) ;
+            if (response.status === 201) {
+                toast.success("¡Producto actualizado exitosamente!");
+                obtenerInventario();
+            }
+        } catch (error) {
+            console.error("Excepcion al actualizar el producto", error);
+            toast.error("Error al actualizar el producto");
+        }
+
+        setProdEditadoID(null);
+        setProdEditado({});
         ocultarEdicion();
-        toast.success("Guardado con exito!");
+
     };
 
     const handleChangeEdicion = (e) => {
         const { name, value } = e.target;
-        setDatosEditados((prev) => ({
-        ...prev,
-        [name]: value,
-        }));
+
+        if (name === "categoria") {
+            const categoriaSelec = categoriaData.find(cat => cat.id === parseInt(value));
+            setProdEditado(prev => ({
+                ...prev,
+                categoria: categoriaSelec
+            }));
+        } else if (name === "proveedor") {
+            const proveedorSelec = proveedoresData.find(p => p.id === parseInt(value));
+            setProdEditado(prev => ({
+                ...prev,
+                provedor: proveedorSelec
+            }));
+        } else {
+            setProdEditado(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
     };
 
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
@@ -444,13 +482,13 @@ const Inventario = () => {
                                             />
                                         </td>
                                         <td>
-                                            {productoEditando === producto.id ? 
+                                            {ProdEditadoID === producto.id ? 
                                                 (
                                                     <input
                                                         className="inputs"
                                                         type="text"
                                                         name="nombre"
-                                                        value={datosEditados.nombre}
+                                                        value={ProdEditado.nombre}
                                                         onChange={handleChangeEdicion}
                                                     />
                                                 ) 
@@ -459,28 +497,33 @@ const Inventario = () => {
                                             }
                                         </td>
                                         <td>
-                                            {productoEditando === producto.id ? 
+                                            {ProdEditadoID === producto.id ? 
                                                 (
-                                                    <input
-                                                        className="inputs"
-                                                        type="text"
+                                                    <select
+                                                        id="select-form-e"
                                                         name="categoria"
-                                                        value={datosEditados.categoria}
+                                                        value={ProdEditado.categoria?.id || ""}
                                                         onChange={handleChangeEdicion}
-                                                    />
+                                                    >
+                                                        { categoriaData.map ((categoria) => (
+                                                            <option key={categoria.id} value={categoria.id}>
+                                                                {categoria.nombre}
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                 ) 
                                                 : 
                                                 (producto.categoria.nombre)
                                             }
                                         </td>
                                         <td>
-                                            {productoEditando === producto.id ? 
+                                            {ProdEditadoID === producto.id ? 
                                                 (
                                                     <input
                                                         className="inputs"
                                                         type="number"
                                                         name="precio"
-                                                        value={datosEditados.precio}
+                                                        value={ProdEditado.precio}
                                                         onChange={handleChangeEdicion}
                                                     />
                                                 ) 
@@ -489,15 +532,20 @@ const Inventario = () => {
                                             }
                                         </td>
                                         <td>
-                                            {productoEditando === producto.id ? 
+                                            {ProdEditadoID === producto.id ? 
                                                 (
-                                                    <input
-                                                        className="inputs"
-                                                        type="text"
+                                                    <select
+                                                        id="select-form-e"
                                                         name="proveedor"
-                                                        value={datosEditados.proveedor.nombre}
+                                                        value={ProdEditado.provedor?.id || ""}
                                                         onChange={handleChangeEdicion}
-                                                    />
+                                                    >
+                                                        { proveedoresData.map ((proveedor) => (
+                                                            <option key={proveedor.id} value={proveedor.id}>
+                                                                {proveedor.nombre}
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                 ) 
                                                 : 
                                                 (producto.proveedor.nombre)
