@@ -273,6 +273,7 @@ const Inventario = () => {
   };
 
   const GuardarEdicion = async () => {
+    
     const productoFormateado = {
       nombre: ProdEditado.nombre,
       precio: ProdEditado.precio,
@@ -284,14 +285,16 @@ const Inventario = () => {
       proveedorid: ProdEditado.proveedor.id,
     };
 
-    console.log(productoFormateado);
+    console.log("producto editado",productoFormateado);
 
     try {
       const response = await editarProductos(productoFormateado, ProdEditadoID);
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success("¡Producto actualizado exitosamente!");
         obtenerInventario();
-      }
+      } else {
+        console.log("respuesta :", response);
+      }	
     } catch (error) {
       console.error("Excepcion al actualizar el producto", error);
       toast.error("Error al actualizar el producto");
@@ -319,7 +322,7 @@ const Inventario = () => {
       );
       setProdEditado((prev) => ({
         ...prev,
-        provedor: proveedorSelec,
+        proveedor: proveedorSelec,
       }));
     } else {
       setProdEditado((prev) => ({
@@ -529,7 +532,7 @@ const Inventario = () => {
                       <select
                         id="select-form-e"
                         name="proveedor"
-                        value={ProdEditado.provedor?.id || ""}
+                        value={ProdEditado.proveedor?.id || ""}
                         onChange={handleChangeEdicion}
                       >
                         {proveedoresData.map((proveedor) => (
