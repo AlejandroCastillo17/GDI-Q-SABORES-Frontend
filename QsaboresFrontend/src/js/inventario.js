@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export const consultaInventario = async () => {
-
   try {
     const productos = await axios.get('http://127.0.0.1:8000/sabores/api/v1/productos/',  {
       headers: {
