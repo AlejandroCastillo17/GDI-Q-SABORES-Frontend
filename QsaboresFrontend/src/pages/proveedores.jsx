@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/proveedores.css';
-import { consultaProveedores } from "../js/proveedores";
+import { consultaProveedores, crearProveedores, eliminarProveedores } from "../js/proveedores";
 
 const Proveedores = () => {
 
@@ -13,38 +13,32 @@ const Proveedores = () => {
 
     const [cargando, setCargando] = useState(true);
 
-    const [proveedoresData, setProveedoresData] = useState([])
+    const [proveedoresData, setProveedoresData] = useState([]);
+
+    const obtenerProveedores =  async () => {
+        try{
+            const provedoresD = await consultaProveedores();
+            if (Array.isArray(provedoresD)){
+                setProveedoresData(provedoresD)
+            }
+            else{
+                console.error("Respuesta inesperada:", provedoresD);
+            }
+        }
+        catch (error){
+            console.error("Error en la consulta:", error);
+        } finally {
+            setCargando(false);
+        }
+    };
+
     useEffect(() => {
 
-        const obtenerProveedores =  async () => {
-            try{
-                const provedoresD = await consultaProveedores();
-                if (Array.isArray(provedoresD)){
-                    setProveedoresData(provedoresD)
-                }
-                else{
-                    console.error("Respuesta inesperada:", provedoresD);
-                }
-            }
-            catch (error){
-                console.error("Error en la consulta:", error);
-            } finally {
-                setCargando(false);
-            }
-        };
         obtenerProveedores();
 
     }, []);
 
-    // logica para eliminar los proveedores que se seleccionen   
-
-    const eliminarProveeSelec = () => {
-        const Provedores = proveedoresData.filter(p => !seleccionados.includes(p.id));
-        setProveedoresData(Provedores);
-        cerrarModalEliminar();
-    };
-
-    // Logica para verificar los cambios del formulario 
+    // Logica para verificar los cambios del formulario & guardar los datos
 
     const [datosForm, setdatosForm] = useState({
         id: '',
@@ -60,7 +54,7 @@ const Proveedores = () => {
         setdatosForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
     
         // Validación de campos
@@ -74,18 +68,22 @@ const Proveedores = () => {
         // Agregar el proveedor a la tabla 
 
         const nuevoProveedor = {
-            id: proveedoresData.length + 1, 
-            nombre,
-            telefono,
-            email
+            nombre: nombre,
+            telefono: telefono,
+            email: email
         };
 
-        setProveedoresData(prev => [...prev, nuevoProveedor]);
+        try {
+            const response = await crearProveedores(nuevoProveedor);
+            if (response.status === 201) {
+                toast.success("¡Proveedor guardado exitosamente!");
+                obtenerProveedores();
+            }
+        } catch (error) {
+            console.error("Excepcion al crear el pproveedor", error);
+            toast.error("Error al crear el proveedor");
+        }
 
-        //Logica para el back, esperar al negro 
-
-        toast.success("¡Proovedor guardado exitosamente!");
-    
         // Reset
         setdatosForm({ nombre: '', telefono: '', email: '' });
         setError('');
@@ -106,6 +104,10 @@ const Proveedores = () => {
         setError('');
     };
 
+    // Filas de tabla seleccionadas
+
+    const [seleccionados, setSeleccionados] = useState([]);
+
     // Logica para el modal de eliminar 
 
     const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -114,19 +116,33 @@ const Proveedores = () => {
         const Seleccionados = proveedoresData.filter(p => seleccionados.includes(p.id));
         if (Seleccionados.length === 0) {
             toast.warning("No hay ningun producto seleccionado");
-        return;
+            return;
         } else {
             setShowModalEliminar(true);
         }
     }
+
+    const eliminarProveeSelec = async () => {
+        try {
+            const data = { ids: seleccionados };
+            const response = await eliminarProveedores(data);
+            if (response.status === 204) {
+            toast.success("¡Proveedores eliminados exitosamente!");
+            obtenerProveedores();
+            }
+        } catch (error) {
+            console.error("Excepcion al eliminar el proveedores", error);
+            toast.error("Error al eliminar el proveedores");
+        }
+    
+        cerrarModalEliminar();
+    };
 
     const cerrarModalEliminar = () => {
         setShowModalEliminar(false);
     }
 
     // Logica para la edicion de los proveedores
-
-    const [seleccionados, setSeleccionados] = useState([]);
 
     const [edicion, setEdicion] =useState(false);
     const [proveedorEditando, setProveedorEditando] = useState(null);

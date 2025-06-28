@@ -234,7 +234,7 @@
   background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 160px 8px 10px;
+  padding: 8px 65px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
@@ -250,7 +250,7 @@
   position: absolute;
   right: 90px;
   top: 68%;
-  transform: translateY(-70%);
+  transform: translateY(-80%);
   pointer-events: none;
 }
 
@@ -286,7 +286,7 @@
   background-color: #fff0bd;
   color: #333;
   cursor: pointer;
-  padding: 8px 235px 8px 10px;
+  padding: 8px 65px 8px 10px;
   transition: border-color 0.3s ease;
   outline: none;
   appearance: none;
@@ -302,7 +302,7 @@
   position: absolute;
   right: 90px;
   top: 78%;
-  transform: translateY(-70%);
+  transform: translateY(-80%);
   pointer-events: none;
 }
 
@@ -363,6 +363,27 @@
   gap: 30px;
   justify-content: center;
   text-align: center;
+}
+
+#botoness .boton.rojo,
+#botoness .boton.verde {
+  outline: none;
+}
+
+#select-form-e {
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 2px solid #333;
+  outline: none;
+  color: #333;
+  background-color: #fff0bd;
+  width: 80%;
+  font-size: 20px;
+}
+
+#select-form-e option {
+  background-color: #333;
+  color: #FFF0BD;
 }
 
 /* Estilos de la tabla */
