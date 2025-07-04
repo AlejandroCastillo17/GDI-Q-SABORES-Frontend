@@ -13,13 +13,23 @@ import { editarProductos } from "../js/inventario";
 
 const Inventario = () => {
   const [cargando, setCargando] = useState(true);
-
-  // Logica para obtener productos, proveedores y categorias
-
+  const [busqueda, setBusqueda] = useState("");
+  console.log("busqueda", busqueda);
   const [productosData, setProductosData] = useState([]);
   const [proveedoresData, setProveedoresData] = useState([]);
   const [categoriaData, setCategoriaData] = useState([]);
   const [error, setError] = useState(null);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+
+  console.log("categoria seleccionada", categoriaSeleccionada);
+  const datosFitrados = productosData.filter(
+    (producto) =>
+      producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
+      producto.categoria.nombre
+        .toLowerCase()
+        .includes(categoriaSeleccionada.toLowerCase())
+  );
+  console.log("datos filtrados", datosFitrados);
 
   const obtenerInventario = async () => {
     try {
@@ -273,7 +283,6 @@ const Inventario = () => {
   };
 
   const GuardarEdicion = async () => {
-    
     const productoFormateado = {
       nombre: ProdEditado.nombre,
       precio: ProdEditado.precio,
@@ -285,7 +294,7 @@ const Inventario = () => {
       proveedorid: ProdEditado.proveedor.id,
     };
 
-    console.log("producto editado",productoFormateado);
+    console.log("producto editado", productoFormateado);
 
     try {
       const response = await editarProductos(productoFormateado, ProdEditadoID);
@@ -294,7 +303,7 @@ const Inventario = () => {
         obtenerInventario();
       } else {
         console.log("respuesta :", response);
-      }	
+      }
     } catch (error) {
       console.error("Excepcion al actualizar el producto", error);
       toast.error("Error al actualizar el producto");
@@ -332,8 +341,6 @@ const Inventario = () => {
     }
   };
 
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
-
   // /////////////////////////////////////////////////////////////////////////////////////////////////////
 
   if (cargando) {
@@ -370,7 +377,11 @@ const Inventario = () => {
               <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
               <path d="M21 21l-6 -6" />
             </svg>
-            <input type="text" />
+            <input
+              type="text"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
           </div>
           <div id="cont-select">
             <select
@@ -379,10 +390,11 @@ const Inventario = () => {
               onChange={(e) => setCategoriaSeleccionada(e.target.value)}
             >
               <option value="">Todas</option>
-              <option value="Ropa">Ropa</option>
-              <option value="licor">Licor</option>
-              <option value="aseo">Aseo</option>
-              <option value="mekato">Mekato</option>
+              {categoriaData.map((categoria) => (
+                <option key={categoria.id} value={categoria.nombre}>
+                  {categoria.nombre}
+                </option>
+              ))}
             </select>
           </div>
           <Button variant="rojo" onClick={abrirModalEliminar}>
@@ -462,10 +474,10 @@ const Inventario = () => {
             </thead>
             <tbody>
               {(categoriaSeleccionada
-                ? productosData.filter(
-                    (p) => p.categoria === categoriaSeleccionada
+                ? datosFitrados.filter(
+                    (p) => p.categoria.nombre === categoriaSeleccionada
                   )
-                : productosData
+                : datosFitrados
               ).map((producto) => (
                 <tr key={producto.id}>
                   <td>
