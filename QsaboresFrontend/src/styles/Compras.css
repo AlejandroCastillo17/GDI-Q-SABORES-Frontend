@@ -1,9 +1,9 @@
 .compras-tabla {
     width: 90%;
-    height: 280px;
+    height: 60%;
     background-color: #C7DB9C;
     padding: 0;
-    border: 15px solid #C7DB9C;
+    border: 1rem solid #C7DB9C;
     border-radius: 15px;
     overflow-x: auto;
   

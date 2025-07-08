@@ -1,51 +1,246 @@
 import React from 'react';
 import Button from '../components/Button';
 import '../styles/Egresos.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Gastos from './Gastos';
 import Compras from './Compras';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getEgresos, createEgreso, deleteEgreso, updateEgreso } from "../js/gastosService";
 
 const Egresos = () => {
-
+    const [cargando, setCargando] = useState(true);
     const [vista, setVista] = useState("gastos");
+    const [egresoData, setEgresoData] = useState([]);
+    const [seleccionados, setSeleccionados] = useState([]);
+    const [showModalEliminar, setShowModalEliminar] = useState(false);
+    const [showModalAgregar, setShowModalAgregar] = useState(false);
+    const [error, setError] = useState('');
+    const [edicion, setEdicion] = useState(false);
+    const [itemEditando, setItemEditando] = useState(null);
+    const [datosEditados, setDatosEditados] = useState({});
+
+    // Formulario dinámico según vista
+    const [datosForm, setDatosForm] = useState({
+        nombre: '',
+        precio: '',
+        // Campos para gastos
+        estado: '',
+        fecha_de_pago: '',
+        // Campos para compras
+        cantidad: '',
+        proveedor: '',
+        fecha_de_compra: ''
+    });
+
+    // Obtener datos según la vista actual
+    const obtenerEgresos = async () => {
+        try {
+            setCargando(true);
+            const data = await getEgresos(vista);
+            
+            // Normalizar datos para evitar errores
+            const datosNormalizados = data.map(item => ({
+                id: item.id || '',
+                nombre: item.nombre || '',
+                precio: item.precio ? Number(item.precio) : 0,
+                // Campos gastos
+                estado: item.estado || '',
+                fecha_de_pago: item.fecha_de_pago || '',
+                // Campos compras
+                producto: item.producto || '',
+                cantidad: item.cantidad ? Number(item.cantidad) : 0,
+                proveedor: item.proveedor || '',
+                fecha_de_compra: item.fecha_de_compra || ''
+            }));
+            
+            setEgresoData(datosNormalizados);
+        } catch (error) {
+            console.error("Error en la consulta:", error);
+            toast.error("Error al cargar los datos");
+        } finally {
+            setCargando(false);
+        }
+    };
+
+    // Manejar cambio en inputs del formulario
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setDatosForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    // Manejar envío del formulario
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Validación básica
+        if (!datosForm.nombre || !datosForm.precio) {
+            setError("Los campos nombre y precio son obligatorios");
+            return;
+        }
+
+        if (vista === "gastos" && (!datosForm.estado || !datosForm.fecha_de_pago)) {
+            setError("Todos los campos son obligatorios para gastos");
+            return;
+        }
+
+        if (vista === "compras" && (!datosForm.cantidad || !datosForm.proveedor || !datosForm.fecha_de_compra)) {
+            setError("Todos los campos son obligatorios para compras");
+            return;
+        }
+        
+        try {
+            const response = await createEgreso(vista, datosForm);
+            if (response.status === 201) {
+                toast.success(`${vista === "gastos" ? "Gasto" : "Compra"} creado exitosamente!`);
+                obtenerEgresos();
+                cerrarModalAgregar();
+            }
+        } catch (error) {
+            toast.error(`Error al crear ${vista === "gastos" ? "gasto" : "compra"}`);
+            console.error(error);
+        }
+    };
+
+    // Manejar eliminación de egresos
+    const eliminarEgresoSeleccionado = async () => {
+        try {
+            const response = await deleteEgreso(vista, seleccionados);
+            if (response.status === 204) {
+                toast.success(`${vista === "gastos" ? "Gasto(s)" : "Compra(s)"} eliminado(s) exitosamente!`);
+                obtenerEgresos();
+            }
+        } catch (error) {
+            console.error(`Error al eliminar ${vista}`, error);
+            toast.error(`Error al eliminar ${vista}`);
+        }
+        setShowModalEliminar(false);
+    };
+
+    // Funciones para manejar modales
+    const abrirModalAgregar = () => {
+        setDatosForm({
+            nombre: '',
+            precio: '',
+            estado: '',
+            fecha_de_pago: '',
+            cantidad: '',
+            proveedor: '',
+            fecha_de_compra: ''
+        });
+        setError('');
+        setShowModalAgregar(true);
+    };
+
+    const cerrarModalAgregar = () => {
+        setShowModalAgregar(false);
+    };
+
+    // Lógica para edición
+    const verEdicion = () => {
+        const itemsSeleccionados = egresoData.filter(item => seleccionados.includes(item.id));
+
+        if (itemsSeleccionados.length === 0) {
+            toast.warning(`No hay ningún ${vista === "gastos" ? "gasto" : "compra"} seleccionado`);
+            return;
+        }
+        
+        if (itemsSeleccionados.length > 1) {
+            toast.warning(`Selecciona solo un ${vista === "gastos" ? "gasto" : "compra"} para editar`);
+            return;
+        }
+
+        const itemSeleccionado = itemsSeleccionados[0];
+        setEdicion(true);
+        setItemEditando(itemSeleccionado.id);
+        setDatosEditados({ ...itemSeleccionado });
+    };
+
+    const cancelarEdicion = () => {
+        setEdicion(false);
+        setItemEditando(null);
+        setDatosEditados({});
+        toast.info("Edición cancelada");
+    };
+
+    const guardarEdicion = async () => {
+        try {
+            // Preparar los datos según el tipo (gastos/compras)
+            let datosActualizados;
+            
+            if (vista === "gastos") {
+                datosActualizados = {
+                    id: datosEditados.id,
+                    nombre: datosEditados.nombre,
+                    precio: datosEditados.precio,
+                    estado: datosEditados.estado,
+                    fecha_de_pago: datosEditados.fecha_de_pago
+                };
+            } else { // compras
+                datosActualizados = {
+                    id: datosEditados.id,
+                    producto: datosEditados.producto,
+                    precio: datosEditados.precio,
+                    cantidad: datosEditados.cantidad,
+                    proveedor: datosEditados.proveedor,
+                    fecha_de_compra: datosEditados.fecha_de_compra
+                };
+            }
+
+            const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
+            
+            if (response.status === 200) {
+                toast.success("¡Cambios guardados exitosamente!");
+                obtenerEgresos();
+                cancelarEdicion();
+            }
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            toast.error("Error al guardar los cambios");
+        }
+    };
+
+
+    const handleChangeEdicion = (e) => {
+        const { name, value } = e.target;
+        setDatosEditados(prev => ({ ...prev, [name]: value }));
+    };
+
+    // Cargar datos cuando cambia la vista
+    useEffect(() => {
+        obtenerEgresos();
+        setSeleccionados([]);
+        setEdicion(false);
+    }, [vista]);
+
+    if (cargando) {
+        return (
+            <div className="modal-cargando">
+                <div className="modal-contenido-c">
+                    <div className='loader'></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
             <section className="egresos">
-                <h1>EGRESOS</h1>
+                {/* <h1>EGRESOS</h1> */}
                 <div id="cont">
                     <div className="buscador">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="25"
-                            height="25"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#000000"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="icon icon-tabler icons-tabler-outline icon-tabler-search"
-                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-search">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
                             <path d="M21 21l-6 -6" />
                         </svg>
-                        <input type="text" />
+                        <input type="text" placeholder={`Buscar ${vista === "gastos" ? "gastos" : "compras"}...`} />
                     </div>
-                    <Button variant="rojo">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="icon icon-tabler icons-tabler-outline icon-tabler-trash"
-                        >
+                    <Button 
+                        variant="rojo" 
+                        onClick={() => seleccionados.length > 0 ? setShowModalEliminar(true) : toast.warning(`Seleccione ${vista === "gastos" ? "gastos" : "compras"} para eliminar`)}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-trash">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M4 7l16 0" />
                             <path d="M10 11l0 6" />
@@ -55,19 +250,11 @@ const Egresos = () => {
                         </svg>
                         Eliminar
                     </Button>
-                    <Button variant="azul" >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="25"
-                            height="25"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="icon icon-tabler icons-tabler-outline icon-tabler-edit"
-                        >
+                    <Button 
+                        variant="azul" 
+                        onClick={verEdicion}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-edit">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
                             <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
@@ -75,19 +262,8 @@ const Egresos = () => {
                         </svg>
                         Editar
                     </Button>
-                    <Button variant="verde" >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="25"
-                            height="25"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="icon icon-tabler icons-tabler-outline icon-tabler-square-rounded-plus"
-                        >
+                    <Button variant="verde" onClick={abrirModalAgregar}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-square-rounded-plus">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
                             <path d="M15 12h-6" />
@@ -100,19 +276,172 @@ const Egresos = () => {
                     <Button 
                         variant={vista === "gastos" ? "activo" : "neutro"} 
                         onClick={() => setVista('gastos')}
-                        >
+                    >
                         Ver Gastos
                     </Button>
                     <Button 
                         variant={vista === "compras" ? "activo" : "neutro"} 
-                        onClick={() => setVista('compras')}>
+                        onClick={() => setVista('compras')}
+                    >
                         Ver Compras
                     </Button>
                 </div>
                 <div id='tablas'>
-                    {vista === "gastos" && <Gastos />}
-                    {vista === "compras" && <Compras />}
+                    {vista === "gastos" && 
+                        <Gastos 
+                            seleccionados={seleccionados}
+                            setSeleccionados={setSeleccionados}
+                            gastosData={egresoData}
+                            itemEditando={itemEditando}
+                            datosEditados={datosEditados}
+                            handleChangeEdicion={handleChangeEdicion}
+                        />
+                    }
+                    {vista === "compras" && 
+                        <Compras 
+                            seleccionados={seleccionados}
+                            setSeleccionados={setSeleccionados}
+                            comprasData={egresoData}
+                            itemEditando={itemEditando}
+                            datosEditados={datosEditados}
+                            handleChangeEdicion={handleChangeEdicion}
+                        />
+                    }
                 </div>
+
+                {edicion && (
+                    <div id="botoness-edicion">
+                        <Button variant="verde" onClick={guardarEdicion}>Guardar</Button>
+                        <Button variant="rojo" onClick={cancelarEdicion}>Cancelar</Button>
+                    </div>
+                )}
+
+                {/* Modal de eliminar */}
+                {showModalEliminar && (
+                    <div className="modal" onClick={() => setShowModalEliminar(false)}>
+                        <div className="modal-contenedor-eliminar-p" onClick={(e) => e.stopPropagation()}>
+                            <h2>¿Está completamente seguro que desea eliminar el/los {vista === "gastos" ? "gasto(s)" : "compra(s)"} seleccionado(s)?</h2>
+                            <div id="botoness">
+                                <Button variant="verde" onClick={eliminarEgresoSeleccionado}>Aceptar</Button>
+                                <Button variant="rojo" onClick={() => setShowModalEliminar(false)}>Cancelar</Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Modal de agregar */}
+                {showModalAgregar && (
+                    <div className="modal" onClick={cerrarModalAgregar}>
+                        <div className="modal-contenedor-p" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-contenido-p">
+                                <form className="formulario-p" onSubmit={handleSubmit}>
+                                    <h2>Agregar {vista === "gastos" ? "Gasto" : "Compra"}</h2>
+                                    
+                                    <div className="bloque-p">
+                                        <label>{vista === "gastos" ? "Nombre del gasto" : "Nombre del producto"}</label>
+                                        <input 
+                                            type="text" 
+                                            placeholder={vista === "gastos" ? "Ej: Arriendo" : "Ej: Bon Bon Bum"} 
+                                            name="nombre" 
+                                            value={datosForm.nombre} 
+                                            onChange={handleChange} 
+                                            required
+                                        />
+                                    </div>
+                                    
+                                    <div className="bloque-p">
+                                        <label>Precio</label>
+                                        <input 
+                                            type="number" 
+                                            placeholder="Ej: 500000" 
+                                            name="precio" 
+                                            value={datosForm.precio} 
+                                            onChange={handleChange}  
+                                            min="0"
+                                            required
+                                        />
+                                    </div>
+
+                                    {vista === "gastos" ? (
+                                        <>
+                                            <div className="bloque-p">
+                                                <label>Estado</label>
+                                                <select 
+                                                    name="estado" 
+                                                    value={datosForm.estado} 
+                                                    onChange={handleChange}
+                                                    required
+                                                >
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="Fijo">Fijo</option>
+                                                    <option value="Variable">Variable</option>
+                                                </select>
+                                            </div>
+
+                                            <div className="bloque-p">
+                                                <label>Fecha de pago</label>
+                                                <input 
+                                                    type="date" 
+                                                    name="fecha_de_pago" 
+                                                    value={datosForm.fecha_de_pago} 
+                                                    onChange={handleChange} 
+                                                    required
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="bloque-p">
+                                                <label>Cantidad</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="Ej: 100" 
+                                                    name="cantidad" 
+                                                    value={datosForm.cantidad} 
+                                                    onChange={handleChange} 
+                                                    min="1"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="bloque-p">
+                                                <label>Proveedor</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Ej: Colombina" 
+                                                    name="proveedor" 
+                                                    value={datosForm.proveedor} 
+                                                    onChange={handleChange} 
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="bloque-p">
+                                                <label>Fecha de compra</label>
+                                                <input 
+                                                    type="date" 
+                                                    name="fecha_de_compra" 
+                                                    value={datosForm.fecha_de_compra} 
+                                                    onChange={handleChange} 
+                                                    required
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {error && <p className="error-p">{error}</p>}  
+
+                                    <div className="botones">
+                                        <Button type="submit" variant="verde" className="btn">Guardar</Button>
+                                        <Button variant="rojo" onClick={cerrarModalAgregar} className="btn">Cancelar</Button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <ToastContainer position="top-center" autoClose={3000} />
             </section>
         </>
     );
