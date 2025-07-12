@@ -3,7 +3,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "../components/Button";
-import Buscador from "../components/buscador";
 import { consultaInventario } from "../js/inventario";
 import { consultaProveedores } from "../js/proveedores";
 import { consultaCategoria } from "../js/categoria";
