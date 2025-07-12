@@ -7,6 +7,8 @@ import Compras from './Compras';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getEgresos, createEgreso, deleteEgreso, updateEgreso } from "../js/gastosService";
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 
 const Egresos = () => {
     const [cargando, setCargando] = useState(true);
@@ -19,6 +21,30 @@ const Egresos = () => {
     const [edicion, setEdicion] = useState(false);
     const [itemEditando, setItemEditando] = useState(null);
     const [datosEditados, setDatosEditados] = useState({});
+    
+    const animatedComponents = makeAnimated();
+    
+
+    // Modificar el estado inicial
+    const [productosOptions, setProductosOptions] = useState([]);
+    const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+
+    // Agregar esta función para obtener productos
+    const obtenerProductos = async () => {
+        try {
+            const productos = await getEgresos("productos"); // Asume que tienes este endpoint
+            const options = productos.map(producto => ({
+                value: producto.id,
+                label: `${producto.nombre} (${producto.proveedor.nombre})`,
+                nombre: producto.nombre,
+                proveedor: producto.proveedor.nombre
+            }));
+            setProductosOptions(options);
+        } catch (error) {
+            console.error("Error al obtener productos:", error);
+            toast.error("Error al cargar los productos");
+        }
+    };
 
     // Formulario dinámico según vista
     const [datosForm, setDatosForm] = useState({
@@ -39,19 +65,17 @@ const Egresos = () => {
             setCargando(true);
             const data = await getEgresos(vista);
             
-            // Normalizar datos para evitar errores
             const datosNormalizados = data.map(item => ({
                 id: item.id || '',
                 nombre: item.nombre || '',
-                precio: item.precio ? Number(item.precio) : 0,
-                // Campos gastos
+                precio: item.precio || item.subtotal || 0,
                 estado: item.estado || '',
                 fecha_de_pago: item.fecha_de_pago || '',
-                // Campos compras
-                producto: item.producto || '',
-                cantidad: item.cantidad ? Number(item.cantidad) : 0,
+                idproducto: item.idproducto || (item.detallesCompra && item.detallesCompra[0]?.idproducto) || '',
+                cantidad: item.cantidad || (item.detallesCompra && item.detallesCompra[0]?.cantidad) || 0,
+                fecha: item.fecha || item.fecha_de_compra || '',
                 proveedor: item.proveedor || '',
-                fecha_de_compra: item.fecha_de_compra || ''
+                productoInfo: item.productoInfo || ''
             }));
             
             setEgresoData(datosNormalizados);
@@ -70,31 +94,47 @@ const Egresos = () => {
     };
 
     // Manejar envío del formulario
-    const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
         e.preventDefault();
         
         // Validación básica
-        if (!datosForm.nombre || !datosForm.precio) {
-            setError("Los campos nombre y precio son obligatorios");
-            return;
-        }
-
-        if (vista === "gastos" && (!datosForm.estado || !datosForm.fecha_de_pago)) {
+        if (vista === "gastos" && (!datosForm.nombre || !datosForm.precio || !datosForm.estado || !datosForm.fecha_de_pago)) {
             setError("Todos los campos son obligatorios para gastos");
             return;
         }
 
-        if (vista === "compras" && (!datosForm.cantidad || !datosForm.proveedor || !datosForm.fecha_de_compra)) {
+        if (vista === "compras" && (!datosForm.idproducto || !datosForm.precio || !datosForm.cantidad || !datosForm.fecha_de_compra)) {
             setError("Todos los campos son obligatorios para compras");
             return;
         }
         
         try {
-            const response = await createEgreso(vista, datosForm);
+            let dataToSend;
+            
+            if (vista === "gastos") {
+                dataToSend = {
+                    nombre: datosForm.nombre,
+                    precio: datosForm.precio,
+                    estado: datosForm.estado,
+                    fecha_de_pago: datosForm.fecha_de_pago
+                };
+            } else { // compras
+                dataToSend = {
+                    subtotal: datosForm.precio,
+                    fecha: datosForm.fecha_de_compra,
+                    detallesCompra: [{
+                        idproducto: datosForm.idproducto,
+                        cantidad: datosForm.cantidad
+                    }]
+                };
+            }
+
+            const response = await createEgreso(vista, dataToSend);
             if (response.status === 201) {
                 toast.success(`${vista === "gastos" ? "Gasto" : "Compra"} creado exitosamente!`);
                 obtenerEgresos();
                 cerrarModalAgregar();
+                setProductoSeleccionado(null); // Limpiar selección
             }
         } catch (error) {
             toast.error(`Error al crear ${vista === "gastos" ? "gasto" : "compra"}`);
@@ -105,6 +145,7 @@ const Egresos = () => {
     // Manejar eliminación de egresos
     const eliminarEgresoSeleccionado = async () => {
         try {
+            console.log("entra",seleccionados)
             const response = await deleteEgreso(vista, seleccionados);
             if (response.status === 204) {
                 toast.success(`${vista === "gastos" ? "Gasto(s)" : "Compra(s)"} eliminado(s) exitosamente!`);
@@ -124,10 +165,11 @@ const Egresos = () => {
             precio: '',
             estado: '',
             fecha_de_pago: '',
+            idproducto: '',
             cantidad: '',
-            proveedor: '',
             fecha_de_compra: ''
         });
+        setProductoSeleccionado(null);
         setError('');
         setShowModalAgregar(true);
     };
@@ -164,41 +206,41 @@ const Egresos = () => {
     };
 
     const guardarEdicion = async () => {
-        try {
-            // Preparar los datos según el tipo (gastos/compras)
-            let datosActualizados;
-            
-            if (vista === "gastos") {
-                datosActualizados = {
-                    id: datosEditados.id,
-                    nombre: datosEditados.nombre,
-                    precio: datosEditados.precio,
-                    estado: datosEditados.estado,
-                    fecha_de_pago: datosEditados.fecha_de_pago
-                };
-            } else { // compras
-                datosActualizados = {
-                    id: datosEditados.id,
-                    producto: datosEditados.producto,
-                    precio: datosEditados.precio,
-                    cantidad: datosEditados.cantidad,
-                    proveedor: datosEditados.proveedor,
-                    fecha_de_compra: datosEditados.fecha_de_compra
-                };
-            }
-
-            const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
-            
-            if (response.status === 200) {
-                toast.success("¡Cambios guardados exitosamente!");
-                obtenerEgresos();
-                cancelarEdicion();
-            }
-        } catch (error) {
-            console.error("Error al actualizar:", error);
-            toast.error("Error al guardar los cambios");
+    try {
+        let datosActualizados;
+        
+        if (vista === "gastos") {
+            datosActualizados = {
+                id: datosEditados.id,
+                nombre: datosEditados.nombre,
+                precio: datosEditados.precio,
+                estado: datosEditados.estado,
+                fecha_de_pago: datosEditados.fecha_de_pago
+            };
+        } else { // compras
+            datosActualizados = {
+                id: datosEditados.id,
+                subtotal: datosEditados.precio,
+                fecha: datosEditados.fecha,
+                detallesCompra: [{
+                    idproducto: datosEditados.idproducto,
+                    cantidad: datosEditados.cantidad
+                }]
+            };
         }
-    };
+
+        const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
+        
+        if (response.status === 200) {
+            toast.success("¡Cambios guardados exitosamente!");
+            obtenerEgresos();
+            cancelarEdicion();
+        }
+    } catch (error) {
+        console.error("Error al actualizar:", error);
+        toast.error("Error al guardar los cambios");
+        }
+    }
 
 
     const handleChangeEdicion = (e) => {
@@ -208,6 +250,9 @@ const Egresos = () => {
 
     // Cargar datos cuando cambia la vista
     useEffect(() => {
+          if (vista === "compras") {
+            obtenerProductos();
+            }
         obtenerEgresos();
         setSeleccionados([]);
         setEdicion(false);
@@ -336,34 +381,32 @@ const Egresos = () => {
                             <div className="modal-contenido-p">
                                 <form className="formulario-p" onSubmit={handleSubmit}>
                                     <h2>Agregar {vista === "gastos" ? "Gasto" : "Compra"}</h2>
-                                    
-                                    <div className="bloque-p">
-                                        <label>{vista === "gastos" ? "Nombre del gasto" : "Nombre del producto"}</label>
-                                        <input 
-                                            type="text" 
-                                            placeholder={vista === "gastos" ? "Ej: Arriendo" : "Ej: Bon Bon Bum"} 
-                                            name="nombre" 
-                                            value={datosForm.nombre} 
-                                            onChange={handleChange} 
-                                            required
-                                        />
-                                    </div>
-                                    
-                                    <div className="bloque-p">
-                                        <label>Precio</label>
-                                        <input 
-                                            type="number" 
-                                            placeholder="Ej: 500000" 
-                                            name="precio" 
-                                            value={datosForm.precio} 
-                                            onChange={handleChange}  
-                                            min="0"
-                                            required
-                                        />
-                                    </div>
-
                                     {vista === "gastos" ? (
                                         <>
+                                            <div className="bloque-p">
+                                                <label>{vista === "gastos" ? "Nombre del gasto" : "Nombre del producto"}</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder={vista === "gastos" ? "Ej: Arriendo" : "Ej: Bon Bon Bum"} 
+                                                    name="nombre" 
+                                                    value={datosForm.nombre} 
+                                                    onChange={handleChange} 
+                                                    required
+                                                />
+                                            </div>
+                                            
+                                            <div className="bloque-p">
+                                                <label>Precio</label>
+                                                <input 
+                                                    type="number" 
+                                                    placeholder="Ej: 500000" 
+                                                    name="precio" 
+                                                    value={datosForm.precio} 
+                                                    onChange={handleChange}  
+                                                    min="0"
+                                                    required
+                                                />
+                                            </div>
                                             <div className="bloque-p">
                                                 <label>Estado</label>
                                                 <select 
@@ -390,45 +433,69 @@ const Egresos = () => {
                                             </div>
                                         </>
                                     ) : (
-                                        <>
-                                            <div className="bloque-p">
-                                                <label>Cantidad</label>
-                                                <input 
-                                                    type="number" 
-                                                    placeholder="Ej: 100" 
-                                                    name="cantidad" 
-                                                    value={datosForm.cantidad} 
-                                                    onChange={handleChange} 
-                                                    min="1"
-                                                    required
-                                                />
-                                            </div>
+                                            <>
+                                                <div className="bloque-p">
+                                                    <label>Producto</label>
+                                                    <Select
+                                                        className="react-select-container"
+                                                        classNamePrefix="react-select"
+                                                        options={productosOptions}
+                                                        value={productoSeleccionado}
+                                                        onChange={(selectedOption) => {
+                                                            setProductoSeleccionado(selectedOption);
+                                                            setDatosForm(prev => ({
+                                                                ...prev,
+                                                                idproducto: selectedOption.value,
+                                                                nombre: selectedOption.nombre,
+                                                                proveedor: selectedOption.proveedor
+                                                            }));
+                                                        }}
+                                                        placeholder="Buscar producto..."
+                                                        isSearchable
+                                                        noOptionsMessage={() => "No se encontraron productos"}
+                                                        components={animatedComponents}
+                                                        required
+                                                    />
+                                                </div>
+                                                
+                                                <div className="bloque-p">
+                                                    <label>Subtotal</label>
+                                                    <input 
+                                                        type="number" 
+                                                        placeholder="Ej: 500000" 
+                                                        name="precio" 
+                                                        value={datosForm.precio} 
+                                                        onChange={handleChange}  
+                                                        min="0"
+                                                        required
+                                                    />
+                                                </div>
 
-                                            <div className="bloque-p">
-                                                <label>Proveedor</label>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Ej: Colombina" 
-                                                    name="proveedor" 
-                                                    value={datosForm.proveedor} 
-                                                    onChange={handleChange} 
-                                                    required
-                                                />
-                                            </div>
+                                                <div className="bloque-p">
+                                                    <label>Cantidad</label>
+                                                    <input 
+                                                        type="number" 
+                                                        placeholder="Ej: 100" 
+                                                        name="cantidad" 
+                                                        value={datosForm.cantidad} 
+                                                        onChange={handleChange} 
+                                                        min="1"
+                                                        required
+                                                    />
+                                                </div>
 
-                                            <div className="bloque-p">
-                                                <label>Fecha de compra</label>
-                                                <input 
-                                                    type="date" 
-                                                    name="fecha_de_compra" 
-                                                    value={datosForm.fecha_de_compra} 
-                                                    onChange={handleChange} 
-                                                    required
-                                                />
-                                            </div>
-                                        </>
-                                    )}
-
+                                                <div className="bloque-p">
+                                                    <label>Fecha de compra</label>
+                                                    <input 
+                                                        type="date" 
+                                                        name="fecha_de_compra" 
+                                                        value={datosForm.fecha_de_compra} 
+                                                        onChange={handleChange} 
+                                                        required
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
                                     {error && <p className="error-p">{error}</p>}  
 
                                     <div className="botones">

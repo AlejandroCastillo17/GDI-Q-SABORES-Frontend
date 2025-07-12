@@ -1,105 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import { getEgresos, deleteEgreso } from "../js/gastosService";
-import { toast } from "react-toastify";
-import "../styles/Compras.css";
+import React from 'react';
+import "../styles/Gastos.css";
 
-const Compras = ({ seleccionados, setSeleccionados, itemEditando, datosEditados, handleChangeEdicion }) => {
-    const [compras, setCompras] = useState([]);
-    const [cargando, setCargando] = useState(true);
-
-    const obtenerCompras = async () => {
-        try {
-            const res = await getEgresos("compras");
-            if (Array.isArray(res)) {
-                setCompras(res);
-            } else {
-                console.error("Respuesta no esperada:", res);
-                toast.error("Formato de datos incorrecto");
-            }
-        } catch (error) {
-            console.error("Error al cargar compras:", error);
-            toast.error("Error al cargar compras");
-        } finally {
-            setCargando(false);
-        }
-    };
-
-    useEffect(() => {
-        obtenerCompras();
-    }, []);
-
+const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, datosEditados, handleChangeEdicion }) => {
     const handleSeleccion = (id) => {
-        setSeleccionados(prev =>
-            prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+        setSeleccionados(prev => 
+            prev.includes(id) 
+                ? prev.filter(item => item !== id) 
+                : [...prev, id]
         );
     };
-
-    const eliminarSeleccionados = async () => {
-        if (seleccionados.length === 0) {
-            toast.warning("No hay compras seleccionadas");
-            return;
-        }
-
-        try {
-            const res = await deleteEgreso("compras", { ids: seleccionados });
-            if (res.status === 204) {
-                toast.success("Compras eliminadas correctamente");
-                obtenerCompras();
-                setSeleccionados([]);
-            }
-        } catch (err) {
-            console.error("Error al eliminar compras:", err);
-            toast.error("No se pudieron eliminar las compras");
-        }
-    };
-
-    if (cargando) {
-        return (
-            <div className="modal-cargando">
-                <div className="modal-contenido-c">
-                    <div className='loader'></div>
-                </div>
-            </div>
-        );
-    }
+    
+    console.log("en compras y detalles", comprasData )
 
     return (
-        <div className="compras-tabla">
+        <div className="gastos-tabla">
             <table className="tabla">
-                <thead>
+                <thead className='t'>
                     <tr>
-                        <th width="5%"></th>
-                        <th width="10%">ID</th>
-                        <th width="20%">Proveedor</th>
-                        <th width="15%">Fecha</th>
-                        <th width="15%">Subtotal</th>
-                        <th width="35%">Productos</th>
+                        <th></th>
+                        <th>Proveedor</th>
+                        <th>Detalles</th>
+                        <th>Cantidad</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {compras.length > 0 ? (
-                        compras.map((compra) => (
-                            <tr key={compra.id} className={seleccionados.includes(compra.id) ? 'seleccionado' : ''}>
+                    {comprasData && comprasData.length > 0 ? (
+                        comprasData.map((compra) => (
+                            <tr key={compra.id}>
                                 <td>
-                                    <input
-                                        type="checkbox"
+                                    <input 
+                                        type="checkbox" 
                                         checked={seleccionados.includes(compra.id)}
                                         onChange={() => handleSeleccion(compra.id)}
-                                        disabled={itemEditando !== null}
+                                        disabled={itemEditando !== null && itemEditando !== compra.id}
                                     />
                                 </td>
-                                <td>{compra.id}</td>
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input
                                             className="input-edit"
                                             type="text"
                                             name="proveedor"
-                                            value={datosEditados.proveedor?.nombre || ''}
+                                            value={datosEditados.subtotal || ''}
                                             onChange={handleChangeEdicion}
                                         />
+                                    ) : (<ul style={{ margin: 0, padding: 0, listStyle: 'none', }}>
+                                    {Array.isArray(compra.detallesCompra) ? compra.detallesCompra.map((detalle, index) => (
+                                        <li key={index}>
+                                        {`${detalle.producto.proveedor.nombre}`}
+                                        </li>
+                                    )): "Sin detalles"}
+                                    </ul>
+                                    )}
+                                </td>
+                                <td>
+                                {itemEditando === compra.id ? (
+                                    <input
+                                    className="input-edit"
+                                    type="text"
+                                    name="detalles"
+                                    value={datosEditados.cantidad || ''}
+                                    onChange={handleChangeEdicion}
+                                    />
+                                ) : (
+                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                                    {Array.isArray(compra.detallesCompra) && compra.detallesCompra.map((detalle, index) => (
+                                        <li key={index}>
+                                        {`${detalle.producto.nombre} (x${detalle.cantidad})` }
+                                        </li>
+                                    ))}
+                                    </ul>
+                                )}
+                                </td>
+                                <td>
+                                    {itemEditando === compra.id ? (
+                                        <input
+                                            className="input-edit"
+                                            type="number"
+                                            name="subtotal"
+                                            value={datosEditados.subtotal || 0}
+                                            onChange={handleChangeEdicion}
+                                            min="0"
+                                        />
                                     ) : (
-                                        compra.proveedor?.nombre || "Sin proveedor"
+                                        `$${(compra.subtotal || 0).toLocaleString()}`
                                     )}
                                 </td>
                                 <td>
@@ -112,89 +98,20 @@ const Compras = ({ seleccionados, setSeleccionados, itemEditando, datosEditados,
                                             onChange={handleChangeEdicion}
                                         />
                                     ) : (
-                                        compra.fecha
+                                        compra.fecha ? new Date(compra.fecha).toLocaleDateString() : 'N/A'
                                     )}
-                                </td>
-                                <td>
-                                    {itemEditando === compra.id ? (
-                                        <input
-                                            className="input-edit"
-                                            type="number"
-                                            name="subtotal"
-                                            value={datosEditados.subtotal || ''}
-                                            onChange={handleChangeEdicion}
-                                            min="0"
-                                            step="0.01"
-                                        />
-                                    ) : (
-                                        `$${compra.subtotal?.toLocaleString() || '0'}`
-                                    )}
-                                </td>
-                                <td>
-                                    {compra.detallesCompra?.map((detalle) => (
-                                        <div key={detalle.id} className="producto-item">
-                                            {itemEditando === compra.id ? (
-                                                <>
-                                                    <input
-                                                        className="input-edit"
-                                                        type="text"
-                                                        name={`producto-${detalle.id}`}
-                                                        value={detalle.producto?.nombre || ''}
-                                                        onChange={(e) => handleChangeEdicion({
-                                                            target: {
-                                                                name: 'productos',
-                                                                value: datosEditados.detallesCompra.map(p => 
-                                                                    p.id === detalle.id ? 
-                                                                    {...p, producto: {...p.producto, nombre: e.target.value}} : p
-                                                                )
-                                                            }
-                                                        })}
-                                                    />
-                                                    <input
-                                                        className="input-edit cantidad"
-                                                        type="number"
-                                                        name={`cantidad-${detalle.id}`}
-                                                        value={detalle.cantidad || ''}
-                                                        onChange={(e) => handleChangeEdicion({
-                                                            target: {
-                                                                name: 'productos',
-                                                                value: datosEditados.detallesCompra.map(p => 
-                                                                    p.id === detalle.id ? 
-                                                                    {...p, cantidad: e.target.value} : p
-                                                                )
-                                                            }
-                                                        })}
-                                                        min="1"
-                                                    />
-                                                </>
-                                            ) : (
-                                                `${detalle.producto?.nombre || 'Producto'} x${detalle.cantidad || '0'}`
-                                            )}
-                                        </div>
-                                    ))}
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="6" className="no-data">
+                            <td colSpan="5" className="no-data">
                                 No hay compras registradas
                             </td>
                         </tr>
                     )}
                 </tbody>
             </table>
-
-            {seleccionados.length > 0 && (
-                <div className="acciones">
-                    <button 
-                        className="btn-eliminar"
-                        onClick={eliminarSeleccionados}
-                    >
-                        Eliminar seleccionados
-                    </button>
-                </div>
-            )}
         </div>
     );
 };
