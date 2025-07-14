@@ -10,7 +10,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
         );
     };
     
-    console.log("en compras y detalles", comprasData )
+    console.log("en compras y detalles", comprasData)
 
     return (
         <div className="gastos-tabla">
@@ -37,24 +37,28 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                         disabled={itemEditando !== null && itemEditando !== compra.id}
                                     />
                                 </td>
+                                {/* Proveedor */}
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input
                                             className="input-edit"
                                             type="text"
                                             name="proveedor"
-                                            value={datosEditados.subtotal || ''}
+                                            value={datosEditados.detallesCompra?.idproducto    || ''}
                                             onChange={handleChangeEdicion}
                                         />
                                     ) : (<ul style={{ margin: 0, padding: 0, listStyle: 'none', }}>
-                                    {Array.isArray(compra.detallesCompra) ? compra.detallesCompra.map((detalle, index) => (
-                                        <li key={index}>
-                                        {`${detalle.producto.proveedor.nombre}`}
-                                        </li>
-                                    )): "Sin detalles"}
+                                        {console.log("compra", compra)}
+                                        {Array.isArray(compra.detallesCompra) ? compra.detallesCompra.map((detalle, index) => (
+                                            <li key={index}>
+                                            {`${detalle.producto.proveedor.nombre}`}
+                                            </li>
+                                        )): compra.producto?.proveedor?.nombre}
                                     </ul>
                                     )}
                                 </td>
+
+                                {/* Detalles */}
                                 <td>
                                 {itemEditando === compra.id ? (
                                     <input
@@ -66,14 +70,35 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                     />
                                 ) : (
                                     <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                                    {Array.isArray(compra.detallesCompra) && compra.detallesCompra.map((detalle, index) => (
+                                    {/* {(Array.isArray(compra.detallesCompra) && compra.detallesCompra.map((detalle, index) => (
                                         <li key={index}>
                                         {`${detalle.producto.nombre} (x${detalle.cantidad})` }
                                         </li>
-                                    ))}
+                                    )))} */}
+                                    
+                                            { compra.producto.nombre }  
                                     </ul>
                                 )}
                                 </td>
+                        
+                                {/* Cantidad */}
+                                <td>
+                                    {itemEditando === compra.id ? (
+                                        <input
+                                            className="input-edit"
+                                            type="number"
+                                            name="cantidad"
+                                            value={datosEditados.detallesCompra?.cantidad || ''}
+                                            onChange={handleChangeEdicion}
+                                        />
+                                    ) : (
+                                        compra.cantidad ? new Number(compra.cantidad).toLocaleString('es-CO', {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0,}) : 'N/A'
+                                    )}
+                                </td>
+                                
+                                {/* Precio */}
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input
@@ -85,9 +110,13 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             min="0"
                                         />
                                     ) : (
-                                        `$${(compra.subtotal || 0).toLocaleString()}`
-                                    )}
+                                        `$${Number(compra.precio || 0).toLocaleString('es-CO', {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0,})}`
+                                            )}
                                 </td>
+
+                                {/* Fecha */}
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input

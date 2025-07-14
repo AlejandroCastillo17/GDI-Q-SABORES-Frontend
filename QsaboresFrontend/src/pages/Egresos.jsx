@@ -6,7 +6,7 @@ import Gastos from './Gastos';
 import Compras from './Compras';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getEgresos, createEgreso, deleteEgreso, updateEgreso } from "../js/gastosService";
+import { getEgresos, createEgreso, deleteEgreso, updateEgreso } from "../js/egresosService";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 
@@ -64,20 +64,20 @@ const Egresos = () => {
         try {
             setCargando(true);
             const data = await getEgresos(vista);
-            
+            // console.log("data", data)
             const datosNormalizados = data.map(item => ({
                 id: item.id || '',
                 nombre: item.nombre || '',
                 precio: item.precio || item.subtotal || 0,
                 estado: item.estado || '',
                 fecha_de_pago: item.fecha_de_pago || '',
-                idproducto: item.idproducto || (item.detallesCompra && item.detallesCompra[0]?.idproducto) || '',
+                producto: item.idproducto || (item.detallesCompra && item.detallesCompra[0]?.producto) || '',
                 cantidad: item.cantidad || (item.detallesCompra && item.detallesCompra[0]?.cantidad) || 0,
                 fecha: item.fecha || item.fecha_de_compra || '',
                 proveedor: item.proveedor || '',
                 productoInfo: item.productoInfo || ''
             }));
-            
+            // console.log("datos normalizados",datosNormalizados)
             setEgresoData(datosNormalizados);
         } catch (error) {
             console.error("Error en la consulta:", error);

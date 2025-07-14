@@ -9,7 +9,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                 : [...prev, id]
         );
     };
-
+    // console.log(gastosData)
     return (
         <div className="gastos-tabla">
             <table className="tabla">
@@ -58,7 +58,10 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                                             min="0"
                                         />
                                     ) : (
-                                        `$${(gasto.precio || 0).toLocaleString()}`
+                                        `$${Number(gasto.precio || 0).toLocaleString('es-CO', {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0,
+                                            })}`
                                     )}
                                 </td>
                                 <td>
@@ -86,7 +89,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                                             onChange={handleChangeEdicion}
                                         />
                                     ) : (
-                                        gasto.fecha_de_pago ? new Date(gasto.fecha_de_pago).toLocaleDateString() : 'N/A'
+                                        gasto.fecha_de_pago ? new Date(gasto.fecha_de_pago).toLocaleDateString('es-ES', { timeZone: 'UTC' }) : 'N/A'
                                     )}
                                 </td>
                             </tr>
