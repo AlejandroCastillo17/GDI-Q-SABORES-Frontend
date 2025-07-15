@@ -6,7 +6,7 @@ import Gastos from './Gastos';
 import Compras from './Compras';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getEgresos, createEgreso, deleteEgreso, updateEgreso } from "../js/egresosService";
+import { getEgresos, createEgreso, deleteEgreso, updateEgreso, getProductos } from "../js/egresosService";
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 
@@ -32,7 +32,7 @@ const Egresos = () => {
     // Agregar esta función para obtener productos
     const obtenerProductos = async () => {
         try {
-            const productos = await getEgresos("productos"); // Asume que tienes este endpoint
+            const productos = await getProductos(); // Asume que tienes este endpoint
             const options = productos.map(producto => ({
                 value: producto.id,
                 label: `${producto.nombre} (${producto.proveedor.nombre})`,

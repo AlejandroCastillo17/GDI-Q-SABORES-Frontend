@@ -1,7 +1,46 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
+import Select from 'react-select';
 import "../styles/Gastos.css";
+import makeAnimated from 'react-select/animated';
+import { getProductos } from '../js/egresosService';
+
+const animatedComponents = makeAnimated();
 
 const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, datosEditados, handleChangeEdicion }) => {
+    
+    const [productosOptions, setProductosOptions] = useState([]);
+    const [proveedoresOptions, setProveedoresOptions] = useState([]);
+    const [combinedOptions, setCombinedOptions] = useState([]);
+    const [headerColspan, setHeaderColspan] = useState({ proveedor: 1, detalles: 1 });
+
+    useEffect(() => {
+        // Simular carga de datos (reemplaza con tu API real)
+        const loadOptions = async () => {
+
+            if (itemEditando) {
+                setHeaderColspan({ proveedor: 2, detalles: 0 });
+            } else {
+                setHeaderColspan({ proveedor: 1, detalles: 1 });
+            }
+
+            const productos = await getProductos();
+
+            const productosOpts = productos.map(p => ({
+                value: p.id,
+                label: `${p.nombre} | ${p.proveedor.nombre}`,
+                producto: p.nombre,
+                proveedor: p.proveedor.nombre
+            }));
+            
+            setProductosOptions(productosOpts);
+            setCombinedOptions(productosOpts);
+        };
+        
+        loadOptions();
+    }, []);
+
+    
     const handleSeleccion = (id) => {
         setSeleccionados(prev => 
             prev.includes(id) 
@@ -10,16 +49,54 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
         );
     };
     
-    console.log("en compras y detalles", comprasData)
+     const handleCombinedChange = (selectedOption) => {
+        if (selectedOption) {
+            handleChangeEdicion({
+                target: {
+                    name: 'producto',
+                    value: selectedOption.producto
+                }
+            });
+            handleChangeEdicion({
+                target: {
+                    name: 'proveedor',
+                    value: selectedOption.proveedor
+                }
+            });
+            handleChangeEdicion({
+                target: {
+                    name: 'idproducto',
+                    value: selectedOption.value
+                }
+            });
+        }
+    };
+
+    const getCurrentCombinedValue = (compra) => {
+        const producto = datosEditados.producto?.nombre || compra.producto?.nombre || '';
+        const proveedor = datosEditados.proveedor || compra.proveedor || compra.producto?.proveedor?.nombre || '';
+        
+        if (!producto && !proveedor) return null;
+        
+        return {
+            value: datosEditados.idproducto || compra.producto?.id || '',
+            label: `${producto} | ${proveedor}`,
+            producto,
+            proveedor
+        };
+    };
+
 
     return (
         <div className="gastos-tabla">
             <table className="tabla">
                 <thead className='t'>
-                    <tr>
+                     <tr>
                         <th></th>
-                        <th>Proveedor</th>
-                        <th>Detalles</th>
+                        <th colSpan={headerColspan.proveedor}>
+                            {itemEditando ? 'Detalles/Proveedor' : 'Proveedor'}
+                        </th>
+                        {!itemEditando && <th colSpan={headerColspan.detalles}>Detalles</th>}
                         <th>Cantidad</th>
                         <th>Monto</th>
                         <th>Fecha</th>
@@ -27,7 +104,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                 </thead>
                 <tbody>
                     {comprasData && comprasData.length > 0 ? (
-                        comprasData.map((compra) => (
+                        comprasData.toReversed().map((compra) => (
                             <tr key={compra.id}>
                                 <td>
                                     <input 
@@ -37,49 +114,37 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                         disabled={itemEditando !== null && itemEditando !== compra.id}
                                     />
                                 </td>
-                                {/* Proveedor */}
+                                
+                                {/* Proveedor - Se combina con Detalles solo en edición */}
                                 <td>
                                     {itemEditando === compra.id ? (
-                                        <input
-                                            className="input-edit"
-                                            type="text"
-                                            name="proveedor"
-                                            value={datosEditados.detallesCompra?.idproducto    || ''}
-                                            onChange={handleChangeEdicion}
-                                        />
-                                    ) : (<ul style={{ margin: 0, padding: 0, listStyle: 'none', }}>
-                                        {console.log("compra", compra)}
-                                        {Array.isArray(compra.detallesCompra) ? compra.detallesCompra.map((detalle, index) => (
-                                            <li key={index}>
-                                            {`${detalle.producto.proveedor.nombre}`}
-                                            </li>
-                                        )): compra.producto?.proveedor?.nombre}
-                                    </ul>
+                                        <div className="combined-select">
+                                            <Select
+                                                className="react-select-container"
+                                                classNamePrefix="react-select"
+                                                options={combinedOptions}
+                                                value={getCurrentCombinedValue(compra)}
+                                                onChange={handleCombinedChange}
+                                                placeholder="Buscar producto/proveedor..."
+                                                isSearchable
+                                                noOptionsMessage={() => "No se encontraron resultados"}
+                                                components={animatedComponents}
+                                            />
+                                        </div>
+                                    ) : (
+                                        compra.proveedor || compra.producto?.proveedor?.nombre || 'N/A'
                                     )}
                                 </td>
 
-                                {/* Detalles */}
-                                <td>
-                                {itemEditando === compra.id ? (
-                                    <input
-                                    className="input-edit"
-                                    type="text"
-                                    name="detalles"
-                                    value={datosEditados.cantidad || ''}
-                                    onChange={handleChangeEdicion}
-                                    />
-                                ) : (
-                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                                    {/* {(Array.isArray(compra.detallesCompra) && compra.detallesCompra.map((detalle, index) => (
-                                        <li key={index}>
-                                        {`${detalle.producto.nombre} (x${detalle.cantidad})` }
-                                        </li>
-                                    )))} */}
-                                    
-                                            { compra.producto.nombre }  
-                                    </ul>
+                                {/* Detalles - Oculto en edición */}
+                                {itemEditando !== compra.id && (
+                                    <td>
+                                        {compra.producto?.nombre || 'N/A'}
+                                    </td>
                                 )}
-                                </td>
+                                {itemEditando === compra.id && (
+                                    <td style={{display: 'none'}}></td>
+                                )}
                         
                                 {/* Cantidad */}
                                 <td>
@@ -88,13 +153,15 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             className="input-edit"
                                             type="number"
                                             name="cantidad"
-                                            value={datosEditados.detallesCompra?.cantidad || ''}
+                                            value={datosEditados.cantidad || compra.cantidad || ''}
                                             onChange={handleChangeEdicion}
+                                            min="1"
                                         />
                                     ) : (
                                         compra.cantidad ? new Number(compra.cantidad).toLocaleString('es-CO', {
                                             minimumFractionDigits: 0,
-                                            maximumFractionDigits: 0,}) : 'N/A'
+                                            maximumFractionDigits: 0,
+                                        }) : 'N/A'
                                     )}
                                 </td>
                                 
@@ -104,16 +171,17 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                         <input
                                             className="input-edit"
                                             type="number"
-                                            name="subtotal"
-                                            value={datosEditados.subtotal || 0}
+                                            name="precio"
+                                            value={datosEditados.precio || compra.precio || 0}
                                             onChange={handleChangeEdicion}
                                             min="0"
                                         />
                                     ) : (
                                         `$${Number(compra.precio || 0).toLocaleString('es-CO', {
                                             minimumFractionDigits: 0,
-                                            maximumFractionDigits: 0,})}`
-                                            )}
+                                            maximumFractionDigits: 0,
+                                        })}`
+                                    )}
                                 </td>
 
                                 {/* Fecha */}
@@ -123,7 +191,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             className="input-edit"
                                             type="date"
                                             name="fecha"
-                                            value={datosEditados.fecha || ''}
+                                            value={datosEditados.fecha || compra.fecha || ''}
                                             onChange={handleChangeEdicion}
                                         />
                                     ) : (
@@ -134,7 +202,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="5" className="no-data">
+                            <td colSpan="6" className="no-data">
                                 No hay compras registradas
                             </td>
                         </tr>

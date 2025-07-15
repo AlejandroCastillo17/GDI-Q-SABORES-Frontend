@@ -14,5 +14,5 @@ export const deleteEgreso = async (url, ids) => {
   return await api.delete(`/${url}/${ids}/`);
 };
 
-export const getProductos = async (url) => (await api.get(`${url}/`)).data;
+export const getProductos = async () => (await api.get(`productos/`)).data;
 

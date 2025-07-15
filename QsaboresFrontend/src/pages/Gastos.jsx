@@ -24,7 +24,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                 </thead>
                 <tbody>
                     {gastosData && gastosData.length > 0 ? (
-                        gastosData.map((gasto) => (
+                        gastosData.toReversed().map((gasto) => (
                             <tr key={gasto.id}>
                                 <td>
                                     <input 
