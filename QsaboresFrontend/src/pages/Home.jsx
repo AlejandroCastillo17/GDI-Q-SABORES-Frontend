@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
 import { consultaInventario } from "../js/inventario";
 import { PrefetchPageLinks } from "react-router-dom";
-
+import { venderProducto } from "../js/venta";
+import { ToastContainer, toast } from "react-toastify";
 const Home = () => {
   const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -14,6 +15,42 @@ const Home = () => {
   const [devuelta, setDevuelta] = useState("");
   const [pago, setPago] = useState(0);
 
+  const exito = (texto) => {
+    toast.success(texto);
+  };
+  const vender = async () => {
+    if (productosSeleccionados.length != 0) {
+      const data = {
+        fecha: new Date().toISOString().split("T")[0],
+        detallesVentas: productosSeleccionados.map((p) => ({
+          idproducto: p.id,
+          subtotal: p.Precio,
+          cantidad: p.cantidad,
+        })),
+      };
+      try {
+        const respuesta = await venderProducto(data);
+        if (respuesta.status === 201) {
+          exito("Venta realizada con éxito");
+          setProductosSeleccionados([]);
+          setPago(0);
+          setDevuelta("");
+          setBusqueda("");
+          setCantidad("");
+          console.log("Venta exitosa");
+        } else {
+          alert("Error al realizar la venta");
+        }
+      } catch (error) {
+        console.error("Error al realizar la venta:", error.response?.data);
+        alert("Error al realizar la venta. Por favor, inténtelo de nuevo.");
+      }
+      console.log("data:", data);
+    } else {
+      alert("No hay productos seleccionados para vender.");
+      return;
+    }
+  };
   const devolucion = (valor) => {
     const total = calcularTotal();
     const pagoNumero = Number(valor);
@@ -322,10 +359,13 @@ const Home = () => {
           </div>
 
           <div className="label_Botones">
-            <Button variant="verde">Vender</Button>
+            <Button variant="verde" onClick={() => vender()}>
+              Vender
+            </Button>
             <Button variant="rojo">Cancelar</Button>
           </div>
         </section>
+        <ToastContainer position="top-center" autoClose={3000} />
       </section>
     </section>
   );
