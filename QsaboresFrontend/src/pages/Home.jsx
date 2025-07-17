@@ -14,6 +14,16 @@ const Home = () => {
   const [cantidad, setCantidad] = useState("");
   const [devuelta, setDevuelta] = useState("");
   const [pago, setPago] = useState(0);
+  const [Tdevuelve, setTdevuelve] = useState("--");
+
+  const handlechange = (e) => {
+    const valor = e.target.value;
+    if (/^-?\d*$/.test(valor)) {
+      setCantidad(valor);
+    } else {
+      alert("Por favor, ingresa un número válido");
+    }
+  };
 
   const exito = (texto) => {
     toast.success(texto);
@@ -51,21 +61,18 @@ const Home = () => {
       return;
     }
   };
+
   const devolucion = (valor) => {
     const total = calcularTotal();
     const pagoNumero = Number(valor);
-
-    if (isNaN(pagoNumero)) {
-      setDevuelta(""); // o podrías mostrar un mensaje de error
+    if (isNaN(pagoNumero) || pagoNumero < total) {
+      setTdevuelve("Falta");
+      setDevuelta((pagoNumero - total).toFixed(2));
       return;
+    } else {
+      setTdevuelve("Devuelve");
+      setDevuelta((pagoNumero - total).toFixed(2));
     }
-
-    if (pagoNumero < total) {
-      setDevuelta("");
-      return;
-    }
-
-    setDevuelta((pagoNumero - total).toFixed(2));
   };
 
   const calcularTotal = () => {
@@ -83,8 +90,9 @@ const Home = () => {
   const actualizarCantidad = (id, operacion) => {
     const nuevosP = productosSeleccionados.map((p) => {
       if (p.id === id) {
+        let cantidadActual = Number(p.cantidad);
         let cantidadNueva =
-          operacion === "sumar" ? p.cantidad + 1 : p.cantidad - 1;
+          operacion === "sumar" ? cantidadActual + 1 : cantidadActual - 1;
         if (cantidadNueva < 1) {
           cantidadNueva = 1;
         }
@@ -150,9 +158,10 @@ const Home = () => {
         total: productoSeleccionado.precio * cantidad,
       };
       setProductosSeleccionados([...productosSeleccionados, nuevo]);
-      setCantidad(1);
+      setCantidad(0);
       setProductoSeleccionado(null);
       setSugerencia([]);
+      setBusqueda("");
     } else {
       alert("Por favor, selecciona un producto y una cantidad válida.");
     }
@@ -193,7 +202,7 @@ const Home = () => {
               type="text"
               id="Busqueda_buscador"
               value={cantidad}
-              onChange={(e) => setCantidad(Number(e.target.value))}
+              onChange={(e) => handlechange(e)}
             />
           </div>
           <Button variant="verde" className="homeB" onClick={AgregarProducto}>
@@ -259,7 +268,7 @@ const Home = () => {
                       </div>
 
                       <input
-                        type="text"
+                        type="number"
                         className="Cantidades_numero"
                         value={p.cantidad}
                         readOnly
@@ -348,7 +357,7 @@ const Home = () => {
             </div>
 
             <div className="Contenido_labels">
-              <label htmlFor="">Devuelve</label>
+              <label htmlFor="">{Tdevuelve}</label>
               <input
                 type="text"
                 className="Labels_input"
