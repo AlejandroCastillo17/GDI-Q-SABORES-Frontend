@@ -209,7 +209,7 @@ const Egresos = () => {
     try {
         let datosActualizados;
         
-        if (vista === "gastos") {
+        if (vista == "gastos") {
             datosActualizados = {
                 id: datosEditados.id,
                 nombre: datosEditados.nombre,
@@ -220,18 +220,19 @@ const Egresos = () => {
         } else { // compras
             datosActualizados = {
                 id: datosEditados.id,
-                subtotal: datosEditados.precio,
+                subtotal: Number(datosEditados.precio),
                 fecha: datosEditados.fecha,
                 detallesCompra: [{
+                    id: datosEditados.detalles?.[0]?.id, 
                     idproducto: datosEditados.idproducto,
-                    cantidad: datosEditados.cantidad
+                    cantidad: Number(datosEditados.cantidad)
                 }]
             };
         }
-
+        console.log(datosActualizados)
         const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
         
-        if (response.status === 200) {
+        if (response.status == 200) {
             toast.success("¡Cambios guardados exitosamente!");
             obtenerEgresos();
             cancelarEdicion();

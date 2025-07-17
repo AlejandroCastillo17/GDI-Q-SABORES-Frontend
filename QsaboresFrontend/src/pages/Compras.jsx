@@ -49,7 +49,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
         );
     };
     
-     const handleCombinedChange = (selectedOption) => {
+    const handleCombinedChange = (selectedOption) => {
         if (selectedOption) {
             handleChangeEdicion({
                 target: {
