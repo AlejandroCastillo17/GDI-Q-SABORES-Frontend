@@ -1,12 +1,12 @@
 .compras-tabla {
     width: 90%;
-    height: 280px;
+    height: 60%;
     background-color: #C7DB9C;
     padding: 0;
-    border: 15px solid #C7DB9C;
+    border: 1rem solid #C7DB9C;
     border-radius: 15px;
     overflow-x: auto;
-  
+    
     scrollbar-width: none; 
     -ms-overflow-style: none; 
 }
@@ -66,3 +66,83 @@
 }
 
 
+.react-select-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.react-select__control {
+    min-height: 40px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.react-select__menu {
+    z-index: 1000;
+}
+
+
+
+/* Estilos para el select de productos */
+.react-select-container {
+    margin-bottom: 15px;
+}
+
+.react-select__control {
+    min-height: 40px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+.react-select__menu {
+    z-index: 1000;
+}
+
+.react-select__option--is-focused {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.react-select__option--is-selected {
+    background-color: #007bff;
+    color: white;
+}
+
+
+/* ------------------- */
+
+/* Estilos para el select combinado */
+.combined-select {
+    width: 100%;
+    min-width: 200px;
+}
+
+.react-select-container {
+    width: 100%;
+}
+
+.react-select__control {
+    min-height: 38px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.react-select__value-container {
+    padding: 2px 8px;
+}
+
+.react-select__input-container {
+    margin: 0;
+    padding: 0;
+}
+
+/* Asegurar que el ancho de las columnas se mantenga */
+.tabla th:nth-child(2),
+.tabla td:nth-child(2) {
+    min-width: 200px;
+}
+
+.tabla th:nth-child(3),
+.tabla td:nth-child(3) {
+    min-width: 150px;
+}

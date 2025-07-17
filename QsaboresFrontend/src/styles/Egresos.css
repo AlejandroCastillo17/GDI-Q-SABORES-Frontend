@@ -80,3 +80,82 @@
   height: 90%;
   justify-items: center;
 }
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(90, 90, 90, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-contenedor-p {
+  background-color: #FFF0BD;
+  width: 35%;
+  height: fit-content;
+  max-width: 90%;
+  max-height: 90%;
+  padding: 2%;
+  position: relative;
+  justify-items: center;
+  overflow: none;
+  border-radius: 15px;
+}
+
+.modal-contenido-p {
+  background: #C7DB9C;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  height: 82%;
+  overflow: none;
+  position: relative;
+}
+
+.modal-contenido div {
+  justify-self: center;
+}
+
+
+
+.modal-cargando {
+  position: fixed;
+  top: 0;
+  left: 320px;
+  width: 100%;
+  height: 100%;
+  background: #FFF0BD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-contenido-c {
+  width: 80%;
+  height: 80%;
+  text-align: center;
+  font-weight: 500;
+  align-content: center;
+  justify-items: center;
+  margin-right: 320px;
+
+}
+
+
+/* #botoness-edicion-egresos {
+  width: 100%;
+  margin-right: 75px;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: right;
+  text-align: center;
+} */
