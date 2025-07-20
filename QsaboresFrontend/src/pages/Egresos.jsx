@@ -226,7 +226,7 @@ const Egresos = () => {
                 fecha: datosEditados.fecha,
                 detallesCompra: [{
                     id: Number(datosEditados.idDetalle), 
-                    idproducto: datosEditados.producto?.id,
+                    idproducto: datosEditados.producto?.id ?? datosEditados.idproducto,
                     cantidad: Number(datosEditados.cantidad)
                 }]
             };
