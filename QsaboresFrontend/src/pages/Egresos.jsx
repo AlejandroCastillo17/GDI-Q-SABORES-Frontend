@@ -71,13 +71,15 @@ const Egresos = () => {
                 precio: item.precio || item.subtotal || 0,
                 estado: item.estado || '',
                 fecha_de_pago: item.fecha_de_pago || '',
+                idDetalle: item.detallesCompra?.id || (item.detallesCompra && item.detallesCompra[0]?.id) || '',
                 producto: item.idproducto || (item.detallesCompra && item.detallesCompra[0]?.producto) || '',
                 cantidad: item.cantidad || (item.detallesCompra && item.detallesCompra[0]?.cantidad) || 0,
                 fecha: item.fecha || item.fecha_de_compra || '',
                 proveedor: item.proveedor || '',
-                productoInfo: item.productoInfo || ''
+                productoInfo: item.productoInfo || '',
+                
             }));
-            // console.log("datos normalizados",datosNormalizados)
+            console.log("datos normalizados",datosNormalizados)
             setEgresoData(datosNormalizados);
         } catch (error) {
             console.error("Error en la consulta:", error);
@@ -208,7 +210,7 @@ const Egresos = () => {
     const guardarEdicion = async () => {
     try {
         let datosActualizados;
-        
+        console.log("datosEditados", datosEditados)
         if (vista == "gastos") {
             datosActualizados = {
                 id: datosEditados.id,
@@ -223,13 +225,13 @@ const Egresos = () => {
                 subtotal: Number(datosEditados.precio),
                 fecha: datosEditados.fecha,
                 detallesCompra: [{
-                    id: datosEditados.detalles?.[0]?.id, 
-                    idproducto: datosEditados.idproducto,
+                    id: Number(datosEditados.idDetalle), 
+                    idproducto: datosEditados.producto?.id,
                     cantidad: Number(datosEditados.cantidad)
                 }]
             };
         }
-        console.log(datosActualizados)
+        console.log("datosActualizados", datosActualizados)
         const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
         
         if (response.status == 200) {
