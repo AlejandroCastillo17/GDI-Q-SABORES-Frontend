@@ -49,24 +49,18 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
         );
     };
     
-     const handleCombinedChange = (selectedOption) => {
-        if (selectedOption) {
-            handleChangeEdicion({
-                target: {
-                    name: 'producto',
-                    value: selectedOption.producto
-                }
-            });
-            handleChangeEdicion({
-                target: {
-                    name: 'proveedor',
-                    value: selectedOption.proveedor
-                }
-            });
-            handleChangeEdicion({
-                target: {
-                    name: 'idproducto',
-                    value: selectedOption.value
+    const handleCombinedChange = (selectedOption, compra) => {
+    if (selectedOption) {
+        handleChangeEdicion({ target: { name: 'producto', value: selectedOption.producto } });
+        handleChangeEdicion({ target: { name: 'proveedor', value: selectedOption.proveedor } });
+        handleChangeEdicion({ target: { name: 'idproducto', value: selectedOption.value } });
+
+        // Aquí sí tienes acceso a la compra actual
+        const detalle = compra?.detallesCompra?.[0] || null;
+        handleChangeEdicion({
+            target: {
+                name: 'detalleCompra',
+                value: detalle
                 }
             });
         }
@@ -124,7 +118,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                                 classNamePrefix="react-select"
                                                 options={combinedOptions}
                                                 value={getCurrentCombinedValue(compra)}
-                                                onChange={handleCombinedChange}
+                                                onChange={(selectedOption) => handleCombinedChange(selectedOption, compra)}
                                                 placeholder="Buscar producto/proveedor..."
                                                 isSearchable
                                                 noOptionsMessage={() => "No se encontraron resultados"}
@@ -155,7 +149,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             name="cantidad"
                                             value={datosEditados.cantidad || compra.cantidad || ''}
                                             onChange={handleChangeEdicion}
-                                            min="1"
+                                            // min=""
                                         />
                                     ) : (
                                         compra.cantidad ? new Number(compra.cantidad).toLocaleString('es-CO', {
@@ -195,7 +189,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             onChange={handleChangeEdicion}
                                         />
                                     ) : (
-                                        compra.fecha ? new Date(compra.fecha).toLocaleDateString() : 'N/A'
+                                        compra.fecha ? new Date(compra.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' }) : 'N/A'
                                     )}
                                 </td>
                             </tr>

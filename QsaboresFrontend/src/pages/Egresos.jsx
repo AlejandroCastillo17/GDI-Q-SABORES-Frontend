@@ -71,13 +71,15 @@ const Egresos = () => {
                 precio: item.precio || item.subtotal || 0,
                 estado: item.estado || '',
                 fecha_de_pago: item.fecha_de_pago || '',
+                idDetalle: item.detallesCompra?.id || (item.detallesCompra && item.detallesCompra[0]?.id) || '',
                 producto: item.idproducto || (item.detallesCompra && item.detallesCompra[0]?.producto) || '',
                 cantidad: item.cantidad || (item.detallesCompra && item.detallesCompra[0]?.cantidad) || 0,
                 fecha: item.fecha || item.fecha_de_compra || '',
                 proveedor: item.proveedor || '',
-                productoInfo: item.productoInfo || ''
+                productoInfo: item.productoInfo || '',
+                
             }));
-            // console.log("datos normalizados",datosNormalizados)
+            console.log("datos normalizados",datosNormalizados)
             setEgresoData(datosNormalizados);
         } catch (error) {
             console.error("Error en la consulta:", error);
@@ -158,16 +160,22 @@ const Egresos = () => {
         setShowModalEliminar(false);
     };
 
+    const obtenerFechaColombia = () => {
+        const hoy = new Date();
+        const offsetColombia = hoy.getTimezoneOffset() + 300; // getTimezoneOffset() ya da en minutos
+        hoy.setMinutes(hoy.getMinutes() - offsetColombia); // restamos para ajustar a UTC-5
+        return hoy.toISOString().slice(0, 10); // YYYY-MM-DD
+    };
     // Funciones para manejar modales
     const abrirModalAgregar = () => {
         setDatosForm({
             nombre: '',
             precio: '',
             estado: '',
-            fecha_de_pago: '',
+            fecha_de_pago: obtenerFechaColombia(),
             idproducto: '',
             cantidad: '',
-            fecha_de_compra: ''
+            fecha_de_compra: obtenerFechaColombia()
         });
         setProductoSeleccionado(null);
         setError('');
@@ -208,8 +216,8 @@ const Egresos = () => {
     const guardarEdicion = async () => {
     try {
         let datosActualizados;
-        
-        if (vista === "gastos") {
+        console.log("datosEditados", datosEditados)
+        if (vista == "gastos") {
             datosActualizados = {
                 id: datosEditados.id,
                 nombre: datosEditados.nombre,
@@ -220,18 +228,19 @@ const Egresos = () => {
         } else { // compras
             datosActualizados = {
                 id: datosEditados.id,
-                subtotal: datosEditados.precio,
+                subtotal: Number(datosEditados.precio),
                 fecha: datosEditados.fecha,
                 detallesCompra: [{
-                    idproducto: datosEditados.idproducto,
-                    cantidad: datosEditados.cantidad
+                    id: Number(datosEditados.idDetalle), 
+                    idproducto: Number(datosEditados.producto?.id ?? datosEditados.idproducto),
+                    cantidad: Number(datosEditados.cantidad)
                 }]
             };
         }
-
+        console.log("datosActualizados", datosActualizados)
         const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
         
-        if (response.status === 200) {
+        if (response.status == 200) {
             toast.success("¡Cambios guardados exitosamente!");
             obtenerEgresos();
             cancelarEdicion();
