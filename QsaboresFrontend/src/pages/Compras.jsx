@@ -189,7 +189,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             onChange={handleChangeEdicion}
                                         />
                                     ) : (
-                                        compra.fecha ? new Date(compra.fecha).toLocaleDateString() : 'N/A'
+                                        compra.fecha ? new Date(compra.fecha).toLocaleDateString('es-ES', { timeZone: 'UTC' }) : 'N/A'
                                     )}
                                 </td>
                             </tr>

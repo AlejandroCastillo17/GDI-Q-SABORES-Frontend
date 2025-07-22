@@ -160,16 +160,22 @@ const Egresos = () => {
         setShowModalEliminar(false);
     };
 
+    const obtenerFechaColombia = () => {
+        const hoy = new Date();
+        const offsetColombia = hoy.getTimezoneOffset() + 300; // getTimezoneOffset() ya da en minutos
+        hoy.setMinutes(hoy.getMinutes() - offsetColombia); // restamos para ajustar a UTC-5
+        return hoy.toISOString().slice(0, 10); // YYYY-MM-DD
+    };
     // Funciones para manejar modales
     const abrirModalAgregar = () => {
         setDatosForm({
             nombre: '',
             precio: '',
             estado: '',
-            fecha_de_pago: '',
+            fecha_de_pago: obtenerFechaColombia(),
             idproducto: '',
             cantidad: '',
-            fecha_de_compra: ''
+            fecha_de_compra: obtenerFechaColombia()
         });
         setProductoSeleccionado(null);
         setError('');
@@ -226,7 +232,7 @@ const Egresos = () => {
                 fecha: datosEditados.fecha,
                 detallesCompra: [{
                     id: Number(datosEditados.idDetalle), 
-                    idproducto: datosEditados.producto?.id ?? datosEditados.idproducto,
+                    idproducto: Number(datosEditados.producto?.id ?? datosEditados.idproducto),
                     cantidad: Number(datosEditados.cantidad)
                 }]
             };
