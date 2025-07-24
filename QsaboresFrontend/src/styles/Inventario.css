@@ -120,7 +120,7 @@
 .modal-contenedor {
   background-color: #fff0bd;
   width: 50%;
-  height: 85%;
+  height: 75%;
   max-width: 90%;
   max-height: 90%;
   padding: 20px;
@@ -130,12 +130,20 @@
   border-radius: 15px;
 }
 
+.modal-contenido h2 {
+  font-family: sans-serif;
+  font-size: 30px;
+  color: #333;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
 .modal-contenido {
   background: #c7db9c;
   padding: 20px;
   border-radius: 12px;
   width: 90%;
-  height: 93%;
+  height: 90%;
   overflow: none;
   position: relative;
   text-align: center;
@@ -157,38 +165,6 @@
   width: 60%;
 }
 
-.image-upload {
-  background: #d9d9d9;
-  height: 150px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  position: relative;
-  width: 50%;
-  cursor: pointer;
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-}
-
-.image-upload input[type="file"] {
-  display: none;
-}
-
-.image-upload label {
-  font-size: 20px;
-  color: #777;
-  cursor: pointer;
-  z-index: 2;
-  background-color: rgba(255, 255, 255, 0.6);
-  padding: 5px 0px;
-  border-radius: 10px;
-}
 
 .formulario {
   display: flex;
@@ -250,7 +226,7 @@
   position: absolute;
   right: 90px;
   top: 68%;
-  transform: translateY(-80%);
+  transform: translateY(-155%);
   pointer-events: none;
 }
 
@@ -302,7 +278,7 @@
   position: absolute;
   right: 90px;
   top: 78%;
-  transform: translateY(-80%);
+  transform: translateY(-142%);
   pointer-events: none;
 }
 

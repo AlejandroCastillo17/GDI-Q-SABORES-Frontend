@@ -18,6 +18,7 @@ const Inventario = () => {
   const [proveedoresData, setProveedoresData] = useState([]);
   const [categoriaData, setCategoriaData] = useState([]);
   const [error, setError] = useState(null);
+  const [errorr, setErrorr] = useState(null);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
 
   console.log("categoria seleccionada", categoriaSeleccionada);
@@ -36,11 +37,11 @@ const Inventario = () => {
       if (Array.isArray(data)) {
         setProductosData(data);
       } else {
-        setError("Error al acceder al inventario");
+        setErrorr("Error al acceder al inventario");
         console.error("Respuesta inesperada:", data);
       }
     } catch (err) {
-      setError("Error al consultar el inventario");
+      setErrorr("Error al consultar el inventario");
       console.error("Error en la consulta:", err);
     } finally {
       setCargando(false);
@@ -53,11 +54,11 @@ const Inventario = () => {
       if (Array.isArray(provedoresD)) {
         setProveedoresData(provedoresD);
       } else {
-        setError("Error al acceder a los proveedores");
+        setErrorr("Error al acceder a los proveedores");
         console.error("Respuesta inesperada:", provedoresD);
       }
     } catch (error) {
-      setError("Error al consultar los proveedores");
+      setErrorr("Error al consultar los proveedores");
       console.error("Error en la consulta:", error);
     }
   };
@@ -69,10 +70,10 @@ const Inventario = () => {
         setCategoriaData(categorias);
       } else {
         setError("Error al acceder a la categoria");
-        console.error("Respuesta inesperada:", categorias);
+        console.errorr("Respuesta inesperada:", categorias);
       }
     } catch (error) {
-      setError("Error al consultar las categorias");
+      setErrorr("Error al consultar las categorias");
       console.error("Error en la consulta:", error);
     }
   };
@@ -104,11 +105,6 @@ const Inventario = () => {
     // Validación de campos
     const { nombre, precio, tope, proveedor, categoria } = datosForm;
     console.log("estos son los datos: ", datosForm);
-
-    if (!imagen) {
-      setError("Debe agregar una imagen del producto.");
-      return;
-    }
 
     if (!nombre || !precio || !tope) {
       setError("Por favor complete todos los campos.");
@@ -161,21 +157,6 @@ const Inventario = () => {
     cerrarModalAgregar();
   };
 
-  // Logica para el cambio de imagen
-
-  const inputRef = useRef(null);
-  const [imagen, setImagen] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagen(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   // Logica para el modal de agregar
 
@@ -187,7 +168,6 @@ const Inventario = () => {
 
   const cerrarModalAgregar = () => {
     setShowModalAgregar(false);
-    setImagen(null);
     inputRef.current.value = null;
     setdatosForm({
       nombre: "",
@@ -221,6 +201,7 @@ const Inventario = () => {
   const eliminarProdSelec = async () => {
     try {
       const data = { ids: seleccionados };
+      console.log("rata", data)
       const response = await eliminarProductos(data);
       if (response.status === 204) {
         toast.success("¡Productos eliminados exitosamente!");
@@ -469,6 +450,7 @@ const Inventario = () => {
                 <th>Categoría</th>
                 <th>Precio Unitario</th>
                 <th>Proveedor</th>
+                <th>Cantidad</th>
               </tr>
             </thead>
             <tbody>
@@ -556,6 +538,19 @@ const Inventario = () => {
                       producto.proveedor.nombre
                     )}
                   </td>
+                  <td>
+                    {ProdEditadoID === producto.id ? (
+                      <input
+                        className="inputs"
+                        type="number"
+                        name="cantidad"
+                        value={ProdEditado.cantidad_actual}
+                        onChange={handleChangeEdicion}
+                      />
+                    ) : (
+                      producto.cantidad_actual
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -583,29 +578,7 @@ const Inventario = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="modal-contenido">
-                <div
-                  className="image-upload"
-                  id="previewContainer"
-                  style={{
-                    backgroundImage: imagen ? `url(${imagen})` : "none",
-                    backgroundSize: imagen ? "100% 100%" : "cover",
-                  }}
-                >
-                  {!imagen && (
-                    <label htmlFor="imagenProducto" id="labelTexto">
-                      + Agregar imagen del producto.
-                    </label>
-                  )}
-                  <input
-                    type="file"
-                    id="imagenProducto"
-                    accept="image/*"
-                    ref={inputRef}
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                  />
-                </div>
-
+                <h2>Agregar nuevo producto</h2>
                 <form className="formulario" onSubmit={handleSubmit}>
                   <div className="bloque">
                     <label>Nombre</label>

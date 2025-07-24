@@ -4,31 +4,29 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../styles/proveedores.css';
-import { consultaProveedores, crearProveedores, editarProveedor, eliminarProveedores } from "../js/proveedores";
+import '../styles/Categorias.css';
+import { consultaCategoria, eliminarCategorias, crearCategoria, editarCategoria } from '../js/categoria';
 
-const Proveedores = () => {
-
-    // Lista de proveedores
+const Categorias = () => {
 
     const [cargando, setCargando] = useState(true);
     const [busqueda, setBusqueda] = useState("");
-    const [proveedoresData, setProveedoresData] = useState([]);
+    const [categoriasData, setCategoriasData] = useState([]);
 
 
-    const datosFitrados = proveedoresData.filter(
-        (provedor) =>
-        provedor.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    const datosFitrados = categoriasData.filter(
+        (categoria) =>
+        categoria.nombre.toLowerCase().includes(busqueda.toLowerCase())
     );
 
-    const obtenerProveedores =  async () => {
+    const obtenerCategoria =  async () => {
         try{
-            const provedoresD = await consultaProveedores();
-            if (Array.isArray(provedoresD)){
-                setProveedoresData(provedoresD)
+            const categoriaD = await consultaCategoria();
+            if (Array.isArray(categoriaD)){
+                setCategoriasData(categoriaD)
             }
             else{
-                console.error("Respuesta inesperada:", provedoresD);
+                console.error("Respuesta inesperada:", categoriaD);
             }
         }
         catch (error){
@@ -40,7 +38,7 @@ const Proveedores = () => {
 
     useEffect(() => {
 
-        obtenerProveedores();
+        obtenerCategoria();
 
     }, []);
 
@@ -49,8 +47,6 @@ const Proveedores = () => {
     const [datosForm, setdatosForm] = useState({
         id: '',
         nombre: '',
-        telefono: '',
-        email: ''
     });
 
     const [error, setError] = useState('');
@@ -64,30 +60,26 @@ const Proveedores = () => {
         e.preventDefault();
     
         // Validación de campos
-        const { nombre, telefono, email } = datosForm;
+        const { nombre } = datosForm;
     
-        if (!nombre || !telefono || !email) {
+        if (!nombre) {
             setError("Por favor complete todos los campos.");
             return;
-        }
+        } 
 
-        // Agregar el proveedor a la tabla 
-
-        const nuevoProveedor = {
-            nombre: nombre,
-            telefono: telefono,
-            email: email
+        const nuevaCategoria = {
+            nombre: nombre
         };
 
         try {
-            const response = await crearProveedores(nuevoProveedor);
+            const response = await crearCategoria(nuevaCategoria);
             if (response.status === 201) {
-                toast.success("¡Proveedor guardado exitosamente!");
-                obtenerProveedores();
+                toast.success("¡Categoria guardado exitosamente!");
+                obtenerCategoria();
             }
         } catch (error) {
-            console.error("Excepcion al crear el pproveedor", error);
-            toast.error("Error al crear el proveedor");
+            console.error("Excepcion al crear la categoria", error);
+            toast.error("Error al crear el categoriar");
         }
 
         // Reset
@@ -119,26 +111,26 @@ const Proveedores = () => {
     const [showModalEliminar, setShowModalEliminar] = useState(false);
 
     const abrirModalEliminar = () => {
-        const Seleccionados = proveedoresData.filter(p => seleccionados.includes(p.id));
+        const Seleccionados = categoriasData.filter(c => seleccionados.includes(c.id));
         if (Seleccionados.length === 0) {
-            toast.warning("No hay ningun producto seleccionado");
+            toast.warning("No hay ninguna categoria seleccionada");
             return;
         } else {
             setShowModalEliminar(true);
         }
     }
 
-    const eliminarProveeSelec = async () => {
+    const eliminarCategoriaSelec = async () => {
         try {
             const data = { ids: seleccionados };
-            const response = await eliminarProveedores(data);
+            const response = await eliminarCategorias(data);
             if (response.status === 204) {
-            toast.success("¡Proveedores eliminados exitosamente!");
-            obtenerProveedores();
+            toast.success("¡Categorias eliminadas exitosamente!");
+            obtenerCategoria();
             }
         } catch (error) {
-            console.error("Excepcion al eliminar el proveedores", error);
-            toast.error("Error al eliminar el proveedores");
+            console.error("Excepcion al eliminar las categorias", error);
+            toast.error("Error al eliminar las categorias");
         }
     
         cerrarModalEliminar();
@@ -151,71 +143,68 @@ const Proveedores = () => {
     // Logica para la edicion de los proveedores
 
     const [edicion, setEdicion] =useState(false);
-    const [proveedorEditando, setProveedorEditando] = useState(null);
+    const [categoriaEditando, setcategoriaEditando] = useState(null);
     const [datosEditados, setDatosEditados] = useState({});
 
     const verEdicion = () => {
-        const Seleccionados = proveedoresData.filter(p => seleccionados.includes(p.id));
+        const Seleccionados = categoriasData.filter(p => seleccionados.includes(p.id));
 
         if (Seleccionados.length === 0) {
-            toast.warning("No hay ningun proveedor seleccionado");
+            toast.warning("No hay ninguna categoria seleccionada");
             return;
         }
         
         if (Seleccionados.length > 1) {
-            toast.warning("Selecciona solo un proveedor para editar");
+            toast.warning("Selecciona una sola categoria");
             return;
         }
 
-        const proveedorSeleccionado = Seleccionados[0];
+        const categoriaSeleccionada = Seleccionados[0];
   
         setEdicion(true);
-        Editar(proveedorSeleccionado);
+        Editar(categoriaSeleccionada);
     }
 
     const ocultarEdicion = () => {
         setEdicion(false)
     }
 
-    const Editar = (proveedor) => {
-        setProveedorEditando(proveedor.id); 
-        setDatosEditados({ ...proveedor }); 
+    const Editar = (categoria) => {
+        setcategoriaEditando(categoria.id); 
+        setDatosEditados({ ...categoria }); 
     };
     
     const CancelarEdicion = () => {
-        setProveedorEditando(null);
+        setcategoriaEditando(null);
         setDatosEditados({});
         ocultarEdicion();
         toast.info("Cancelado con exito!");
     };
     
-
-    const GuardarEdicion = async () => {
-        const proveedorE = {
-        nombre: datosEditados.nombre,
-        telefono: datosEditados.telefono,
-        email: datosEditados.email
-        };
-
-        console.log("proveedor editado", proveedorE);
-
-        try {
-        const response = await editarProveedor(proveedorE, proveedorEditando);
-        if (response.status === 200) {
-            toast.success("¡Proveedor actualizado exitosamente!");
-            obtenerProveedores();
-        } else {
-            console.log("respuesta :", response);
-        }
-        } catch (error) {
-        console.error("Excepcion al actualizar el proveedor", error);
-        toast.error("Error al actualizar el proveedor");
-        }
-
-        setProveedorEditando(null);
-        setDatosEditados({});
-        ocultarEdicion();
+  const GuardarEdicion = async () => {
+    const categoriaE = {
+      nombre: datosEditados.nombre,
     };
+
+    console.log("categoria editado", categoriaE);
+
+    try {
+      const response = await editarCategoria(categoriaE, categoriaEditando);
+      if (response.status === 200) {
+        toast.success("¡Categoria actualizada exitosamente!");
+        obtenerCategoria();
+      } else {
+        console.log("respuesta :", response);
+      }
+    } catch (error) {
+      console.error("Excepcion al actualizar la categoria", error);
+      toast.error("Error al actualizar la categoria");
+    }
+
+    setcategoriaEditando(null);
+    setDatosEditados({});
+    ocultarEdicion();
+  };
     
     const handleChangeEdicion = (e) => {
         const { name, value } = e.target;
@@ -241,8 +230,8 @@ const Proveedores = () => {
 
     return (
         <>
-            <section className="proveedores">
-                <h1>PROVEEDORES</h1>
+            <section className="categorias">
+                <h1>CATEGORIAS</h1>
                 <div id="cont">
                     <div className="buscador">
                         <svg xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  
@@ -282,35 +271,32 @@ const Proveedores = () => {
                     </Button>
                 </div>
                 <br />
-                <div className="proveedores-tabla">
-                    <table class="tabla-P">
-                        <thead className='t-P'>
+                <div className="categorias-tabla">
+                    <table class="tabla-c">
+                        <thead className='t-c'>
                             <tr>
                                 <th></th>
-                                <th>Nombre</th>
-                                <th>Telefono</th>
-                                <th>Email</th>
-                                
+                                <th>Nombre</th>                                
                             </tr>
                         </thead>
                         <tbody>
-                            {datosFitrados.map((proveedor) => 
-                                <tr key={proveedor.id}>
+                            {datosFitrados.map((Categoria) => 
+                                <tr key={Categoria.id}>
                                     <td>
                                         <input 
                                             type="checkbox" 
-                                            checked={seleccionados.includes(proveedor.id)}
+                                            checked={seleccionados.includes(Categoria.id)}
                                             onChange={(e) => {
                                                 if (e.target.checked) {
-                                                setSeleccionados([...seleccionados, proveedor.id]);
+                                                setSeleccionados([...seleccionados, Categoria.id]);
                                                 } else {
-                                                setSeleccionados(seleccionados.filter(id => id !== proveedor.id));
+                                                setSeleccionados(seleccionados.filter(id => id !== Categoria.id));
                                                 }
                                             }}
                                         />
                                     </td>
                                     <td>
-                                        {proveedorEditando === proveedor.id ? 
+                                        {categoriaEditando === Categoria.id ? 
                                             (
                                                 <input
                                                     className="inputss"
@@ -321,37 +307,7 @@ const Proveedores = () => {
                                                 />
                                             ) 
                                             : 
-                                            (proveedor.nombre)
-                                        }
-                                    </td>
-                                    <td>
-                                        {proveedorEditando === proveedor.id ? 
-                                            (
-                                                <input
-                                                    className="inputss"
-                                                    type="tel"
-                                                    name="telefono"
-                                                    value={datosEditados.telefono}
-                                                    onChange={handleChangeEdicion}
-                                                />
-                                            ) 
-                                            : 
-                                            (proveedor.telefono)
-                                        }
-                                    </td>
-                                    <td>
-                                        {proveedorEditando === proveedor.id ? 
-                                            (
-                                                <input
-                                                    className="inputss"
-                                                    type="email"
-                                                    name="email"
-                                                    value={datosEditados.email}
-                                                    onChange={handleChangeEdicion}
-                                                />
-                                            ) 
-                                            : 
-                                            (proveedor.email)
+                                            (Categoria.nombre)
                                         }
                                     </td>
                                 </tr>
@@ -367,30 +323,20 @@ const Proveedores = () => {
                     </div>
                 )}
 
-                {/* Modal de agregar producto */}
+                {/* Modal de agregar categoria */}
                 {showModalAgregar && (
                     <div className="modal" onClick={cerrarModalAgregar}>
-                        <div className="modal-contenedor-p" onClick={(e) => e.stopPropagation()}>
-                            <div className="modal-contenido-p">
-                                <h2>Agregar nuevo proveedor</h2>
-                                <form className="formulario-p" onSubmit={handleSubmit}>
+                        <div className="modal-contenedor-c" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-contenido-ca">
+                                <h2>Agregar nueva categoria</h2>
+                                <form className="formulario-c" onSubmit={handleSubmit}>
 
-                                    <div className="bloque-p">
+                                    <div className="bloque-c">
                                         <label>Nombre</label>
-                                        <input type="text" placeholder="Nombre del proovedor" name="nombre" value={datosForm.nombre} onChange={handleChange} />
-                                    </div>
-                                    
-                                    <div className="bloque-p">
-                                        <label>Telefono</label>
-                                        <input type="tel" placeholder="Numero de contacto" name="telefono" value={datosForm.telefono} onChange={handleChange}  />
+                                        <input type="text" placeholder="Nombre de la categoria" name="nombre" value={datosForm.nombre} onChange={handleChange} />
                                     </div>
 
-                                    <div className="bloque-p">
-                                        <label>Email</label>
-                                        <input type="email" step="0.01" placeholder="Email del proveedor" name="email" value={datosForm.email} onChange={handleChange} />
-                                    </div>
-
-                                    {error && <p className="error-p">{error}</p>}  
+                                    {error && <p className="error-c">{error}</p>}  
 
                                     <div className="botones">
                                         <Button type="submit" variant="verde" class="btn">Guardar</Button>
@@ -405,10 +351,10 @@ const Proveedores = () => {
                 {/* Modal de eliminar producto */}
                 {showModalEliminar && (
                     <div className="modal" onClick={cerrarModalEliminar}>
-                        <div className="modal-contenedor-eliminar-p" onClick={(e) => e.stopPropagation()}>
-                            <h2>¿Esta completamente seguro que desea eliminar el/los proveedores?</h2>
+                        <div className="modal-contenedor-eliminar-c" onClick={(e) => e.stopPropagation()}>
+                            <h2>¿Esta completamente seguro que desea eliminar el/las categorias?</h2>
                             <div id="botoness">
-                                <Button variant="verde" onClick={eliminarProveeSelec}>Aceptar</Button>
+                                <Button variant="verde" onClick={eliminarCategoriaSelec}>Aceptar</Button>
                                 <Button variant="rojo" onClick={cerrarModalEliminar}>Cancelar</Button>
                             </div>
                         </div>
@@ -422,4 +368,4 @@ const Proveedores = () => {
     );
 }
 
-export default Proveedores;
+export default Categorias;
