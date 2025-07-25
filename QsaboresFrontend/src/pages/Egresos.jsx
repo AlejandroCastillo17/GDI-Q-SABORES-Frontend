@@ -10,7 +10,27 @@ import { getEgresos, createEgreso, deleteEgreso, updateEgreso, getProductos } fr
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 
+
+const normalizarTexto = (texto) => {
+    return texto
+        .normalize("NFD") // Descompone los caracteres con tilde
+        .replace(/[\u0300-\u036f]/g, "") // Elimina las tildes
+        .toLowerCase(); // Pasa a minúsculas
+};
+
+
+const formatearFechaHumana = (fecha) => {
+    if (!fecha) return '';
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+    const fechaObj = new Date(fecha);
+    if (isNaN(fechaObj)) return ''; // Maneja fechas inválidas
+    return fechaObj.toLocaleDateString('es-ES', opciones); // Ej: "24 de julio de 2025"
+};
+
+
 const Egresos = () => {
+
+    const [busqueda, setBusqueda] = useState('');
     const [cargando, setCargando] = useState(true);
     const [vista, setVista] = useState("gastos");
     const [egresoData, setEgresoData] = useState([]);
@@ -44,6 +64,27 @@ const Egresos = () => {
             console.error("Error al obtener productos:", error);
             toast.error("Error al cargar los productos");
         }
+    };
+
+
+    const filtrarEgresos = () => {
+        const termino = normalizarTexto(busqueda);
+
+        return egresoData.filter(item => {
+            const nombre = item.nombre || item.producto?.nombre || '';
+            const proveedor = item.proveedor || '';
+            const fecha = item.fecha || item.fecha_de_pago || '';
+            
+            const fechaNormal = normalizarTexto(fecha); // "2025-07-24"
+            const fechaHumana = normalizarTexto(formatearFechaHumana(fecha)); // "24 de julio de 2025"
+
+            return (
+                normalizarTexto(nombre).includes(termino) ||
+                normalizarTexto(proveedor).includes(termino) ||
+                fechaNormal.includes(termino) ||
+                fechaHumana.includes(termino)
+            );
+        });
     };
 
     // Formulario dinámico según vista
@@ -288,7 +329,12 @@ const Egresos = () => {
                             <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
                             <path d="M21 21l-6 -6" />
                         </svg>
-                        <input type="text" placeholder={`Buscar ${vista === "gastos" ? "gastos" : "compras"}...`} />
+                       <input
+                            type="text"
+                            placeholder={`Buscar ${vista === "gastos" ? "gastos" : "compras"}...`}
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                        />
                     </div>
                     <Button 
                         variant="rojo" 
@@ -345,7 +391,7 @@ const Egresos = () => {
                         <Gastos 
                             seleccionados={seleccionados}
                             setSeleccionados={setSeleccionados}
-                            gastosData={egresoData}
+                            gastosData={filtrarEgresos()}
                             itemEditando={itemEditando}
                             datosEditados={datosEditados}
                             handleChangeEdicion={handleChangeEdicion}
@@ -355,7 +401,7 @@ const Egresos = () => {
                         <Compras 
                             seleccionados={seleccionados}
                             setSeleccionados={setSeleccionados}
-                            comprasData={egresoData}
+                            comprasData={filtrarEgresos()}
                             itemEditando={itemEditando}
                             datosEditados={datosEditados}
                             handleChangeEdicion={handleChangeEdicion}

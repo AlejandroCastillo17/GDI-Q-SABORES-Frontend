@@ -66,15 +66,27 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
         }
     };
 
+    const buildLabelgetCurrentCombinedValue = (compra) => {
+        
+        if(typeof(datosEditados.producto) == "object") {
+            return `${(datosEditados.producto.nombre)} | ${(datosEditados.producto?.proveedor?.nombre)}`
+        }
+
+        return `${(datosEditados.producto)} | ${(datosEditados.proveedor || compra.proveedor?.nombre)}`
+    }
+
+
     const getCurrentCombinedValue = (compra) => {
         const producto = datosEditados.producto?.nombre || compra.producto?.nombre || '';
         const proveedor = datosEditados.proveedor || compra.proveedor || compra.producto?.proveedor?.nombre || '';
         
         if (!producto && !proveedor) return null;
         
+        console.log("datosEditados",buildLabelgetCurrentCombinedValue(compra))
+
         return {
             value: datosEditados.idproducto || compra.producto?.id || '',
-            label: `${producto} | ${proveedor}`,
+            label: buildLabelgetCurrentCombinedValue(compra), //`${producto} | ${proveedor}`,
             producto,
             proveedor
         };
