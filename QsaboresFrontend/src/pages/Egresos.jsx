@@ -67,17 +67,42 @@ const Egresos = () => {
     };
 
 
-    const filtrarEgresos = () => {
-        const termino = normalizarTexto(busqueda);
+ const filtrarEgresos = () => {
+        const termino = normalizarTexto(busqueda.trim());
 
-        return egresoData.filter(item => {
-            const nombre = item.nombre || item.producto?.nombre || '';
-            const proveedor = item.proveedor || '';
-            const fecha = item.fecha || item.fecha_de_pago || '';
-            
-            const fechaNormal = normalizarTexto(fecha); // "2025-07-24"
-            const fechaHumana = normalizarTexto(formatearFechaHumana(fecha)); // "24 de julio de 2025"
+    // Detectar si el usuario quiere filtrar por campo específico
+    const matchCampo = termino.match(/^(\w+)=(.*)$/);
 
+    return egresoData.filter(item => {
+        const nombre = item.nombre || item.producto?.nombre || '';
+        const proveedor = item.proveedor || '';
+        const estado = item.estado || '';
+        const fecha = item.fecha || '';
+        const fechaNormal = normalizarTexto(fecha); // 2025-07-24
+        const fechaHumana = normalizarTexto(formatearFechaHumana(fecha)); // 24 de julio de 2025
+
+        if (matchCampo) {
+            const campo = matchCampo[1];
+            const valor = matchCampo[2].trim();
+
+            switch (campo) {
+                case 'nombre':
+                    return normalizarTexto(nombre).includes(normalizarTexto(valor));
+                case 'proveedor':
+                    return normalizarTexto(proveedor).includes(normalizarTexto(valor));
+                case 'estado':
+                    return normalizarTexto(estado).includes(normalizarTexto(valor));
+                case 'fecha':
+                    return (
+                        fechaNormal.includes(normalizarTexto(valor)) ||
+                        fechaHumana.includes(normalizarTexto(valor))
+                    );
+                default:
+                    return true; // Si el campo no es reconocido, muestra todo
+            }
+        }
+
+        // Filtro general si no hay campo específico
             return (
                 normalizarTexto(nombre).includes(termino) ||
                 normalizarTexto(proveedor).includes(termino) ||
@@ -86,6 +111,7 @@ const Egresos = () => {
             );
         });
     };
+
 
     // Formulario dinámico según vista
     const [datosForm, setDatosForm] = useState({
@@ -494,6 +520,7 @@ const Egresos = () => {
                                                     <Select
                                                         className="react-select-container"
                                                         classNamePrefix="react-select"
+                                                        menuPlacement='auto'
                                                         options={productosOptions}
                                                         value={productoSeleccionado}
                                                         onChange={(selectedOption) => {

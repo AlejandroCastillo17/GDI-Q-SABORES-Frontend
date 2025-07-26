@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import "../styles/Gastos.css";
+import "../styles/Compras.css";
 import makeAnimated from 'react-select/animated';
 import { getProductos } from '../js/egresosService';
 
@@ -128,6 +128,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                             <Select
                                                 className="react-select-container"
                                                 classNamePrefix="react-select"
+                                                menuPlacement='auto'
                                                 options={combinedOptions}
                                                 value={getCurrentCombinedValue(compra)}
                                                 onChange={(selectedOption) => handleCombinedChange(selectedOption, compra)}
