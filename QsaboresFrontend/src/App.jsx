@@ -1,3 +1,4 @@
+import './App.css'
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Login from './pages/Login'
@@ -6,7 +7,6 @@ import Inventario from './pages/Inventario';
 import Informes from './pages/Informes';
 import Layout from './Layouts/Layout';
 import Proveedores from './pages/proveedores';
-import './App.css'
 import Egresos from './pages/Egresos';
 
 function App() {

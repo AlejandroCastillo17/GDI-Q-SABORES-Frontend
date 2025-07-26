@@ -92,7 +92,6 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
         };
     };
 
-
     return (
         <div className="gastos-tabla">
             <table className="tabla">
