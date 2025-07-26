@@ -75,7 +75,7 @@ const Egresos = () => {
 
     return egresoData.filter(item => {
         const nombre = item.nombre || item.producto?.nombre || '';
-        const proveedor = item.proveedor || '';
+        const proveedor = item.proveedor || item.producto?.proveedor?.nombre || '';
         const estado = item.estado || '';
         const fecha = item.fecha || '';
         const fechaNormal = normalizarTexto(fecha); // 2025-07-24
@@ -87,6 +87,8 @@ const Egresos = () => {
 
             switch (campo) {
                 case 'nombre':
+                    return normalizarTexto(nombre).includes(normalizarTexto(valor));
+                case 'detalles':
                     return normalizarTexto(nombre).includes(normalizarTexto(valor));
                 case 'proveedor':
                     return normalizarTexto(proveedor).includes(normalizarTexto(valor));
