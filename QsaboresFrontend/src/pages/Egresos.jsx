@@ -285,7 +285,6 @@ const Egresos = () => {
     const guardarEdicion = async () => {
     try {
         let datosActualizados;
-        console.log("datosEditados", datosEditados)
         if (vista == "gastos") {
             datosActualizados = {
                 id: datosEditados.id,
@@ -306,7 +305,6 @@ const Egresos = () => {
                 }]
             };
         }
-        console.log("datosActualizados", datosActualizados)
         const response = await updateEgreso(vista, datosActualizados.id, datosActualizados);
         
         if (response.status == 200) {
