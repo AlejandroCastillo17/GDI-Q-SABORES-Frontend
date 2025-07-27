@@ -334,6 +334,7 @@ const Egresos = () => {
         obtenerEgresos();
         setSeleccionados([]);
         setEdicion(false);
+        setItemEditando(null);
     }, [vista]);
 
     if (cargando) {

@@ -1,12 +1,12 @@
 .compras-tabla {
-    width: 90%;
-    height: 60%;
+    width: 95%;
+    height: 100%;
     background-color: #C7DB9C;
     padding: 0;
     border: 1rem solid #C7DB9C;
     border-radius: 15px;
     overflow-x: auto;
-    
+  
     scrollbar-width: none; 
     -ms-overflow-style: none; 
 }
@@ -137,4 +137,8 @@
 .tabla th:nth-child(3),
 .tabla td:nth-child(3) {
     min-width: 150px;
+}
+
+th {
+    position: sticky;
 }

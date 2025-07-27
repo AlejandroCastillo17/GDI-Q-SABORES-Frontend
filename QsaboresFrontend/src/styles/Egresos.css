@@ -1,7 +1,14 @@
+/* Añade esto al inicio de tu CSS */
+#botoness-edicion, #botoness-edicion * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .egresos {
   flex-grow: 1;
-  height: 100vh;
-  padding: 20px;
+  height: 95vh;
+  padding: 1% 1%;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -65,6 +72,12 @@
   margin-bottom: 20px;
 }
 
+.boton {
+  min-width: 120px; /* En lugar de width fijo */
+  white-space: nowrap;
+}
+
+
 .boton.neutro {
   outline: none;
 }
@@ -75,10 +88,19 @@
 
 /* Tabla */
 
-#tablas {
+/* #tablas {
   width: 90%;
   height: 90%;
   justify-items: center;
+} */
+
+#tablas {
+  width: 100%;
+  height: auto;
+  min-width: 800px;
+  margin: 0 0;
+  padding: 0%;
+  overflow-x: auto; /* Para scroll horizontal si es necesario */
 }
 
 
@@ -104,18 +126,20 @@
   padding: 2%;
   position: relative;
   justify-items: center;
-  overflow: none;
+  overflow-y: auto;
   border-radius: 15px;
 }
 
 .modal-contenido-p {
-  background: #C7DB9C;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  height: 82%;
-  overflow: none;
-  position: relative;
+    background: #C7DB9C;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .modal-contenido div {
@@ -148,21 +172,54 @@
 
 }
 
+#botoness {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: center;
+  text-align: center;
+}
 
-
-
-/* 
-.react-select-container {
-  background-color: black;
-} */
-
-/* #botoness-edicion-egresos {
+/* #botoness-edicion {
   width: 100%;
   margin-right: 75px;
-  margin-top: 0px;
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
   gap: 30px;
   justify-content: right;
   text-align: center;
 } */
+
+@media (max-width: 768px) {
+  #botoness-edicion {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+#botoness-edicion {
+  width: 98%;
+  margin: 5px auto 0;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px 12px;
+  text-align: left;
+}
+
+#botoness-edicion .boton {
+  min-width: 100px;
+  padding: 6px 12px;
+}
