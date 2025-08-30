@@ -35,7 +35,7 @@ export const crearProveedores = async (proveedoresData) => {
 
 export const eliminarProveedores = async (proveedoresIds) => {
   try {
-    const response = await axios.post('http://127.0.0.1:8000/sabores/api/v1/proveedores/eliminar_proveedores/', proveedoresIds, 
+    const response = await axios.post('http://127.0.0.1:8000/sabores/api/v1/proveedores/bulk_delete/', proveedoresIds, 
       {
         headers: {
           'Content-Type': 'application/json',
