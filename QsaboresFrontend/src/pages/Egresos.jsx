@@ -216,14 +216,12 @@ const Egresos = () => {
     // Manejar eliminación de egresos
     const eliminarEgresoSeleccionado = async () => {
         try {
-            console.log("entra",seleccionados)
             const response = await deleteEgreso(vista, seleccionados);
             if (response.status === 204) {
                 toast.success(`${vista === "gastos" ? "Gasto(s)" : "Compra(s)"} eliminado(s) exitosamente!`);
                 obtenerEgresos();
             }
         } catch (error) {
-            console.error(`Error al eliminar ${vista}`, error);
             toast.error(`Error al eliminar ${vista}`);
         }
         setShowModalEliminar(false);
