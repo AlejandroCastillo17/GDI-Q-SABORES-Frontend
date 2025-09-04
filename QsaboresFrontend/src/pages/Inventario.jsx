@@ -105,11 +105,6 @@ const Inventario = () => {
     const { nombre, precio, tope, proveedor, categoria } = datosForm;
     console.log("estos son los datos: ", datosForm);
 
-    if (!imagen) {
-      setError("Debe agregar una imagen del producto.");
-      return;
-    }
-
     if (!nombre || !precio || !tope) {
       setError("Por favor complete todos los campos.");
       return;
@@ -164,18 +159,6 @@ const Inventario = () => {
   // Logica para el cambio de imagen
 
   const inputRef = useRef(null);
-  const [imagen, setImagen] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagen(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   // Logica para el modal de agregar
 
@@ -187,7 +170,6 @@ const Inventario = () => {
 
   const cerrarModalAgregar = () => {
     setShowModalAgregar(false);
-    setImagen(null);
     inputRef.current.value = null;
     setdatosForm({
       nombre: "",
@@ -469,6 +451,7 @@ const Inventario = () => {
                 <th>Categoría</th>
                 <th>Precio Unitario</th>
                 <th>Proveedor</th>
+                <th>Cantidad</th>
               </tr>
             </thead>
             <tbody>
@@ -556,6 +539,19 @@ const Inventario = () => {
                       producto.proveedor.nombre
                     )}
                   </td>
+                  <td>
+                    {ProdEditadoID === producto.id ? (
+                      <input
+                        className="inputs"
+                        type="number"
+                        name="cantidad"
+                        value={ProdEditado.cantidad_actual}
+                        onChange={handleChangeEdicion}
+                      />
+                    ) : (
+                      producto.cantidad_actual
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -583,29 +579,6 @@ const Inventario = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="modal-contenido">
-                <div
-                  className="image-upload"
-                  id="previewContainer"
-                  style={{
-                    backgroundImage: imagen ? `url(${imagen})` : "none",
-                    backgroundSize: imagen ? "100% 100%" : "cover",
-                  }}
-                >
-                  {!imagen && (
-                    <label htmlFor="imagenProducto" id="labelTexto">
-                      + Agregar imagen del producto.
-                    </label>
-                  )}
-                  <input
-                    type="file"
-                    id="imagenProducto"
-                    accept="image/*"
-                    ref={inputRef}
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                  />
-                </div>
-
                 <form className="formulario" onSubmit={handleSubmit}>
                   <div className="bloque">
                     <label>Nombre</label>
