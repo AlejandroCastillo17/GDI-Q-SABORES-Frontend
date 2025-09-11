@@ -29,36 +29,41 @@ const Home = () => {
     toast.success(texto);
   };
   const vender = async () => {
-    if (productosSeleccionados.length != 0) {
-      const data = {
-        fecha: new Date().toISOString().split("T")[0],
-        detallesVentas: productosSeleccionados.map((p) => ({
-          idproducto: p.id,
-          subtotal: p.Precio,
-          cantidad: p.cantidad,
-        })),
-      };
-      try {
-        const respuesta = await venderProducto(data);
-        if (respuesta.status === 201) {
-          exito("Venta realizada con éxito");
-          setProductosSeleccionados([]);
-          setPago(0);
-          setDevuelta("");
-          setBusqueda("");
-          setCantidad("");
-          console.log("Venta exitosa");
-        } else {
-          alert("Error al realizar la venta");
-        }
-      } catch (error) {
-        console.error("Error al realizar la venta:", error.response?.data);
-        alert("Error al realizar la venta. Por favor, inténtelo de nuevo.");
-      }
-      console.log("data:", data);
-    } else {
-      alert("No hay productos seleccionados para vender.");
+    if (pago < calcularTotal()) {
+      alert("El pago es insuficiente");
       return;
+    } else {
+      if (productosSeleccionados.length != 0) {
+        const data = {
+          fecha: new Date().toISOString().split("T")[0],
+          detallesVentas: productosSeleccionados.map((p) => ({
+            idproducto: p.id,
+            subtotal: p.Precio,
+            cantidad: p.cantidad,
+          })),
+        };
+        try {
+          const respuesta = await venderProducto(data);
+          if (respuesta.status === 201) {
+            exito("Venta realizada con éxito");
+            setProductosSeleccionados([]);
+            setPago(0);
+            setDevuelta("");
+            setBusqueda("");
+            setCantidad("");
+            console.log("Venta exitosa");
+          } else {
+            alert("Error al realizar la venta");
+          }
+        } catch (error) {
+          console.error("Error al realizar la venta:", error.response?.data);
+          alert("Error al realizar la venta. Por favor, inténtelo de nuevo.");
+        }
+        console.log("data:", data);
+      } else {
+        alert("No hay productos seleccionados para vender.");
+        return;
+      }
     }
   };
 

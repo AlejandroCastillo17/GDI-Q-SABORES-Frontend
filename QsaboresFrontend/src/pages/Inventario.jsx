@@ -579,6 +579,7 @@ const Inventario = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="modal-contenido">
+                <h2>Agregar nuevo producto</h2>
                 <form className="formulario" onSubmit={handleSubmit}>
                   <div className="bloque">
                     <label>Nombre</label>
