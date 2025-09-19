@@ -146,13 +146,13 @@
   height: 90%;
   overflow: none;
   position: relative;
-  text-align: center;
+  text-align: center; 
 }
 
 .bloque {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 10px;
 }
 
@@ -204,7 +204,7 @@
 
 #cont-select-form select {
   width: 100%;
-  font-size: 22px;
+  font-size: 19.5px;
   border-radius: 8px;
   background-color: #fff0bd;
   color: #333;

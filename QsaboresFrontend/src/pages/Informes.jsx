@@ -1,33 +1,30 @@
 // src/pages/Informes.jsx
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../styles/Informes.css";
 import Button from "../components/Button";
 import { ConsultarInformes } from "../js/informes.js";
 
+// Importar componentes de Recharts
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 const Informes = () => {
-  const [fechaF, setFechaF] = useState("Fecha Final");
-  const calendarF = useRef(null);
-  const [fecha, setFecha] = useState("Fecha Inicio");
-  const calendar = useRef(null);
   const [informesData, setinformesData] = useState([]);
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(true);
-
-  const abrirCalendario = (tipo) => {
-    if (tipo === "Inicio") {
-      calendar.current.showPicker();
-    } else {
-      calendarF.current.showPicker();
-    }
-  };
-  const cambiarFecha = (e) => {
-    const fechaActual = e.target.value;
-    if (e.target.name === "Inicio") {
-      setFecha(fechaActual);
-    } else {
-      setFechaF(fechaActual);
-    }
-  };
 
   const consultarInformes = async () => {
     try {
@@ -45,7 +42,7 @@ const Informes = () => {
       setCargando(false);
     }
   };
-  console.log(informesData);
+
   useEffect(() => {
     consultarInformes();
   }, []);
@@ -54,11 +51,12 @@ const Informes = () => {
     return (
       <div className="modal-cargando">
         <div className="modal-contenido-c">
-          <div class="loader"></div>
+          <div className="loader"></div>
         </div>
       </div>
     );
   }
+
   const asignarColor = (estado) => {
     if (estado <= 30) {
       return "red";
@@ -68,71 +66,45 @@ const Informes = () => {
       return "green";
     }
   };
+
+  // Datos para gráficos de barras y líneas
+  const chartData = informesData.map((item) => ({
+    name: item.nombre,
+    estado: Number(item.estado),
+  }));
+
+  // Datos para gráfico de torta (pastel)
+  const pieData = [
+    {
+      name: "Por debajo del 30%",
+      value: informesData.filter((i) => Number(i.estado) <= 30).length,
+    },
+    {
+      name: "Entre 31% y 70%",
+      value: informesData.filter(
+        (i) => Number(i.estado) > 30 && Number(i.estado) <= 70
+      ).length,
+    },
+    {
+      name: "Más del 70%",
+      value: informesData.filter((i) => Number(i.estado) > 70).length,
+    },
+  ];
+
+  const COLORS = ["#FF4D4D", "#FFB347", "#4CAF50"];
+
   return (
     <section className="informes">
-      <section className="Botones">
-        <section
-          className="contenedor_inputs"
-          onClick={() => abrirCalendario("Inicio")}
-        >
-          <p>{fecha}</p>
-          <span>▼</span>
-          <input
-            type="date"
-            name="Inicio"
-            className="fechaInicio"
-            ref={calendar}
-            onChange={cambiarFecha}
-          />
-        </section>
-
-        <section
-          className="contenedor_inputs"
-          onClick={() => abrirCalendario("Fin")}
-        >
-          <p>{fechaF}</p>
-          <span>▼</span>
-          <input
-            type="date"
-            name="Fin"
-            className="fechaFin"
-            ref={calendarF}
-            onChange={cambiarFecha}
-          />
-        </section>
-        <Button
-          variant="verde"
-          id="aceptar"
-          icon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              width="20"
-              height="20"
-              stroke-width="2"
-            >
-              {" "}
-              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>{" "}
-              <path d="M7 11l5 5l5 -5"></path> <path d="M12 4l0 12"></path>{" "}
-            </svg>
-          }
-        >
-          {" "}
-          Descargar
-        </Button>
-      </section>
-
+      {/* Tabla de informes */}
       <section className="TablaInformes">
         <table className="tabla">
           <thead>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-            <th>Estado</th>
-            <th>Proveedor</th>
+            <tr>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Estado</th>
+              <th>Proveedor</th>
+            </tr>
           </thead>
           <tbody>
             {informesData.map((informe, index) => (
@@ -141,9 +113,9 @@ const Informes = () => {
                 <td>{informe.cantidad_actual}</td>
                 <td
                   style={{
-                    backgroundColor: asignarColor(informe.estado),
-                    Color:
-                      informe.estado > 30 && informe.estado < 70
+                    backgroundColor: asignarColor(Number(informe.estado)),
+                    color:
+                      Number(informe.estado) > 30 && Number(informe.estado) < 70
                         ? "white"
                         : "black",
                   }}
@@ -156,6 +128,70 @@ const Informes = () => {
           </tbody>
         </table>
       </section>
+
+      {/* Contenedor de gráficos (scroll hacia abajo) */}
+      <div className="charts-container">
+        {/* Gráfico de barras */}
+        <div className="chart">
+          <h4>Estado de Inventario (Barras)</h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="estado" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Gráfico de líneas */}
+        <div className="chart">
+          <h4>Estado de Inventario (Líneas)</h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="estado"
+                stroke="#8884d8"
+                strokeWidth={2}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Gráfico de torta */}
+        <div className="chart">
+          <h4>Distribución por Rangos (%)</h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                label
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </section>
   );
 };

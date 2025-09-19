@@ -33,7 +33,7 @@
   min-height: 30rem;
   max-height: 39rem;
   width: 30%;
-  height:30rem;
+  height: 30rem;
   background-color: #c7db9c;
 }
 
@@ -156,9 +156,44 @@
   border-radius: 0.5rem;
 }
 
-.Contenido_labels{
+.Contenido_labels {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
   margin-top: 1rem;
+}
+
+.Superior_busqueda {
+  position: relative; /* clave: referencia para que los hijos absolute se ubiquen respecto a este contenedor */
+  min-width: 5rem;
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  color: black;
+}
+
+.Sugerencia_Productos {
+  position: absolute;
+  top: 77%; /* justo debajo del input */
+  left: 3%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  margin-top: 0.2rem; /* pequeño espacio */
+  max-height: 200px;
+  overflow-y: auto;
+  width: 94%; /* igual ancho que el input */
+  z-index: 100;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.Sugerencia_Productos div {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.Sugerencia_Productos div:hover {
+  background-color: #f0f0f0;
 }

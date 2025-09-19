@@ -24,7 +24,15 @@ const Home = () => {
       alert("Por favor, ingresa un número válido");
     }
   };
-
+  const cancelarPago = () => {
+    exito("Venta cancelada con exito");
+    setProductosSeleccionados([]);
+    setPago(0);
+    setDevuelta("");
+    setBusqueda("");
+    setCantidad("");
+    console.log("Venta cancelada");
+  };
   const exito = (texto) => {
     toast.success(texto);
   };
@@ -376,7 +384,9 @@ const Home = () => {
             <Button variant="verde" onClick={() => vender()}>
               Vender
             </Button>
-            <Button variant="rojo">Cancelar</Button>
+            <Button variant="rojo" onClick={() => cancelarPago()}>
+              Cancelar
+            </Button>
           </div>
         </section>
         <ToastContainer position="top-center" autoClose={3000} />

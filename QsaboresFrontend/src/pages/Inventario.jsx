@@ -636,7 +636,7 @@ const Inventario = () => {
 
                   <div className="bloque">
                     <label>Categoría</label>
-                    <div id="cont-select-form2">
+                    <div id="cont-select-form">
                       <select
                         id="select-form"
                         name="categoria"
