@@ -1,0 +1,9 @@
+name: qsabores-frontend
+services:
+  web:
+    build:
+      builder: nixpacks
+    static:
+      spa: true       # 👈 Esto activa modo SPA
+      buildPath: dist # 👈 Aquí está tu build
+      outputPath: /   # Se sirve desde la raíz
