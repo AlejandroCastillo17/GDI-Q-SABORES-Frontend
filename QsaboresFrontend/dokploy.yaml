@@ -5,5 +5,5 @@ static:
   build:
     builder: nixpacks
     command: npm run build
-  output: dist # 👈 si usas CRA cambia a "build"
+  output: dist
   spa: true
