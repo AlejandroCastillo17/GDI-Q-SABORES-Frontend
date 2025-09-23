@@ -1,9 +1,0 @@
-name: qsabores-frontend
-type: static
-
-static:
-  build:
-    builder: nixpacks
-    command: npm run build
-  output: dist
-  spa: true
