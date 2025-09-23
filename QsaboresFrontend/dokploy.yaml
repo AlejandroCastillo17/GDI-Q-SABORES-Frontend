@@ -1,5 +1,10 @@
-build:
-  builder: "nixpacks"
-  buildCommand: "npm run build"
-  outputDirectory: "build"
-  spa: true
+name: qsabores-frontend
+services:
+  web:
+    build:
+      builder: nixpacks
+    static:
+      spa: true # 👈 Esto le dice a Dokploy que es un SPA (React, Vue, Angular)
+      buildPath: dist # 👈 Cambia según dónde tu proyecto genera el build (ej: "build" para React)
+      outputPath: / # Ruta donde se sirve
+
