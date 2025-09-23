@@ -3,7 +3,8 @@ services:
   web:
     build:
       builder: nixpacks
+      buildCommand: npm run build # 👈 Compila Vite
     static:
-      spa: true       # 👈 Esto activa modo SPA
-      buildPath: dist # 👈 Aquí está tu build
-      outputPath: /   # Se sirve desde la raíz
+      spa: true # 👈 Activa el modo SPA
+      buildPath: dist # 👈 Carpeta generada por vite build
+      outputPath: / # 👈 Se sirve desde la raíz
