@@ -3,7 +3,7 @@ import axios from "axios";
 export const authentication = async (datos) => {
   try {
     const response = await axios.post(
-      "http://qsabores-backend-dacpsw-6d0816-72-60-26-170.dokploy.app/sabores/api/v1/usuarios/login/",
+      "http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/usuarios/login/",
       datos,
       {
         headers: {
