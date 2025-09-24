@@ -11,6 +11,7 @@ export const authentication = async (datos) => {
         },
       }
     );
+    //console.log('Respuesta del backend:', response);
     if (response.status === 200) {
       // Guardar el token en el almacenamiento local
       sessionStorage.setItem("token", response.data.token);
