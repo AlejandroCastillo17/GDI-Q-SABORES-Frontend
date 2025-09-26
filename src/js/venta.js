@@ -2,7 +2,7 @@ import axios from "axios";
 export const venderProducto = async (data) => {
   try {
     const response = await axios.post(
-      "api.qsabores.shop/sabores/api/v1/ventas/",
+      "http://api.qsabores.shop/sabores/api/v1/ventas/",
       data, // Aquí van los datos que envías
       {
         headers: {
