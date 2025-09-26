@@ -71,7 +71,7 @@ export const editarProductos = async (producto, id) => {
 export const eliminarProductos = async (productoIds) => {
   try {
     const response = await axios.post(
-      "http://api.qsabores.shop/sabores/api/v1/productos/eliminar_productos/",
+      "https://api.qsabores.shop/sabores/api/v1/productos/eliminar_productos/",
       productoIds,
       {
         headers: {
