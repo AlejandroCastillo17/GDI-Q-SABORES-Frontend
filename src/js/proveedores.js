@@ -3,7 +3,7 @@ import axios from "axios";
 export const consultaProveedores = async () => {
   try {
     const proveedores = await axios.get(
-      "http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/proveedores/",
+      "api.qsabores.shop/sabores/api/v1/proveedores/",
       {
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const consultaProveedores = async () => {
 export const editarProveedor = async (proveedor, id) => {
   try {
     const response = await axios.put(
-      `http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/proveedores/${id}/`,
+      `api.qsabores.shop/sabores/api/v1/proveedores/${id}/`,
       proveedor,
       {
         headers: {
@@ -48,7 +48,7 @@ export const editarProveedor = async (proveedor, id) => {
 export const crearProveedores = async (proveedoresData) => {
   try {
     const response = await axios.post(
-      "http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/proveedores/",
+      "api.qsabores.shop/sabores/api/v1/proveedores/",
       proveedoresData, // Aquí van los datos que envías
       {
         headers: {
@@ -70,7 +70,7 @@ export const crearProveedores = async (proveedoresData) => {
 export const eliminarProveedores = async (proveedoresIds) => {
   try {
     const response = await axios.post(
-      "http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/proveedores/bulk_delete/",
+      "api.qsabores.shop/sabores/api/v1/proveedores/bulk_delete/",
       proveedoresIds,
       {
         headers: {
@@ -89,4 +89,3 @@ export const eliminarProveedores = async (proveedoresIds) => {
     return error.response || error.message;
   }
 };
-   
