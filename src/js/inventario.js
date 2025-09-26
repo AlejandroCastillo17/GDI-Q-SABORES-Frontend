@@ -3,7 +3,7 @@ import axios from "axios";
 export const consultaInventario = async () => {
   try {
     const productos = await axios.get(
-      "http://api.qsabores.shop/sabores/api/v1/productos/",
+      "https://api.qsabores.shop/sabores/api/v1/productos/",
       {
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const consultaInventario = async () => {
 export const crearProductos = async (productoData) => {
   try {
     const response = await axios.post(
-      "http://api.qsabores.shop/sabores/api/v1/productos/",
+      "https://api.qsabores.shop/sabores/api/v1/productos/",
       productoData, // Aquí van los datos que envías
       {
         headers: {
@@ -48,7 +48,7 @@ export const crearProductos = async (productoData) => {
 export const editarProductos = async (producto, id) => {
   try {
     const response = await axios.put(
-      `http://api.qsabores.shop/sabores/api/v1/productos/${id}/`,
+      `https://api.qsabores.shop/sabores/api/v1/productos/${id}/`,
       producto,
       {
         headers: {
@@ -71,7 +71,7 @@ export const editarProductos = async (producto, id) => {
 export const eliminarProductos = async (productoIds) => {
   try {
     const response = await axios.post(
-      "http://api.qsabores.shop/sabores/api/v1/productos/eliminar_productos/",
+      "https://api.qsabores.shop/sabores/api/v1/productos/eliminar_productos/",
       productoIds,
       {
         headers: {
