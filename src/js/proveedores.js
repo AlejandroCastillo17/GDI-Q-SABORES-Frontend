@@ -3,7 +3,7 @@ import axios from "axios";
 export const consultaProveedores = async () => {
   try {
     const proveedores = await axios.get(
-      "https://api.qsabores.shop/sabores/api/v1/proveedores/",
+      "http://api.qsabores.shop/sabores/api/v1/proveedores/",
       {
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export const consultaProveedores = async () => {
 export const editarProveedor = async (proveedor, id) => {
   try {
     const response = await axios.put(
-      `https://api.qsabores.shop/sabores/api/v1/proveedores/${id}/`,
+      `http://api.qsabores.shop/sabores/api/v1/proveedores/${id}/`,
       proveedor,
       {
         headers: {
@@ -48,7 +48,7 @@ export const editarProveedor = async (proveedor, id) => {
 export const crearProveedores = async (proveedoresData) => {
   try {
     const response = await axios.post(
-      "https://api.qsabores.shop/sabores/api/v1/proveedores/",
+      "http://api.qsabores.shop/sabores/api/v1/proveedores/",
       proveedoresData, // Aquí van los datos que envías
       {
         headers: {
@@ -70,7 +70,7 @@ export const crearProveedores = async (proveedoresData) => {
 export const eliminarProveedores = async (proveedoresIds) => {
   try {
     const response = await axios.post(
-      "https://api.qsabores.shop/sabores/api/v1/proveedores/bulk_delete/",
+      "http://api.qsabores.shop/sabores/api/v1/proveedores/bulk_delete/",
       proveedoresIds,
       {
         headers: {

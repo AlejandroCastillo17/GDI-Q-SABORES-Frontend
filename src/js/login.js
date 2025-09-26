@@ -3,7 +3,7 @@ import axios from "axios";
 export const authentication = async (datos) => {
   try {
     const response = await axios.post(
-      "https://api.qsabores.shop/sabores/api/v1/usuarios/login/",
+      "http://api.qsabores.shop/sabores/api/v1/usuarios/login/",
       datos,
       {
         headers: {
