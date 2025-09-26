@@ -2,7 +2,7 @@ import axios from "axios";
 export const venderProducto = async (data) => {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/ventas/",data, // Aquí van los datos que envías
+      "http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/ventas/",data, // Aquí van los datos que envías
       {
         headers: {
           "Content-Type": "application/json",

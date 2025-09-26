@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/sabores/api/v1/',
+  baseURL: 'http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/',
   headers: {
     'Content-Type': 'application/json',
   },

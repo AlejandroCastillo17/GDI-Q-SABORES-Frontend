@@ -3,7 +3,7 @@ import axios from "axios";
 export const ConsultarInformes = async () => {
   try {
     const informes = await axios.get(
-      "http://127.0.0.1:8000/sabores/api/v1/informes/",
+      "http://qsabores-backend-dacpsw-8612bd-72-60-26-170.traefik.me/sabores/api/v1/informes/",
       {
         headers: {
           "Content-Type": "application/json",
