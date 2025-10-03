@@ -3,7 +3,7 @@ import axios from "axios";
 export const consultaCategoria = async () => {
   try {
     const categoria = await axios.get(
-      "https://api.qsabores.shop/sabores/api/v1/categorias/",
+      "http://127.0.0.1:8000/sabores/api/v1/categorias/",
       {
         headers: {
           "Content-Type": "application/json",
