@@ -8,6 +8,7 @@ import Informes from './pages/Informes';
 import Layout from './Layouts/Layout';
 import Proveedores from './pages/proveedores';
 import Egresos from './pages/Egresos';
+import Categorias from './pages/Categoria';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/informes" element={<Informes/>} />
                 <Route path="/proveedores" element={<Proveedores/>} />
                 <Route path="/egresos" element={<Egresos/>} />
+                <Route path="/categorias" element={<Categorias/>} />
               </Route>
             </Routes>
           </Router>

@@ -90,3 +90,27 @@ export const eliminarProductos = async (productoIds) => {
     return error.response || error.message;
   }
 };
+
+// Notificacion de existencias de productos
+
+export const consultaExistencias = async () => {
+  try {
+    const ExistProductos = await axios.get(
+      "http://127.0.0.1:8000/sabores/api/v1/notificaciones/",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    return ExistProductos.data;
+  } catch (error) {
+    console.error(
+      "Error al enviar datos:",
+      error.response?.data || error.message
+    );
+    return error.response || error.message;
+  }
+};
