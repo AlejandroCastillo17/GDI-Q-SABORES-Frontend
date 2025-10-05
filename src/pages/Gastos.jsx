@@ -37,7 +37,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                                 <td>
                                     {itemEditando === gasto.id ? (
                                         <input
-                                            className="input-edit"
+                                            className="inputss"
                                             type="text"
                                             name="nombre"
                                             value={datosEditados.nombre || ''}
@@ -50,7 +50,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                                 <td>
                                     {itemEditando === gasto.id ? (
                                         <input
-                                            className="input-edit"
+                                            className="inputss"
                                             type="number"
                                             name="precio"
                                             value={datosEditados.precio || 0}
@@ -67,7 +67,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                                 <td>
                                     {itemEditando === gasto.id ? (
                                         <select
-                                            className="input-edit"
+                                            className="inputss"
                                             name="estado"
                                             value={datosEditados.estado || ''}
                                             onChange={handleChangeEdicion}
@@ -82,7 +82,7 @@ const Gastos = ({ seleccionados, setSeleccionados, gastosData, itemEditando, dat
                                 <td>
                                     {itemEditando === gasto.id ? (
                                         <input
-                                            className="input-edit"
+                                            className="inputss"
                                             type="date"
                                             name="fecha_de_pago"
                                             value={datosEditados.fecha_de_pago || ''}

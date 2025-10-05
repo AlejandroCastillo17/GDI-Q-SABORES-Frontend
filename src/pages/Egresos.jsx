@@ -555,12 +555,13 @@ const Egresos = () => {
                                                 <div className="bloque-p">
                                                     <label>Cantidad</label>
                                                     <input 
-                                                        type="number" 
+                                                        type="text" 
+                                                        pattern="[0-9]*"
                                                         placeholder="Ej: 100" 
                                                         name="cantidad" 
                                                         value={datosForm.cantidad} 
                                                         onChange={handleChange} 
-                                                        min="1"
+                                                        // min="1"
                                                         required
                                                     />
                                                 </div>

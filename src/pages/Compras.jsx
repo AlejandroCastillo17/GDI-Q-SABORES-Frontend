@@ -112,7 +112,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                         comprasData.toReversed().map((compra) => (
                             <tr key={compra.id}>
                                 <td>
-                                    <input 
+                                    <input
                                         type="checkbox" 
                                         checked={seleccionados.includes(compra.id)}
                                         onChange={() => handleSeleccion(compra.id)}
@@ -144,7 +144,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
 
                                 {/* Detalles - Oculto en edición */}
                                 {itemEditando !== compra.id && (
-                                    <td>
+                                    <td style={{ visibility: itemEditando === compra.id ? 'hidden' : 'visible' }}>
                                         {compra.producto?.nombre || 'N/A'}
                                     </td>
                                 )}
@@ -156,12 +156,15 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input
-                                            className="input-edit"
+                                            className="inputss"
                                             type="number"
                                             name="cantidad"
-                                            value={datosEditados.cantidad || compra.cantidad || ''}
-                                            onChange={handleChangeEdicion}
-                                            // min=""
+                                            value={datosEditados.cantidad === 0 ? 0 : datosEditados.cantidad || ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value === '' ? '' : Number(e.target.value);
+                                                handleChangeEdicion({ target: { name: e.target.name, value } });
+                                            }}
+                                            min="0"
                                         />
                                     ) : (
                                         compra.cantidad ? new Number(compra.cantidad).toLocaleString('es-CO', {
@@ -175,11 +178,14 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input
-                                            className="input-edit"
+                                            className="inputss"
                                             type="number"
                                             name="precio"
-                                            value={datosEditados.precio || compra.precio || 0}
-                                            onChange={handleChangeEdicion}
+                                            value={datosEditados.precio === 0 ? 0 : datosEditados.precio || ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value === '' ? '' : Number(e.target.value);
+                                                handleChangeEdicion({ target: { name: e.target.name, value } });
+                                            }}
                                             min="0"
                                         />
                                     ) : (
@@ -194,7 +200,7 @@ const Compras = ({ seleccionados, setSeleccionados, comprasData, itemEditando, d
                                 <td>
                                     {itemEditando === compra.id ? (
                                         <input
-                                            className="input-edit"
+                                            className="inputss"
                                             type="date"
                                             name="fecha"
                                             value={datosEditados.fecha || compra.fecha || ''}
