@@ -5,6 +5,8 @@ import { consultaInventario, consultaExistencias } from "../js/inventario";
 import { PrefetchPageLinks } from "react-router-dom";
 import { venderProducto } from "../js/venta";
 import { ToastContainer, toast } from "react-toastify";
+import ImprimirFacturaPOS from "../components/imprimirFactura";
+
 const Home = () => {
   const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -14,6 +16,9 @@ const Home = () => {
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [cantidad, setCantidad] = useState("");
   const [devuelta, setDevuelta] = useState("");
+  const [ventaActual, setVentaActual] = useState(null);
+  const [mostrarFactura, setMostrarFactura] = useState(false);
+
   const [pago, setPago] = useState(0);
   const [Tdevuelve, setTdevuelve] = useState("--");
 
@@ -53,8 +58,22 @@ const Home = () => {
         };
         try {
           const respuesta = await venderProducto(data);
+          const ventaCompleta = {
+            id: respuesta.data?.id || Date.now(), // Si tu backend devuelve el id
+            fecha: data.fecha,
+            total: calcularTotal(),
+            detallesVentas: productosSeleccionados.map((p) => ({
+              id: p.id,
+              cantidad: p.cantidad,
+              subtotal: p.Precio * p.cantidad,
+              producto: { nombre: p.nombre, precio: p.Precio },
+            })),
+          };
+
           if (respuesta.status === 201) {
             exito("Venta realizada con éxito");
+            setVentaActual(ventaCompleta); // 👈 guardamos la venta para el modal
+            setMostrarFactura(true); 
             setProductosSeleccionados([]);
             setPago(0);
             setDevuelta("");
@@ -227,7 +246,6 @@ const Home = () => {
   };
 
   // /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   return (
     <section className="rata">
@@ -515,6 +533,14 @@ const Home = () => {
           </div>
         </div>
       )}
+          {mostrarFactura && ventaActual && (
+            console.log("ventaActual", ventaActual),
+            <ImprimirFacturaPOS
+              venta={ventaActual}
+              isOpen={mostrarFactura}
+              onClose={() => setMostrarFactura(false)}
+            />
+          )}
     </section>
 
 
