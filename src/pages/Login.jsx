@@ -44,16 +44,16 @@ const Login = ({setAutenticacion}) => {
         <section className="login">
             <div className="cont-img">
                 <img src={bosque} alt="" />
-            </div>
+            </div>{/* este div es de la imagen que parte a la mitad la pantalla*/}
             <div className="cont-rest">
                 <br />
-                <img src={logo} alt="Logo de Q'SaboresS" />
+                <img src={logo} alt="Logo de Q'SaboresS" id="logo"/>
                 <br />
                 <br />
                 <h1 >Bienvenido de nuevo!</h1>
-                <br />
-                <p>Contraseña</p>
+                <br/>
                 <div className="contraseña-vision">
+                    <label htmlFor="contrasena">Contraseña</label>
                     <input
                         type={verContraseña ? "text" : "password"}
                         placeholder="Ingrese su contraseña"
