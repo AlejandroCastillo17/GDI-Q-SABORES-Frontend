@@ -1,85 +1,80 @@
-import React from "react";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
-import Modal from "react-modal";
+import { useReactToPrint } from "react-to-print";
+import { useRef, forwardRef, useImperativeHandle } from "react";
+import "/src/styles/ImprimirFactura.css";
 
-Modal.setAppElement("#root");
+const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
+  const contentRef = useRef();
 
-export default function ImprimirFacturaPOS({ ventas, isOpen, onClose }) {
-  const venta = ventas[0]; // porque solo hay una venta
+  const handlePrint = useReactToPrint({
+    contentRef,
+    documentTitle: `Factura_${venta.id}_${venta.fecha}_${venta.hora}`,
+  });
 
-  const imprimirFactura = () => {
-    if (window.print) {
-      window.print();
-    } else {
-      generarPDF();
-    }
-  };
-
-  const generarPDF = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.text(`Factura N° ${venta.id}`, 10, 10);
-    doc.setFontSize(12);
-    doc.text(`Fecha: ${venta.fecha}`, 10, 20);
-
-    const columnas = ["Producto", "Cantidad", "Precio", "Subtotal"];
-    const filas = venta.detallesVentas.map((d) => [
-      d.producto.nombre,
-      d.cantidad,
-      `$${parseFloat(d.producto.precio).toLocaleString()}`,
-      `$${parseFloat(d.subtotal).toLocaleString()}`,
-    ]);
-
-    doc.autoTable({
-      head: [columnas],
-      body: filas,
-      startY: 30,
-    });
-
-    const totalY = doc.lastAutoTable.finalY + 10;
-    doc.text(`Total: $${parseFloat(venta.total).toLocaleString()}`, 10, totalY);
-
-    doc.save(`factura_${venta.id}.pdf`);
-  };
+  // Permite ejecutar desde el padre con printRef.current.print()
+  useImperativeHandle(ref, () => ({
+    print: handlePrint,
+  }));
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      contentLabel="Factura POS"
-      style={{
-        content: {
-          width: "400px",
-          margin: "auto",
-          borderRadius: "10px",
-          padding: "20px",
-        },
-      }}
-    >
-      <h3>Factura N° {venta.id}</h3>
-      <p>Fecha: {venta.fecha}</p>
-      <hr />
-      <ul>
-        {venta.detallesVentas.map((d) => (
-          <li key={d.id}>
-            {d.cantidad}x {d.producto.nombre} — $
-            {parseFloat(d.subtotal).toLocaleString()}
-          </li>
-        ))}
-      </ul>
-      <hr />
-      <p style={{ textAlign: "right" }}>
-        <strong>Total: ${parseFloat(venta.total).toLocaleString()}</strong>
-      </p>
+    <div style={{ display: "none" }}>
+      {/* Contenido a imprimir (oculto visualmente) */}
+      <div ref={contentRef} className="factura-container">
+        {/* Encabezado */}
+        <div className="factura-header">
+          <img
+            src="/src/assets/images/qsaboreslogo.png" // cambia a tu logo real
+            alt="Q'Sabores"
+            className="factura-logo"
+          />
+          <h2>Q'SABORES</h2>
+          <p className="factura-slogan">
+            TODO LO QUE NECESITAS, SIEMPRE CERCA
+          </p>
+          <hr />
+          <p className="factura-info">
+            <strong>Factura N°:</strong> {venta.id}
+            <br />
+            <strong>Fecha:</strong> {venta.fecha}
+            <br />
+            <strong>Hora:</strong> {venta.hora}
+          </p>
+        </div>
 
-      <div style={{ marginTop: "15px", textAlign: "center" }}>
-        <button onClick={imprimirFactura} style={{ marginRight: "10px" }}>
-          🖨️ Imprimir / PDF
-        </button>
-        <button onClick={onClose}>Cerrar</button>
+        {/* Detalles */}
+        <table className="factura-tabla">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cant.</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {venta.detallesVentas.map((d) => (
+              <tr key={d.id}>
+                <td>{d.producto.nombre}</td>
+                <td className="centro">{d.cantidad}</td>
+                <td className="derecha">
+                  ${parseFloat(d.subtotal).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Total */}
+        <div className="factura-total">
+          Total: ${parseFloat(venta.total).toLocaleString()}
+        </div>
+
+        {/* Pie */}
+        <div className="factura-footer">
+          <hr />
+          ¡Gracias por su compra! 🌿
+        </div>
       </div>
-    </Modal>
+    </div>
   );
-}
+});
+
+export default ImprimirFacturaPOS;

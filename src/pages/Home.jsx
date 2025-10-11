@@ -1,11 +1,12 @@
 import "../styles/Home.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Button from "../components/Button";
 import { consultaInventario, consultaExistencias } from "../js/inventario";
 import { PrefetchPageLinks } from "react-router-dom";
 import { venderProducto } from "../js/venta";
 import { ToastContainer, toast } from "react-toastify";
 import ImprimirFacturaPOS from "../components/imprimirFactura";
+import Print from "../components/imprimirFactura";
 
 const Home = () => {
   const [productos, setProductos] = useState([]);
@@ -18,6 +19,7 @@ const Home = () => {
   const [devuelta, setDevuelta] = useState("");
   const [ventaActual, setVentaActual] = useState(null);
   const [mostrarFactura, setMostrarFactura] = useState(false);
+   const printRef = useRef();
 
   const [pago, setPago] = useState(0);
   const [Tdevuelve, setTdevuelve] = useState("--");
@@ -37,64 +39,78 @@ const Home = () => {
     setDevuelta("");
     setBusqueda("");
     setCantidad("");
-    console.log("Venta cancelada");
   };
   const exito = (texto) => {
     toast.success(texto);
   };
+  
   const vender = async () => {
     if (pago < calcularTotal()) {
       alert("El pago es insuficiente");
       return;
-    } else {
-      if (productosSeleccionados.length != 0) {
-        const data = {
-          fecha: new Date().toISOString().split("T")[0],
+    }
+
+    if (productosSeleccionados.length === 0) {
+      alert("No hay productos seleccionados para vender.");
+      return;
+    }
+    const ahoraUTC = new Date();
+    const ahoraColombia = new Date(ahoraUTC.getTime() - 5 * 60 * 60 * 1000);
+    const [fecha, hora] = ahoraColombia.toISOString().split("T");
+
+    const fechaHora = fecha + "T" + hora
+
+    const data = {
+      fecha: ahoraUTC,
+      detallesVentas: productosSeleccionados.map((p) => ({
+        idproducto: p.id,
+        subtotal: p.Precio,
+        cantidad: p.cantidad,
+      })),
+    };
+
+    try {
+      const respuesta = await venderProducto(data);
+
+      if (respuesta.status === 201) {
+        const ventaCompleta = {
+          id: respuesta.data?.id || Date.now(),
+          fecha: fecha,
+          hora: hora.split(".")[0],
+          total: calcularTotal(),
           detallesVentas: productosSeleccionados.map((p) => ({
-            idproducto: p.id,
-            subtotal: p.Precio,
+            id: p.id,
             cantidad: p.cantidad,
+            subtotal: p.Precio * p.cantidad,
+            producto: { nombre: p.nombre, precio: p.Precio },
           })),
         };
-        try {
-          const respuesta = await venderProducto(data);
-          const ventaCompleta = {
-            id: respuesta.data?.id || Date.now(), // Si tu backend devuelve el id
-            fecha: data.fecha,
-            total: calcularTotal(),
-            detallesVentas: productosSeleccionados.map((p) => ({
-              id: p.id,
-              cantidad: p.cantidad,
-              subtotal: p.Precio * p.cantidad,
-              producto: { nombre: p.nombre, precio: p.Precio },
-            })),
-          };
 
-          if (respuesta.status === 201) {
-            exito("Venta realizada con éxito");
-            setVentaActual(ventaCompleta); // 👈 guardamos la venta para el modal
-            setMostrarFactura(true); 
-            setProductosSeleccionados([]);
-            setPago(0);
-            setDevuelta("");
-            setBusqueda("");
-            setCantidad("");
-            console.log("Venta exitosa");
-            consultaExistencias();
-          } else {
-            alert("Error al realizar la venta");
-          }
-        } catch (error) {
-          console.error("Error al realizar la venta:", error.response?.data);
-          alert("Error al realizar la venta. Por favor, inténtelo de nuevo.");
-        }
-        console.log("data:", data);
+        exito("Venta realizada con éxito");
+
+        setVentaActual(ventaCompleta); // guardamos venta
+        setTimeout(() => {
+          printRef.current?.print(); // ✅ imprime automáticamente
+        }, 300);
+
+        // Limpieza de datos (después de imprimir)
+        setTimeout(() => {
+          setProductosSeleccionados([]);
+          setPago(0);
+          setDevuelta("");
+          setBusqueda("");
+          setCantidad("");
+          consultaExistencias();
+        }, 1000);
       } else {
-        alert("No hay productos seleccionados para vender.");
-        return;
+        alert("Error al realizar la venta");
       }
+    } catch (error) {
+      console.error("Error al realizar la venta:", error.response?.data);
+      alert("Error al realizar la venta. Por favor, inténtelo de nuevo.");
     }
   };
+
 
   const devolucion = (valor) => {
     const total = calcularTotal();
@@ -273,6 +289,7 @@ const Home = () => {
       </div>
       <section className="Contenedor_principal">
         <section className="Principal_contenido">
+
           <div className="Contenido_superior">
             <div className="Superior_busqueda">
               <label>Producto</label>
@@ -473,6 +490,10 @@ const Home = () => {
               <Button variant="verde" onClick={() => vender()}>
                 Vender
               </Button>
+              
+                {/* El componente de impresión invisible */}
+                {ventaActual && <ImprimirFacturaPOS ref={printRef} venta={ventaActual} />}
+
               <Button variant="rojo" onClick={() => cancelarPago()}>
                 Cancelar
               </Button>
@@ -533,14 +554,14 @@ const Home = () => {
           </div>
         </div>
       )}
-          {mostrarFactura && ventaActual && (
+          {/* {mostrarFactura && ventaActual && (
             console.log("ventaActual", ventaActual),
             <ImprimirFacturaPOS
               venta={ventaActual}
               isOpen={mostrarFactura}
               onClose={() => setMostrarFactura(false)}
             />
-          )}
+          )} */}
     </section>
 
 
