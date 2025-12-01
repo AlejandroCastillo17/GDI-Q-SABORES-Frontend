@@ -16,7 +16,12 @@ const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
   }));
 
   return (
-    <div style={{ display: "none" }}>
+    <div style={{ 
+      position: "absolute",
+      left: "-9999px",
+      top: "0" ,
+      width: "58mm"    // MUY IMPORTANTE
+    }}>
       {/* Contenido a imprimir (oculto visualmente) */}
       <div ref={contentRef} className="factura-container">
         {/* Encabezado */}

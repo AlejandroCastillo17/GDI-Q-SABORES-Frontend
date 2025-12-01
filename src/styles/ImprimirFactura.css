@@ -5,7 +5,6 @@
   }
 
   html, body {
-    width: 58mm;
     margin: 0 auto;
     background: #fff;
     font-family: "Courier New", monospace;
@@ -21,16 +20,15 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   /* ---------- Contenedor ---------- */
-  .factura-container {
-    width: 100%;
-    max-width: 58mm;
-    background: #fff;
-    padding: 6px;
-    text-align: center;
-    box-sizing: border-box;
+ .factura-container {
+    width: 58mm !important;
+    max-width: 58mm !important;
+    zoom: 2 !important /* Realicé un cambia aqui, esto modifica el zoom del contenido de la factura, estaba en 1 y lo puse en 2 */
   }
 
   /* ---------- Encabezado ---------- */
