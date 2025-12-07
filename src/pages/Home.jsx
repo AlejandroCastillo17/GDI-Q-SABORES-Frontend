@@ -171,26 +171,28 @@ const Home = () => {
     }
   };
 
-
-
   const obtenerExistencias = async () => {
     try {
       const data = await consultaExistencias();
       if (Array.isArray(data)) {
         setExistencias(data);
       } else {
-        setError("Error al acceder a las Existencias de los productos porximos a terminar");
+        setError(
+          "Error al acceder a las Existencias de los productos porximos a terminar"
+        );
         console.error("Respuesta inesperada:", data);
       }
     } catch (err) {
-      setError("Error al acceder a las Existencias de los productos porximos a terminar");
+      setError(
+        "Error al acceder a las Existencias de los productos porximos a terminar"
+      );
       console.error("Error en la consulta:", err);
     }
   };
 
   useEffect(() => {
     ConsultarProductos();
-    obtenerExistencias()
+    obtenerExistencias();
   }, []);
 
   const handleBusqueda = (texto) => {
@@ -236,15 +238,14 @@ const Home = () => {
   };
   console.log("esta es la sugerencia", sugerencia);
 
-  
   //****************************************************************************************************** */
   // Notificacion de existencias
-  
+
   const [noti, setNoti] = useState(false);
   const [condicion, setCondicion] = useState(false);
-  
+
   const productosP = [];
-  
+
   useEffect(() => {
     if (existencias.length === 0) {
       setCondicion(false);
@@ -267,22 +268,23 @@ const Home = () => {
     <section className="rata">
       <div className="rata2">
         {condicion && (
-          <svg  
-            xmlns="http://www.w3.org/2000/svg"  
-            width="50"  
-            height="50"  
-            viewBox="0 0 24 24"  
-            fill="#7c0000ff"  
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="50"
+            height="50"
+            viewBox="0 0 24 24"
+            fill="#7c0000ff"
             className="alertIcon"
             onClick={verNoti}
           >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M12 2c5.523 0 10 4.477 10 10a10 
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2c5.523 0 10 4.477 10 10a10 
               10 0 0 1 -19.995 .324l-.005 -.324l.004 -.28c.148 
               -5.393 4.566 -9.72 9.996 -9.72zm.01 13l-.127 .007a1 1 0 0 0 0 
               1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007zm-.01 
               -8a1 1 0 0 0 -.993 .883l-.007 .117v4l.007 .117a1 1 0 0 0
-              1.986 0l.007 -.117v-4l-.007 -.117a1 1 0 0 0 -.993 -.883z" 
+              1.986 0l.007 -.117v-4l-.007 -.117a1 1 0 0 0 -.993 -.883z"
             />
           </svg>
         )}
@@ -315,37 +317,44 @@ const Home = () => {
               )}
             </div>
 
-            <div className="Superior_Cantidad">
-              <label>Cantidad</label>
-              <input
-                type="text"
-                id="Busqueda_buscador"
-                value={cantidad}
-                onChange={(e) => handlechange(e)}
-              />
-            </div>
-            <Button variant="verde" className="homeB" onClick={AgregarProducto}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="50"
-                height="50"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"
+            <div className="Superior_Cantidad_Agregar">
+              <div className="Superior_Cantidad">
+                <label>Cantidad</label>
+                <input
+                  type="text"
+                  id="Busqueda_buscador"
+                  value={cantidad}
+                  onChange={(e) => handlechange(e)}
+                />
+              </div>
+              <Button
+                variant="verde"
+                className="homeB"
+                onClick={AgregarProducto}
               >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                <path d="M17 17h-11v-14h-2" />
-                <path d="M6 5l14 1l-1 7h-13" />
-              </svg>
-              Agregar
-            </Button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="50"
+                  height="50"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M17 17h-11v-14h-2" />
+                  <path d="M6 5l14 1l-1 7h-13" />
+                </svg>
+                Agregar
+              </Button>
+            </div>
           </div>
+
           <div className="Contenido_Tabla">
             <table className="Tabla_productos">
               <thead>
@@ -446,7 +455,6 @@ const Home = () => {
             </table>
           </div>
         </section>
-
         <section className="Principal_valores">
           <section className="labels">
             <div className="label_Contenido">
@@ -485,7 +493,6 @@ const Home = () => {
                 />
               </div>
             </div>
-
             <div className="label_Botones">
               <Button variant="verde" onClick={() => vender()}>
                 Vender
@@ -506,20 +513,20 @@ const Home = () => {
         <div className="modal-noti-p" onClick={ocultarNoti}>
           <div className="modal-noti" onClick={(e) => e.stopPropagation()}>
             <div className="modal-noti-header">
-              <svg  
-                xmlns="http://www.w3.org/2000/svg"  
-                width="50"  
-                height="50"  
-                viewBox="0 0 24 24"  
-                fill="none"  
-                stroke="#000000"  
-                strokeWidth="2"  
-                strokeLinecap="round"  
-                strokeLinejoin="round"  
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="50"
+                height="50"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="closeIcon"
                 onClick={ocultarNoti}
               >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M12 21a9 9 0 0 0 9 -9a9 9 0 0 0 -9 -9a9 9 0 0 0 -9 9a9 9 0 0 0 9 9z" />
                 <path d="M9 8l6 8" />
                 <path d="M15 8l-6 8" />
@@ -530,19 +537,19 @@ const Home = () => {
               {existencias.map((producto) => (
                 <div className="noti-prod" key={producto.producto.id}>
                   <p>{producto.producto.nombre}</p>
-                  <svg  
-                    xmlns="http://www.w3.org/2000/svg"  
-                    width="30"  
-                    height="30"  
-                    viewBox="0 0 24 24"  
-                    fill="none"  
-                    stroke="#000000"  
-                    strokeWidth="2"  
-                    strokeLinecap="round"  
-                    strokeLinejoin="round"  
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000000"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right"
                   >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M5 12l14 0" />
                     <path d="M13 18l6 -6" />
                     <path d="M13 6l6 6" />
@@ -563,8 +570,6 @@ const Home = () => {
             />
           )} */}
     </section>
-
-
   );
 };
 
