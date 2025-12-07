@@ -435,7 +435,7 @@ const Inventario = () => {
               value={categoriaSeleccionada}
               onChange={(e) => setCategoriaSeleccionada(e.target.value)}
             >
-              <option value="">Todas</option>
+              <option value="" >Todas</option>
               {categoriaData.map((categoria) => (
                 <option key={categoria.id} value={categoria.nombre}>
                   {categoria.nombre}
