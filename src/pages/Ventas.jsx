@@ -9,6 +9,7 @@ const Ventas = () => {
   const [error, setError] = useState(null);
   const [cargando, setCargando] = useState(true); // <-- Loader activado
   const [Panel, setPanel] = useState(false);
+  const [VentaSeleccionada, setVentaSeleccionada] = useState(null)
 
   const regitroVentas = async () => {
     try {
@@ -24,14 +25,23 @@ const Ventas = () => {
       console.error("Error en la consulta:", err);
     } finally {
       setCargando(false); // <-- Desactivar loader cuando termina
-    }
+    } 
   };
+
+  const DetallesVenta = (Venta) =>{
+   console.log(Venta);
+   setVentaSeleccionada(Venta)
+   setPanel(true)
+  }
+
+  console.log("esto es lo de ventaSeleccionada:",VentaSeleccionada)
 
   useEffect(() => {
     regitroVentas();
   }, []);
 
-  console.log("Ventas cargadas:", ventasData);
+ //console.log("Ventas cargadas:", ventasData);
+
 
   if (cargando) {
     return (
@@ -68,18 +78,31 @@ const Ventas = () => {
                 <td>{new Date(Venta.fecha).toLocaleString()}</td>
                 <td>{Venta.total}</td>
                 <td>
-                  <button onClick={()=> setPanel(true)}>Ver mas</button>
+                  <button onClick={()=>DetallesVenta(Venta)}>Ver mas</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div className={Panel ? "panel panel-open" : "panel panel-closed"}>
+
+        {Panel && VentaSeleccionada &&(
+          <div className="panel panel-open">
           <div className="contenidoP">
-            <p>funciono</p>
+            <h1>Venta #{VentaSeleccionada.id}</h1>
+            <h2>{new Date(VentaSeleccionada.fecha).toLocaleString()}</h2>
+            <h2>Total {VentaSeleccionada.total}</h2>
+            <h3>Detalles</h3>
+            <ul>
+              {VentaSeleccionada.detallesVentas?.map((detalle, index)=>(
+              <li key={index}>
+               {detalle.producto.nombre} {detalle.cantidad}
+              </li>
+              ))}
+            </ul> 
             <button onClick={()=> setPanel(false)}> Salir </button>
-          </div>
+          </div>  
         </div>
+        )}
       </section>
     </section>
   );

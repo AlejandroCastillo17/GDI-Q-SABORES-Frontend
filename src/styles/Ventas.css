@@ -82,26 +82,64 @@ H1 {
 .panel {
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* <-- CENTRADO REAL */
+  left: 60%;
+  transform: translate(-50%, -60%); /* <-- CENTRADO REAL */
   background-color: white;
   color: black;
-  width: 400px;
-  height: auto;
+  width: 50rem;
+  height: 30rem;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  z-index: 2000; /* para que quede encima de todo */
+  z-index: 2000;
+  opacity: 0;
+
+
+  transition:
+  transform  0.3s ease,
+  opacity 0.3s ease;
 }
 
 /* Estado oculto */
 .panel-closed {
-  display: none;
+  transform: translate(-50%, -60%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Estado visible */
 .panel-open {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transform: translate(-50%, -50%);
+  opacity: 1;
 }
+
+.contenidoP{
+ display:flex;
+ flex-direction:column;
+ background-color: white;
+ height: 100%;
+}
+
+.contenidoP button{
+   margin-top: auto;
+   margin-bottom: 1rem;
+   width: 10rem;
+   align-self: center;
+}
+
+.contenidoP h1 {
+  font-size: 1.5rem;
+  align-self: flex-start;
+  margin:0rem;
+  padding:0rem;
+  font-family: 'monospace';
+  margin-bottom: 0.5rem ;
+}
+
+.contenidoP h2 {
+  font-size: 1.1rem;
+  align-self: flex-start;
+  margin:0rem;
+  padding:0rem;
+}
+
