@@ -9,6 +9,7 @@ import Layout from './Layouts/Layout';
 import Proveedores from './pages/proveedores';
 import Egresos from './pages/Egresos';
 import Categorias from './pages/Categoria';
+import Ventas from './pages/Ventas';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/proveedores" element={<Proveedores/>} />
                 <Route path="/egresos" element={<Egresos/>} />
                 <Route path="/categorias" element={<Categorias/>} />
+                <Route path="/ventas" element={<Ventas/>} />
               </Route>
             </Routes>
           </Router>

@@ -105,6 +105,32 @@ const Sidebar = () => {
               width="40"
               height="40"
               viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-presentation-analytics"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M9 12v-4" />
+              <path d="M15 12v-2" />
+              <path d="M12 12v-1" />
+              <path d="M3 4h18" />
+              <path d="M4 4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-10" />
+              <path d="M12 16v4" />
+              <path d="M9 20h6" />
+            </svg>
+            <Link className="link" to="/ventas">
+              Ventas
+            </Link>
+          </li>
+          <li>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
               fill="#000000"
               class="icon icon-tabler icons-tabler-filled icon-tabler-coin"
             >
