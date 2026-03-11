@@ -1,5 +1,5 @@
 // src/pages/Informes.jsx
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createRef } from "react";
 import "../styles/Ventas.css";
 import Button from "../components/Button";
 import { ConsultarVentas } from "../js/ventas.js";
@@ -15,7 +15,45 @@ const Ventas = () => {
   const [Filtracion, setFiltracion] = useState(false);
   const [SelectAll, setSelectAll] = useState(false);
   const [Seleccionados, setSeleccionados] = useState([]);
-  const printRef = useRef(null);
+
+  // map of refs for each venta; allows printing any or all invoices
+  const printRefs = useRef({});
+  const [descargarTodo, setDescargarTodo] = useState(false);
+  const [Total, setTotal] = useState(0);
+
+  const getPrintRef = (id) => {
+    if (!printRefs.current[id]) {
+      printRefs.current[id] = createRef();
+    }
+    return printRefs.current[id];
+  };
+
+  useEffect(() =>{
+     const totalCalculado= ventasData.filter((venta) => Seleccionados.includes(venta.id)).reduce((acc, venta)=> acc + Number(venta.total),0)
+     setTotal(totalCalculado)
+     if(Seleccionados.length>1){setDescargarTodo(true)}else{setDescargarTodo(false)}
+  }, [Seleccionados,ventasData])
+
+  
+
+  const handleDescargarTodo = async () => {
+  if (Seleccionados.length === 0) return;
+
+  const ventasSeleccionadas = ventasData.filter(v =>
+    Seleccionados.includes(v.id)
+  );
+
+  for (const venta of ventasSeleccionadas) {
+    const ref = getPrintRef(venta.id);
+
+    await new Promise(resolve => {
+      setTimeout(() => {
+        ref.current?.print();
+        resolve();
+      }, 900);
+    });
+  }
+};
 
   const regitroVentas = async () => {
     try {
@@ -42,22 +80,20 @@ const Ventas = () => {
 
   const CambioSeleccion = (id) => {
     setSeleccionados(
-      (
-        items, //indicador de los items de setSeleccionados o los items de su array
-      ) =>
-        items.includes(id)
-          ? items.filter((item) => item !== id) // si en los items esta la id entonces devuelve el array con los items menos ese id
-          : [...items, id], // sino esta entonces lo añade
+      (items) => (items.includes(id)) 
+       ? items.filter((item) => item !== id) : 
+            // si en los items esta la id entonces devuelve el array con los items menos ese id
+          [...items, id], // sino esta entonces lo añade
+    
     );
   };
 
   const imprimirVenta = () => {
     if (!VentaSeleccionada) return;
 
+    const ref = getPrintRef(VentaSeleccionada.id);
     setTimeout(() => {
-      if (printRef.current) {
-        printRef.current.print();
-      }
+      ref.current?.print();
     }, 200);
   };
 
@@ -112,14 +148,17 @@ const Ventas = () => {
           <div
             className="BotonSeleccion"
             onClick={() => {
+              // toggle select all and flag for downloading
               if (Seleccionados.length === ventasData.length) {
-                //cuando de clic si el array de seleccionados es igual al de las ventas es por que selecciono todo y quiere vaciar lo seleccionado
-                setSeleccionados([]); // lo vacia
+                setSeleccionados([]);
+                setSelectAll(false);
+                setDescargarTodo(false);
               } else {
-                // sino esta todo seleccionado  cambia el state de seleccionados y le agrega todos los ids al state para que se seleccione todo
-                setSeleccionados(ventasData.map((v) => v.id));
+                const allIds = ventasData.map((v) => v.id);
+                setSeleccionados(allIds);
+                setSelectAll(true);
+                setDescargarTodo(true);
               }
-              setSelectAll(!SelectAll);
             }}
           >
             <div
@@ -127,10 +166,56 @@ const Ventas = () => {
             ></div>
             <p>Seleccionar todo</p>
           </div>
+          <div
+            className={`Descargar ${descargarTodo ? "DescargarO" : "DescargarC"}`}
+            onClick={handleDescargarTodo}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000000"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+              <path d="M7 11l5 5l5 -5" />
+              <path d="M12 4l0 12" />
+            </svg>
+            <p>Descargar Todo</p>
+          </div>
+          <div className="Total">
+           
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+  <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+  <path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+  <path d="M12 17v1m0 -8v1" />
+          </svg>
+           <p>{Total}</p>
+          </div>
         </div>
       </div>
 
       {error && <p className="error-msg">{error}</p>}
+
+      {/* componentes de impresión ocultos para cada venta */}
+      {ventasData.map((v) => (
+        <ImprimirFacturaPOS key={v.id} ref={getPrintRef(v.id)} venta={v} />
+      ))}
 
       <section className="TablaVentas">
         <table className="tabla">
@@ -231,7 +316,7 @@ const Ventas = () => {
                     </svg>
                   </button>
                   <ImprimirFacturaPOS
-                    ref={printRef}
+                    ref={VentaSeleccionada ? getPrintRef(VentaSeleccionada.id) : null}
                     venta={VentaSeleccionada}
                   />
                 </div>
@@ -310,3 +395,5 @@ const Ventas = () => {
 };
 
 export default Ventas;
+
+
