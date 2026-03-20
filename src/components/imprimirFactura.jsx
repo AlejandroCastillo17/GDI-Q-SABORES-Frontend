@@ -37,6 +37,10 @@ const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
           </p>
           <hr />
           <p className="factura-info">
+            <strong>NIT EMPRESA Q'SABORES:</strong> 1094430725-9
+            <br />
+            <strong>Direccion:</strong> Carrera 32 # 76 - 30 Medellin
+            <br />
             <strong>Factura N°:</strong> {venta.id}
             <br />
             <strong>Fecha:</strong> {venta.fecha}

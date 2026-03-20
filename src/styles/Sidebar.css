@@ -30,7 +30,7 @@
 }
 
 .sidebar li {
-  margin: 14px 8px;
+  margin: 0.4rem 8px;
   width: 94%;
   text-align: left;
   display: flex;
@@ -120,7 +120,7 @@
   margin-top: 10px;
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  gap: 1rem;
   justify-content: center;
   text-align: center;
 }

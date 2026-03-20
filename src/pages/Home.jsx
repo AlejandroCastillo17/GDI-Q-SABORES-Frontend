@@ -244,7 +244,6 @@ const Home = () => {
   const [noti, setNoti] = useState(false);
   const [condicion, setCondicion] = useState(false);
 
-  const productosP = [];
 
   useEffect(() => {
     if (existencias.length === 0) {
@@ -308,9 +307,14 @@ const Home = () => {
                   {sugerencia.map((producto) => (
                     <div
                       key={producto.id}
+                      className="sugerencia-item"
                       onClick={() => handleSeleccionarProducto(producto)}
                     >
-                      {producto.nombre}
+                      <span>{producto.nombre}</span>
+
+                      <span className="stock-producto">
+                       ({producto.cantidad_actual})
+                      </span>
                     </div>
                   ))}
                 </div>

@@ -486,3 +486,19 @@
     margin-bottom: 5px;
   }
 }
+
+.sugerencia-item{
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.sugerencia-item:hover{
+  background: #f2f2f2;
+}
+
+.stock-producto{
+  font-size: 13px;
+  color: #666;
+}

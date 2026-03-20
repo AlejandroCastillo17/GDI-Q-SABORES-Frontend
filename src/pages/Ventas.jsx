@@ -15,12 +15,13 @@ const Ventas = () => {
   const [Filtracion, setFiltracion] = useState(false);
   const [SelectAll, setSelectAll] = useState(false);
   const [Seleccionados, setSeleccionados] = useState([]);
-
-  // map of refs for each venta; allows printing any or all invoices
+  const [ventasFiltradas, setVentasFiltradas] = useState([]);
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
   const printRefs = useRef({});
   const [descargarTodo, setDescargarTodo] = useState(false);
   const [Total, setTotal] = useState(0);
-
+  
   const getPrintRef = (id) => {
     if (!printRefs.current[id]) {
       printRefs.current[id] = createRef();
@@ -29,17 +30,17 @@ const Ventas = () => {
   };
 
   useEffect(() =>{
-     const totalCalculado= ventasData.filter((venta) => Seleccionados.includes(venta.id)).reduce((acc, venta)=> acc + Number(venta.total),0)
+     const totalCalculado= ventasFiltradas.filter((venta) => Seleccionados.includes(venta.id)).reduce((acc, venta)=> acc + Number(venta.total),0)
      setTotal(totalCalculado)
      if(Seleccionados.length>1){setDescargarTodo(true)}else{setDescargarTodo(false)}
-  }, [Seleccionados,ventasData])
+  }, [Seleccionados,ventasFiltradas])
 
   
 
   const handleDescargarTodo = async () => {
   if (Seleccionados.length === 0) return;
 
-  const ventasSeleccionadas = ventasData.filter(v =>
+  const ventasSeleccionadas = ventasFiltradas.filter(v =>
     Seleccionados.includes(v.id)
   );
 
@@ -60,6 +61,7 @@ const Ventas = () => {
       const response = await ConsultarVentas();
       if (Array.isArray(response)) {
         setventasData(response);
+        setVentasFiltradas(response);
       } else {
         setError("Error: formato inesperado en ventas");
         console.error("Respuesta inesperada:", response);
@@ -96,6 +98,135 @@ const Ventas = () => {
       ref.current?.print();
     }, 200);
   };
+
+// función para mostrar todas las ventas sin filtro
+  const aplicarFiltroFechas = () => {
+
+  if (!fechaDesde || !fechaHasta) return;
+
+  const inicio = new Date(fechaDesde);
+  const fin = new Date(fechaHasta);
+
+  fin.setHours(23,59,59,999);
+
+  const resultado = ventasData.filter((venta) => {
+
+    const fechaVenta = new Date(venta.fecha);
+
+    return fechaVenta >= inicio && fechaVenta <= fin;
+
+  });
+
+  setVentasFiltradas(resultado);
+
+  // reset selección
+  setSeleccionados([]);
+  setSelectAll(false);
+
+};
+
+const filtrarPorRango = (inicio, fin) => {
+
+  const resultado = ventasData.filter((venta) => {
+
+    const fechaVenta = new Date(venta.fecha);
+
+    return fechaVenta >= inicio && fechaVenta <= fin;
+
+  });
+
+  setVentasFiltradas(resultado);
+
+  setSeleccionados([]);
+  setSelectAll(false);
+  setFiltracion(false);
+
+};
+
+const filtroHoy = () => {
+
+  const hoy = new Date();
+
+  const inicio = new Date(hoy);
+  inicio.setHours(0,0,0,0);
+
+  const fin = new Date(hoy);
+  fin.setHours(23,59,59,999);
+
+  filtrarPorRango(inicio, fin);
+
+};
+
+const filtroAyer = () => {
+
+  const ayer = new Date();
+  ayer.setDate(ayer.getDate() - 1);
+
+  const inicio = new Date(ayer);
+  inicio.setHours(0,0,0,0);
+
+  const fin = new Date(ayer);
+  fin.setHours(23,59,59,999);
+
+  filtrarPorRango(inicio, fin);
+
+};
+
+const filtroUltimos7Dias = () => {
+
+  const hoy = new Date();
+
+  const inicio = new Date();
+  inicio.setDate(hoy.getDate() - 6);
+  inicio.setHours(0,0,0,0);
+
+  const fin = new Date();
+  fin.setHours(23,59,59,999);
+
+  filtrarPorRango(inicio, fin);
+
+};
+
+const filtroEsteMes = () => {
+
+  const hoy = new Date();
+
+  const inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+  const fin = new Date();
+  fin.setHours(23,59,59,999);
+
+  filtrarPorRango(inicio, fin);
+
+};
+
+const filtroMesPasado = () => {
+
+  const hoy = new Date();
+
+  const inicio = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+
+  const fin = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
+  fin.setHours(23,59,59,999);
+
+  filtrarPorRango(inicio, fin);
+
+};
+
+
+const mostrarTodo = () => {
+
+  setVentasFiltradas(ventasData);
+
+  setFechaDesde("");
+  setFechaHasta("");
+
+  // reset selección
+  setSeleccionados([]);
+  setSelectAll(false);
+  setFiltracion(false);
+
+};
 
   console.log("esto es lo que agrega el state", Seleccionados);
 
@@ -213,12 +344,12 @@ const Ventas = () => {
       {error && <p className="error-msg">{error}</p>}
 
       {/* componentes de impresión ocultos para cada venta */}
-      {ventasData.map((v) => (
+      {ventasFiltradas.map((v) => (
         <ImprimirFacturaPOS key={v.id} ref={getPrintRef(v.id)} venta={v} />
       ))}
 
       <section className="TablaVentas">
-        <table className="tabla">
+        <table className="tabla ">
           <thead>
             <tr>
               <th></th>
@@ -230,9 +361,9 @@ const Ventas = () => {
           </thead>
 
           <tbody>
-            {ventasData.map((Venta, index) => (
-              <tr key={index}>
-                <td>
+            {ventasFiltradas.map((Venta, index) => (
+              <tr key={index} className="tablaTd">
+                <td >
                   <input
                     type="checkbox"
                     id="check"
@@ -362,31 +493,37 @@ const Ventas = () => {
           </div>
 
           <div className="BotonesAtajo">
-            <div className="BA Bhoy">Hoy</div>
-            <div className="BA Bayer">Ayer</div>
-            <div className="BA B7D">Ultimos 7 dias </div>
-            <div className="BA BEM">Este mes </div>
-            <div className="BA BMP">Mes Pasado</div>
+            <div className="BA Bhoy"  onClick={filtroHoy}>Hoy</div>
+            <div className="BA Bayer" onClick={filtroAyer}>Ayer</div>
+            <div className="BA B7D"   onClick={filtroUltimos7Dias}>Ultimos 7 dias </div>
+            <div className="BA BEM"   onClick={filtroEsteMes}>Este mes </div>
+            <div className="BA BMP"   onClick={filtroMesPasado}>Mes Pasado</div>
+            <div className="BA BMP"   onClick={mostrarTodo}>Todo</div>
           </div>
 
           <div className="PF_Fechas">
             <div className="Fechas">
               <p>Desde</p>
               <div className="Fechas_input">
-                <input className="Dinput" type="date" />
+                <input
+                 className="Dinput"
+                 type="date"
+                 value={fechaDesde}
+                 onChange={(e) => setFechaDesde(e.target.value)}
+                 />
               </div>
             </div>
 
             <div className="Fechas">
               <p>Hasta</p>
               <div className="Fechas_input">
-                <input className="Dinput" type="date" />
+                <input className="Dinput" type="date" value={fechaHasta} onChange={(e) => setFechaHasta(e.target.value)} />
               </div>
             </div>
           </div>
 
           <div className="ButtonA">
-            <button id="BAplicar">Aplicar</button>
+            <button id="BAplicar" onClick={aplicarFiltroFechas}>Aplicar</button>
           </div>
         </div>
       </div>

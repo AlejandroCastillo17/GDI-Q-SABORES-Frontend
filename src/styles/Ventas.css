@@ -70,10 +70,11 @@ H1 {
 
 .Tabla th,
 .Tabla td {
-  border: 1px solid #000;
-  padding: 8px;
+  padding: 0.2rem;
   text-align: center;
 }
+
+
 
 .Tabla th {
   background-color: #c7db9c;

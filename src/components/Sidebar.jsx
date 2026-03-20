@@ -122,7 +122,7 @@ const Sidebar = () => {
               <path d="M9 20h6" />
             </svg>
             <Link className="link" to="/ventas">
-              Ventas
+              Registro Ventas
             </Link>
           </li>
           <li>
