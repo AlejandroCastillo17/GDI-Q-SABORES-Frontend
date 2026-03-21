@@ -391,6 +391,9 @@ const mostrarTodo = () => {
                   <h2 id="Total">
                     Total <span>${VentaSeleccionada.total}</span>
                   </h2>
+                  {VentaSeleccionada.devuelta != null && (
+                    <h2>Devuelta <span>${VentaSeleccionada.devuelta}</span></h2>
+                  )}
                 </div>
 
                 <h3>Detalles de Venta</h3>

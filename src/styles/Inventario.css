@@ -684,4 +684,39 @@
     min-width: 100%;
     min-height: 17%;
   }
+
+  .modal-contenedor {
+    width: 90%;
+    height: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-contenido {
+    height: auto;
+  }
+
+  .modal-contenedor-eliminar {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .modal-contenedor-eliminar h2 {
+    width: 100%;
+    padding-left: 10px;
+    font-size: 20px;
+  }
+
+  .modal-cargando {
+    left: 0;
+  }
+
+  .modal-contenido-c {
+    margin-right: 0;
+  }
+
+  .formulario input {
+    width: 80%;
+  }
 }

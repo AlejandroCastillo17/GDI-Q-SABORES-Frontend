@@ -62,6 +62,7 @@ const Home = () => {
 
     const data = {
       fecha: ahoraUTC,
+      devuelta: parseFloat(devuelta) || 0,
       detallesVentas: productosSeleccionados.map((p) => ({
         idproducto: p.id,
         subtotal: p.Precio,
@@ -78,6 +79,8 @@ const Home = () => {
           fecha: fecha,
           hora: hora.split(".")[0],
           total: calcularTotal(),
+          pago: parseFloat(pago) || 0,
+          devuelta: parseFloat(devuelta) || 0,
           detallesVentas: productosSeleccionados.map((p) => ({
             id: p.id,
             cantidad: p.cantidad,

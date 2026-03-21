@@ -577,3 +577,83 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
   padding-left: 1rem;
 }
+
+@media (max-width: 430px) {
+  .superior H1 {
+    font-size: 2.2rem;
+    margin-top: 2.5rem;
+  }
+
+  .superiorBotones {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .BotonFiltro,
+  .BotonSeleccion,
+  .Descargar,
+  .DescargarO {
+    width: calc(50% - 1rem);
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    padding-left: 0.5rem;
+  }
+
+  .Total {
+    width: calc(50% - 1rem);
+    margin-left: 0.5rem;
+  }
+
+  .panel {
+    left: 50%;
+    width: 92vw;
+    height: auto;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .ListaProductos {
+    max-height: 10rem;
+  }
+
+  .TablaVentas {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .PanelF {
+    width: 90%;
+    height: auto;
+    top: 5%;
+    left: 5%;
+  }
+
+  .BotonesAtajo {
+    height: auto;
+    max-height: none;
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .BA {
+    font-size: 0.85rem;
+    padding: 0 0.6rem;
+    height: 1.8rem;
+  }
+
+  .PF_Fechas {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .Fechas {
+    width: 90%;
+  }
+
+  .Dinput {
+    width: 100%;
+  }
+}

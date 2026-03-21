@@ -103,6 +103,17 @@
     font-size: 10px;
   }
 
+  /* ---------- Pago y devuelta ---------- */
+  .factura-pago {
+    margin-top: 4px;
+    font-size: 9px;
+    text-align: left;
+  }
+
+  .factura-pago span {
+    display: block;
+  }
+
   /* ---------- Pie ---------- */
   .factura-footer {
     text-align: center;

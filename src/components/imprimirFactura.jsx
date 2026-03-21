@@ -76,6 +76,14 @@ const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
           Total: ${parseFloat(venta.total).toLocaleString()}
         </div>
 
+        {/* Pago y devuelta */}
+        {(venta.pago > 0 || venta.devuelta != null) && (
+          <div className="factura-pago">
+            {venta.pago > 0 && <span>Pago cliente: ${parseFloat(venta.pago).toLocaleString()}</span>}
+            {venta.devuelta != null && <span>Devuelta: ${parseFloat(venta.devuelta).toLocaleString()}</span>}
+          </div>
+        )}
+
         {/* Pie */}
         <div className="factura-footer">
           <hr />

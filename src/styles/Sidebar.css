@@ -134,4 +134,14 @@
   .sidebar img {
     margin-top: 4rem;
   }
+
+  .modal-contenedor-s {
+    width: 90%;
+  }
+
+  .modal-contenedor-s h2 {
+    width: 100%;
+    padding-left: 10px;
+    font-size: 20px;
+  }
 }
