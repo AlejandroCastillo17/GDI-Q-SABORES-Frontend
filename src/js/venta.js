@@ -1,17 +1,8 @@
-import axios from "axios";
+import api from "./api";
+
 export const venderProducto = async (data) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/ventas/",
-      data, // Aquí van los datos que envías
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const response = await api.post("ventas/", data);
     return response;
   } catch (error) {
     console.error(

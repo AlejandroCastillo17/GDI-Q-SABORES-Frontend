@@ -1,16 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 export const authentication = async (datos) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/usuarios/login/",
-      datos,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await api.post("usuarios/login/", datos);
     //console.log('Respuesta del backend:', response);
     if (response.status === 200) {
       // Guardar el token en el almacenamiento local

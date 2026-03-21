@@ -1,17 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 export const consultaProveedores = async () => {
   try {
-    const proveedores = await axios.get(
-      "http://127.0.0.1:8000/sabores/api/v1/proveedores/",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const proveedores = await api.get("proveedores/");
     return proveedores.data;
   } catch (error) {
     console.error(
@@ -24,17 +15,7 @@ export const consultaProveedores = async () => {
 
 export const editarProveedor = async (proveedor, id) => {
   try {
-    const response = await axios.put(
-      `http://127.0.0.1:8000/sabores/api/v1/proveedores/${id}/`,
-      proveedor,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const response = await api.put(`proveedores/${id}/`, proveedor);
     return response;
   } catch (error) {
     console.error(
@@ -47,16 +28,7 @@ export const editarProveedor = async (proveedor, id) => {
 
 export const crearProveedores = async (proveedoresData) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/proveedores/",
-      proveedoresData, // Aquí van los datos que envías
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
+    const response = await api.post("proveedores/", proveedoresData);
     return response;
   } catch (error) {
     console.error(
@@ -69,17 +41,7 @@ export const crearProveedores = async (proveedoresData) => {
 
 export const eliminarProveedores = async (proveedoresIds) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/proveedores/bulk_delete/",
-      proveedoresIds,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const response = await api.post("proveedores/bulk_delete/", proveedoresIds);
     return response;
   } catch (error) {
     console.error(

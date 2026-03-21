@@ -1,17 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 export const ConsultarVentas = async () => {
   try {
-    const ventas = await axios.get(
-      "http://127.0.0.1:8000/sabores/api/v1/ventas/",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const ventas = await api.get("ventas/");
     return ventas.data;
   } catch (error) {
     console.error(

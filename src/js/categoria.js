@@ -1,17 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 export const consultaCategoria = async () => {
   try {
-    const categoria = await axios.get(
-      "http://127.0.0.1:8000/sabores/api/v1/categorias/",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const categoria = await api.get("categorias/");
     return categoria.data;
   } catch (error) {
     console.error(
@@ -24,17 +15,7 @@ export const consultaCategoria = async () => {
 
 export const editarCategoria = async (categoria, id) => {
   try {
-    const response = await axios.put(
-      `http://127.0.0.1:8000/sabores/api/v1/categorias/${id}/`,
-      categoria,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const response = await api.put(`categorias/${id}/`, categoria);
     return response;
   } catch (error) {
     console.error(
@@ -47,16 +28,7 @@ export const editarCategoria = async (categoria, id) => {
 
 export const crearCategoria = async (CategoriaData) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/categorias/",
-      CategoriaData, // Aquí van los datos que envías
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
+    const response = await api.post("categorias/", CategoriaData);
     return response;
   } catch (error) {
     console.error(
@@ -69,17 +41,7 @@ export const crearCategoria = async (CategoriaData) => {
 
 export const eliminarCategoria = async (categoriaIds) => {
   try {
-    const response = await axios.post(
-      "http://127.0.0.1:8000/sabores/api/v1/categorias/bulk_delete/",
-      categoriaIds,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
+    const response = await api.post("categorias/bulk_delete/", categoriaIds);
     return response;
   } catch (error) {
     console.error(
@@ -89,4 +51,3 @@ export const eliminarCategoria = async (categoriaIds) => {
     return error.response || error.message;
   }
 };
-
