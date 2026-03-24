@@ -204,6 +204,10 @@
   pointer-events: none;
 }
 
+#cont-select:hover::after {
+  color: #fff0bd;
+}
+
 #select option {
   background-color: #333;
   color: #fff0bd;
@@ -214,9 +218,6 @@
   color: #fff0bd;
 }
 
-#cont-select:hover::after {
-  color: #fff0bd;
-}
 
 /* Estilos del modal */
 

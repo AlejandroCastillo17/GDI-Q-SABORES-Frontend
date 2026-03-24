@@ -435,12 +435,14 @@ const Inventario = () => {
               value={categoriaSeleccionada}
               onChange={(e) => setCategoriaSeleccionada(e.target.value)}
             >
-              <option value="" >Todas</option>
-              {categoriaData.map((categoria) => (
-                <option key={categoria.id} value={categoria.nombre}>
-                  {categoria.nombre}
-                </option>
-              ))}
+              <option value="">Todas</option>
+              {[...categoriaData]
+                .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                .map((categoria) => (
+                  <option key={categoria.id} value={categoria.nombre}>
+                    {categoria.nombre}
+                  </option>
+                ))}
             </select>
           </div>
           <Button variant="rojo" onClick={abrirModalEliminar}>
