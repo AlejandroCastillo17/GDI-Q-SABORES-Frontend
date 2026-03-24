@@ -48,10 +48,12 @@ const Ventas = () => {
     const ref = getPrintRef(venta.id);
 
     await new Promise(resolve => {
-      setTimeout(() => {
-        ref.current?.print();
+      const onAfterPrint = () => {
+        window.removeEventListener('afterprint', onAfterPrint);
         resolve();
-      }, 900);
+      };
+      window.addEventListener('afterprint', onAfterPrint);
+      ref.current?.print();
     });
   }
 };
