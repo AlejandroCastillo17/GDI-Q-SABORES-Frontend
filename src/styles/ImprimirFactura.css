@@ -9,6 +9,7 @@
     background: #fff;
     font-family: "Courier New", monospace;
     font-size: 10px;
+    font-weight: bold;
     line-height: 1.3;
     color: #000;
     -webkit-print-color-adjust: exact;
@@ -28,7 +29,7 @@
  .factura-container {
     width: 58mm !important;
     max-width: 58mm !important;
-    zoom: 2 !important /* Realicé un cambia aqui, esto modifica el zoom del contenido de la factura, estaba en 1 y lo puse en 2 */
+    zoom: 1 !important /* zoom reducido para papel angosto de impresora de carbón */
   }
 
   /* ---------- Encabezado ---------- */
@@ -98,7 +99,7 @@
     border-top: 1px dashed #000;
     padding-top: 4px;
     margin-top: 6px;
-    text-align: right;
+    text-align: left;
     font-weight: bold;
     font-size: 10px;
   }
