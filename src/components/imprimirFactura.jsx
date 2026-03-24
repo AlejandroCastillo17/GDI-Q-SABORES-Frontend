@@ -4,15 +4,25 @@ import "/src/styles/ImprimirFactura.css";
 
 const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
   const contentRef = useRef();
+  const callbackRef = useRef(null);
 
   const handlePrint = useReactToPrint({
     contentRef,
     documentTitle: `Factura_${venta.id}_${venta.fecha}_${venta.hora}`,
+    onAfterPrint: () => {
+      if (callbackRef.current) {
+        callbackRef.current();
+        callbackRef.current = null;
+      }
+    },
   });
 
-  // Permite ejecutar desde el padre con printRef.current.print()
+  // Permite ejecutar desde el padre con printRef.current.print(callback)
   useImperativeHandle(ref, () => ({
-    print: handlePrint,
+    print: (callback) => {
+      callbackRef.current = callback ?? null;
+      handlePrint();
+    },
   }));
 
   return (

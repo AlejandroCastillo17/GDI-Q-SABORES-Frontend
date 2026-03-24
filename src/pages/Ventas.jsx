@@ -48,12 +48,7 @@ const Ventas = () => {
     const ref = getPrintRef(venta.id);
 
     await new Promise(resolve => {
-      const onAfterPrint = () => {
-        window.removeEventListener('afterprint', onAfterPrint);
-        resolve();
-      };
-      window.addEventListener('afterprint', onAfterPrint);
-      ref.current?.print();
+      ref.current?.print(resolve);
     });
   }
 };
