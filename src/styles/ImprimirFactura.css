@@ -26,17 +26,15 @@
     print-color-adjust: exact;
     height: auto !important;
     min-height: 0 !important;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
   }
 
   /* ---------- Contenedor ---------- */
   .factura-container {
-    width: 54mm !important;
-    max-width: 54mm !important;
-    margin: 0 auto !important;
-    padding: 0 1mm;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 3mm !important;
+    box-sizing: border-box !important;
     font-weight: bold;
   }
 
