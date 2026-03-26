@@ -30,8 +30,8 @@
 
   /* ---------- Contenedor ---------- */
   .factura-container {
-    width: 58mm !important;
-    max-width: 58mm !important;
+    width: 60mm !important;
+    max-width: 60mm !important;
     margin: 0 auto !important;
     padding: 0 2mm !important;
     box-sizing: border-box !important;
