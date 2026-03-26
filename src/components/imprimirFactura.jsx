@@ -47,15 +47,15 @@ const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
           </p>
           <hr />
           <p className="factura-info">
-            <strong>NIT EMPRESA Q'SABORES:</strong> 1094430725-9
+            <strong>NIT EMPRESA Q'SABORES: 1094430725-9</strong>
             <br />
-            <strong>Direccion:</strong> Carrera 32 # 76 - 30 Medellin
+            <strong>Direccion: Carrera 32 # 76 - 30 Medellin</strong>
             <br />
-            <strong>Factura N°:</strong> {venta.id}
+            <strong>Factura N°: {venta.id}</strong>
             <br />
-            <strong>Fecha:</strong> {venta.fecha}
+            <strong>Fecha: {venta.fecha}</strong>
             <br />
-            <strong>Hora:</strong> {venta.hora}
+            <strong>Hora: {venta.hora}</strong>
           </p>
         </div>
 
@@ -97,7 +97,7 @@ const ImprimirFacturaPOS = forwardRef(({ venta }, ref) => {
         {/* Pie */}
         <div className="factura-footer">
           <hr />
-          ¡Gracias por su compra! 🌿
+          ¡Gracias por su compra!
         </div>
       </div>
     </div>
