@@ -7,6 +7,7 @@
   * {
     font-weight: bold !important;
     box-sizing: border-box;
+    color: #000 !important;
   }
 
   hr {
@@ -18,13 +19,16 @@
     padding: 0;
     background: #fff;
     font-family: "Courier New", monospace;
-    font-size: 11px;
-    line-height: 1.4;
+    font-size: 13px;
+    line-height: 1.5;
     color: #000;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     height: auto !important;
     min-height: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   /* ---------- Contenedor ---------- */
@@ -46,7 +50,7 @@
   }
 
   .factura-header h2 {
-    font-size: 14px;
+    font-size: 16px;
     margin: 2px 0;
     font-weight: bold;
   }
@@ -58,14 +62,14 @@
   }
 
   .factura-slogan {
-    font-size: 9px;
+    font-size: 11px;
     margin: 2px 0;
     font-weight: bold;
   }
 
   .factura-info {
     text-align: left;
-    font-size: 11px;
+    font-size: 13px;
     margin-top: 4px;
     font-weight: bold;
   }
@@ -85,7 +89,7 @@
   .factura-tabla th,
   .factura-tabla td {
     padding: 1px 0;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: bold;
   }
 
@@ -112,13 +116,13 @@
     margin-top: 4px;
     text-align: left;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   /* ---------- Pago y devuelta ---------- */
   .factura-pago {
     margin-top: 3px;
-    font-size: 11px;
+    font-size: 13px;
     text-align: left;
     font-weight: bold;
   }
@@ -131,7 +135,7 @@
   /* ---------- Pie ---------- */
   .factura-footer {
     text-align: center;
-    font-size: 11px;
+    font-size: 13px;
     margin-top: 6px;
     border-top: 1px dashed #000;
     padding-top: 4px;
